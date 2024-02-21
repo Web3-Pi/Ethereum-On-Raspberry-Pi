@@ -206,7 +206,7 @@ function prepare_image() {
   local dev=$(map_image $output_file)
   echo "  -> $dev (OS partition)"
 
-  # Mound temp dir with the mapped parition
+  # Mount temp dir with the mapped parition
   local tmp_dir=$(mktemp -d)
   sudo mount "$dev" "$tmp_dir"
   if [[ ! -d "$tmp_dir/etc" ]]; then
