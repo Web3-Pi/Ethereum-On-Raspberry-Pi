@@ -2,12 +2,6 @@
 The Raspberry Pi 5 devices will be configured during the initial run, and their software will be updated. 
 After this step, devices can be used to host an **Ethereum Node**.
 
-Pleace give ~5 min for the first boot.
-Device can restart automaticli during this process.
-If everything goes correctly Geth and Lighthuse started automaticly as a services:
--geth.service
--lightservice
-
 
 ### Warning
 ⚠️ **In most cases, the installation script erases the SSD content.** ⚠️
@@ -30,7 +24,12 @@ If everything goes correctly Geth and Lighthuse started automaticly as a service
 
 After the device is powered up, it will enter the process of updating the software and configuring itself to act as an **Ethereum Node**.
 
+Device can restart automaticli during this process.
 Wait 5 minutes and try to log in as _raspberry/raspberry_ via SSH. 
+
+If everything goes correctly Geth and Lighthuse started automaticly as a services:
+-geth.service
+-lightservice
 
 To configure key-based authentication to access devices, follow this [guideline](./4a-ssh-key-based-authentication.md).
 
