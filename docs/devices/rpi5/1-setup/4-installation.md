@@ -27,11 +27,8 @@ After the device is powered up, it will enter the process of updating the softwa
 Device can restart automaticli during this process.
 Wait 5 minutes and try to log in as _raspberry/raspberry_ via SSH. 
 
-If everything goes correctly Geth and Lighthuse started automaticly as a services:
--geth.service
--lightservice
 
-To configure key-based authentication to access devices, follow this [guideline](./4a-ssh-key-based-authentication.md).
+[Optional] To configure key-based authentication to access devices, follow this [guideline](./4a-ssh-key-based-authentication.md).
 
 ### Summary
 At this point, both devices are configured and ready to host and **Ethereum Node**. A detailed procedure for running two devices as a single node is described in the following sections.
