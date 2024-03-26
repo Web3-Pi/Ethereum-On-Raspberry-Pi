@@ -42,7 +42,6 @@ Look at the displayed log messages. If the _rc.local_ configuration script was s
   ```bash
   sudo reboot
   ```
-[^1]: See the [geth device configuration](./3-raspberry-pi-images.md#1-geth)
 
 During the second run, the installation script should be executed correctly. Wait for the configuration to finish.
 
@@ -53,7 +52,6 @@ Wait 15 minutes and try to log in as _ethereum/ethereum_ via SSH. If the user is
   ```bash
   sudo reboot
   ```
-[^2]: See the [lighthouse device configuration](./3-raspberry-pi-images.md#1-lighthouse)
 
 ### Installation verification
 The verification procedure is identical for both devices. To verify that the installation was successful, follow these steps:
