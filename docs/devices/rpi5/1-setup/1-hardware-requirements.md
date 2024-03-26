@@ -5,7 +5,7 @@ To run an **Ethereum Node** on Raspberry Pi 5, you will need
 - 1 x [Raspberry Pi 5 (8GB)](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active colling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html)
 - 1 x 2TB SSD drive (external USB SSD or NVMe m.2 with adapter) 
 - 1 x SD Card reader/writer 
-- 1 x [microSD Card](#fast-sd-cards)
+- 1 x [microSD Card](#microSD Card)
 - 1 x [Power supply](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html)
   
 ## Details
@@ -32,7 +32,7 @@ Active cooling is required to avoid throttling and keep sufficient performance/s
 https://botland.store/raspberry-pi-5-mounting-elements/23925-raspberry-pi-active-cooler-heatsink-fan-for-raspberry-pi-5-5056561803357.html
 
 
-### microSD Cards
+### microSD Card
 
 Flashing a microSD card takes time, but it can be reduced by using a fast device. Additionally, using a fast micro SD card results in a shorter booting time. A few examples:
 
