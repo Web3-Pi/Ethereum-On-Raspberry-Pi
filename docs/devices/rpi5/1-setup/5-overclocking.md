@@ -37,6 +37,9 @@ Raspberry Pi has enough power to handle Ethereum node without OC so our recommen
 
 If the procedure is successful, the device should be up and running with the updated OC settings.
 
+For more information about OC please visit: https://www.jeffgeerling.com/blog/2023/overclocking-and-underclocking-raspberry-pi-5
+
+
 ## Next Step
 You are ready to run the **Ethereum Node** on your overclocked devices.
 
