@@ -1,6 +1,6 @@
 ## Overclocking
 
-There are two things wich can be tweaked at Raspberry po to increase Ethereum Node performance.
+There are two things that can be tweaked at Raspberry po to increase Ethereum Node performance.
 - CPU frequency
 - PCIe generation
 
