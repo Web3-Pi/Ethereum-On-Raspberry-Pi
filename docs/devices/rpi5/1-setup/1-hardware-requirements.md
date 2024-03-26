@@ -2,35 +2,36 @@
 
 To run an **Ethereum Node** on Raspberry Pi 5, you will need
 
-- 1 x [Raspberry Pi 5 Starter Kit](#starter-kit) (8GB)
-- 1 x 2TB [NVMe m.2 + HAT PCIe to m.2] or [External USB 3.0 SSD] 
-- 2 x [Fast micro SD Card](#fast-sd-cards)
-- 1 x SD Card reader / writer
-- 1 x [Active colling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html)
-
-
+- 1 x [Raspberry Pi 5 (8GB)](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active colling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html)
+- 1 x 2TB SSD drive (external USB SSD or NVMe m.2 with adapter) 
+- 1 x SD Card reader/writer 
+- 1 x [microSD Card](#fast-sd-cards)
+- 1 x [Power supply](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html)
+  
 ## Details
 
-### Starter Kit
+### Storage
+2 TB fast drive is required. 
+With Raspberry Pi 5 you have two options for storage:
+- external USB SSD drive 
+- m.2 NVMe drive with NVMe HAT for Raspberry Pi 5
 
-A single all-in-one starter kit contains the core Raspberry Pi 4 accessories
+Raspberry Pi 5 has a PCIe x1 connector on board so with a special adapter m.2 NVMe drive can be used.
+This option gives the maximum possible performance.
+For more information visit: [recommended storage](./1a-recommended-storage.md)
 
-- [Raspberry Pi 5](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-5/23905-raspberry-pi-5-8gb-5056561803326.html)
-- Power supply
-- Plastic enlosure (not used)
-- microHDMI - HDMI cable
-- 32 GB class 10 microSD card (not the fastest microSD card but can be used)
-- Network cable - Ethernet patchcord
+### Power supply
+As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
+Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
 
-Available for purchase as a [botland starter kit](https://botland.com.pl/moduly-i-zestawy-raspberry-pi-5/23948-zestaw-z-raspberry-pi-5-wifi-8gb-ram-32gb-microsd-oficjalne-akcesoria.html).
-
-_If starter kit is not available for immediate delivery you can always order above parts separately._
-
+### Cooling
+Active cooling is required to avoid throttling and keep sufficient performance/stability of the system.
+https://botland.store/raspberry-pi-5-mounting-elements/23925-raspberry-pi-active-cooler-heatsink-fan-for-raspberry-pi-5-5056561803357.html
 
 
-### Fast Micro SD Cards
+### microSD Cards
 
-Flashing an micro SD card takes time, but it can be reduced by using a fast device. Additionally, using a fast micro SD card results in a shorter booting time. A few examples:
+Flashing a microSD card takes time, but it can be reduced by using a fast device. Additionally, using a fast micro SD card results in a shorter booting time. A few examples:
 
 - [Silicon Power 3D NAND](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-best-microsd-card-overall)
 - [SanDisk Extreme Pro](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-great-speeds-best-for-pi-3)
