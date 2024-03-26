@@ -24,8 +24,7 @@ Raspberry Pi 5 has a PCIe x1 connector on board so with a special adapter m.2 NV
 This option gives the maximum possible performance.
 For more information visit: [recommended storage](./1a-recommended-storage.md)
 
-As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5
-https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html
+As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
 Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
 
 ### 2. Accessories and Network Setup
