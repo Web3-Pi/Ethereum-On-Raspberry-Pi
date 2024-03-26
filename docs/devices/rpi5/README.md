@@ -14,7 +14,7 @@ The default setup requires the following hardware components
 - 1 x microSD memory card 32 GB or bigger
 - 1 x Compatible power supply
 
-➡️ [Details and examples](./1-setup/1-hardware-requiremments.md)
+➡️ [Details and examples](./1-setup/1-hardware-requirements.md)
 
 ### 2. Accessories and Network Setup
 The basic setup requires the following steps
