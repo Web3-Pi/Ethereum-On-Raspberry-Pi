@@ -9,7 +9,7 @@ To write an image on an SD card, it is recommended to use the official tool prov
 After installing it to your PC, you can download the newest **Ethereum on Pi** image. This image will be used on each of the devices, so only one copy is required:
 - [Ethereum on Pi image for Raspberry Pi 5](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/tag/rpi5)
 
-You can check the list of all images [here](https://github.com/viggith/ethereum-on-pi/releases).
+You can check the list of all images [here](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases).
 
 
 ## Writing Images
