@@ -37,7 +37,7 @@ Due to the cloud updates configured by default, the Ethereum installation tasks 
 #### With a HDMI monitor connected
 Look at the displayed log messages. If the _rc.local_ configuration script was started, wait for it to finish. Otherwise
 - Wait for the cloud update to finish
-- Log into the device using the default user credentials[^1]
+- Log into the device using the default user credentials
 - Reboot the device with the command:
   ```bash
   sudo reboot
@@ -47,7 +47,7 @@ During the second run, the installation script should be executed correctly. Wai
 
 #### Without a monitor
 Wait 15 minutes and try to log in as _ethereum/ethereum_ via SSH. If the user is unavailable, the first run did not execute the installation tasks. In such case
-- Log into the device using the default user credentials[^2]
+- Log into the device using the default user credentials
 - Reboot the device with the command:
   ```bash
   sudo reboot
