@@ -1,4 +1,4 @@
-## Ethereum On Raspberry Pi[^1]
+## Ethereum On Raspberry Pi
 
 Basic suite of tools and references to existing projects to create and host Ethereum Nodes on the devices from the Raspberry Pi family.
 
@@ -36,7 +36,6 @@ You can also follow the instructions for a particular device setup:
 - [Raspberry Pi 5](./docs/devices/rpi5/README.md)
 - 🚧 ~~Compute Module 4~~ 🚧
 
-[^1]: _**The current version** describes in detail the procedure of setting up an **Ethereum Node** on the **Raspberry Pi 4 Model B** (via a 2-device setup)_
 
 ## Acknowledgements
 Thanks to [Ethereum on ARM](https://github.com/EOA-Blockchain-Labs/ethereumonarm) project and its community.
