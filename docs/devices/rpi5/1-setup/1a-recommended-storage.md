@@ -13,7 +13,7 @@ We recommend the following hardware:
 
 <br>
 #### m.2 NVME drive
-This drives needs adapter
+Those drives need adapters
 
 | Brand   | Storage | Model                              |
 | ------- | ------- | ---------------------------------- |
@@ -57,8 +57,8 @@ This drives needs adapter
 
 or other similar
 
+<be>
 <br>
-\
 **Important information**
 
 Some M.2 disks are not compatible. Please check the availability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
