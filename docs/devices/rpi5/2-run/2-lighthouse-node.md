@@ -51,10 +51,4 @@ The node is operational, but there are still some historical blocks to download.
 
 ## Next Step
 
-[➡️ Click here to move to next step & learn about rebooting your nodes. ➡️](./5a-rebooting-device.md)
-
-
-
-## Next Step
-
-[➡️ Click here to move to next step & learn about rebooting your nodes. ➡️](./5a-rebooting-device.md)
+[➡️ Click here to move to next step & learn about rebooting your nodes. ➡️](./3a-rebooting-device.md)
