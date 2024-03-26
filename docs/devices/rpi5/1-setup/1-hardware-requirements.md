@@ -12,13 +12,16 @@ To run an **Ethereum Node** on Raspberry Pi 5, you will need
 
 ### Storage
 2 TB fast drive is required. 
-With Raspberry Pi 5 you have two options for storage:
-- external USB SSD drive 
-- m.2 NVMe drive with NVMe HAT for Raspberry Pi 5
+With Raspberry Pi 5 you have three options for storage:
+- external USB SSD drive (wide availability)
+- m.2 NVMe drive with NVMe HAT for Raspberry Pi 5 (max performance)
+- m.2 NVMe drive with USB m.2 adapter 
 
 Raspberry Pi 5 has a PCIe x1 connector on board so with a special adapter m.2 NVMe drive can be used.
 This option gives the maximum possible performance.
 For more information visit: [recommended storage](./1a-recommended-storage.md)
+
+If you use USB always choose USB 3.0 ports (blue ones).
 
 ### Power supply
 As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
