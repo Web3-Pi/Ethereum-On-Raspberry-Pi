@@ -2,9 +2,12 @@
 
 
 By default, the Raspberry Pi 5 CPU clock is set to 2.4 GHz, but it is relatively easy to overclock. An overclocked CPU with a significant load will require an active cooling solution or a high-quality cooling case. 
+
 The maximum stable clock that can be achieved depends on a particular device.
+
 Safe for all devices is 2.6 GHz.
 The reasonable top is 3.0GHz.
+
 Raspberry Pi has enough power to handle Ethereum node without OC so our recommendation is to keep stable settings like 2.6 GHz
 
 
