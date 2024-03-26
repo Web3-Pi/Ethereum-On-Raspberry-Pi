@@ -64,20 +64,10 @@ The verification procedure is identical for both devices. To verify that the ins
 - By default, _ethereum_ user is forced to change the password during the first login
 
 #### Network configuration verification
-- SSH login into the _geth-1_ device and run a command:
-  ```bash
-  ping lighthouse-1.local
-  ```
-- SSH login into the _lighthouse-1_ device and run a command:
-  ```bash
-  ping geth-1.local
-  ```
-  > _If the network configuration is valid, both devices should be able to reach each other_
-- From _geth-1_ device and _lighthouse-1_ device run a command:
+- From Raspberry Pi device run the command:
   ```bash
   ping google.com
   ```
-  > _If the network configuration is valid (access to the Internet), both devices should be able to reach the remote host_
 
 To configure key-based authentication to access devices, follow this [guideline](./4a-ssh-key-based-authentication.md).
 
