@@ -1,6 +1,6 @@
 ## Overclocking
 
-There are two things that can be tweaked at Raspberry po to increase Ethereum Node performance.
+There are two things that can be tweaked at Raspberry Pi to increase Ethereum Node performance.
 - CPU frequency
 - PCIe generation
 
@@ -16,14 +16,14 @@ The reasonable top is 3.0GHz.
 Raspberry Pi has enough power to handle Ethereum node without OC so our recommendation is to keep stable settings like 2.6 GHz
 
 
-### How to overclock CPU
+### How to overclock the CPU
 - Edit the _/boot/firmware/config.txt_ for editing:
   ```bash
   sudo nano /boot/firmware/config.txt
   ```
 - Find the last `[all]` section, almost at the end of the file. Look for this comment:
    ```bash
-   # Tell the DVFS algorithm to increase voltage by this amount (in µV; default 0).
+   # Tell the DVFS algorithm to increase the voltage by this amount (in µV; default 0).
    over_voltage_delta=10000
 
    # Set the Arm A76 core frequency (in MHz; default 2400).
