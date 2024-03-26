@@ -47,13 +47,14 @@ This drives needs adapter
 | ZenWire | https://zenwire.eu/pl/p/Adapter-SSD-M2-NVMESATA-kieszen-na-dysk-obudowa-M.2-USB-C-10-GBs-Zenwire/289|
 | RIITOP  | https://www.amazon.nl/dp/B0B1HVGBZ3?ref_=pe_28126711_487767311_302_E_DDE_dt_1|
 | QOLTEC  | https://www.tme.eu/en/details/qoltec-50311/hdd-ssd-accessories/qoltec/50311/|
-or other similar.
+
+or other similar
 
 
 \
 **Important information**
 
-Some M.2 disks are not compatible. Please check the avability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
+Some M.2 disks are not compatible. Please check the availability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
 
 
 ---
