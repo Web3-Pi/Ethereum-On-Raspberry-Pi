@@ -13,8 +13,8 @@ We recommend the following hardware:
 #### m.2 NVME drive
 This drives needs adapter
 
-| Brand   | Storage | Model                              | Link*                                                                                     | comment                            |
-| ------- | ------- | ---------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------- |
+| Brand   | Storage | Model                              |
+| ------- | ------- | ---------------------------------- |
 | Kingston    |         | KC3000 
 | AData   |         | Legend 700
 | AData   |         | Legend 800
