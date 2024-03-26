@@ -38,3 +38,5 @@ An example screenshot with settings for the geth node:
 _If some steps remain unclear, you can visit the [Raspberry Pi "getting started" page](https://www.raspberrypi.com/documentation/computers/getting-started.html) for more information on Imager settings and usage._
 
 ## Next Step
+
+[➡️ Click here to move to next step & Run your Raspberry Pi for the first time ➡️](./4-installation.md)
