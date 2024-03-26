@@ -3,7 +3,7 @@
 We recommend the following hardware:
 
 
-<br>---
+<br>
 #### External USB SSD drive
 
 | Brand   | Storage | Model                              | Link*                                                                                     | comment                            |
@@ -11,7 +11,7 @@ We recommend the following hardware:
 | Samsung | 2 TB    | T7 2TB USB 3.2                     | https://tweakers.net/pricewatch/1560668/samsung-portable-ssd-t7-2tb-grijs/specificaties/ | **recommended for most users**     |
 
 
-<br>---
+<br>
 #### m.2 NVME drive
 This drives needs adapter
 
@@ -37,7 +37,7 @@ This drives needs adapter
 [Full compatibility list](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579)
 
 
-<br>---
+<br>
 ### NVMe HAT for Raspberry Pi 5:
 
 | Brand   | Link*                                                                                       |
@@ -46,7 +46,7 @@ This drives needs adapter
 | Pineberrypi  | https://pineberrypi.com/products/hatdrive-bottom-2230-2242-2280-for-rpi5 |   |
 
 
-<br>---
+<br>
 ### USB to NVMe adapters:
 
 | Brand   | Link*                                                                                       |
