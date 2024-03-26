@@ -8,24 +8,11 @@ Here, you can find a full description of how to set up an **Ethereum Full Node**
 
 ### 1. Hardware requirements
 The default setup requires the following hardware components
-- 1 x Raspberry Pi 5 (8GB)
+- 1 x Raspberry Pi 5 (8GB) with active cooling
 - 1 x 2TB SSD drive (external USB SSD or NVMe m.2 with adapter) 
 - 1 x SD Card reader/writer
 - 1 x microSD memory card 32 GB or bigger
 - 1 x Compatible power supply
-
-
-2 TB fast drive is required. 
-With Raspberry Pi 5 you have two options for storage:
-- external USB SSD drive 
-- m.2 NVMe drive with NVMe HAT for Raspberry Pi 5
-
-Raspberry Pi 5 has a PCIe x1 connector on board so with a special adapter m.2 NVMe drive can be used.
-This option gives the maximum possible performance.
-For more information visit: [recommended storage](./1a-recommended-storage.md)
-
-As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
-Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
 
 ### 2. Accessories and Network Setup
 The basic setup requires the following steps
