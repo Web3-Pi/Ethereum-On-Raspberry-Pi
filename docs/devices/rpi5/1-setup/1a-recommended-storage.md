@@ -32,6 +32,8 @@ This drives needs adapter
 | Samsung    |         | 980
 | Samsung    |         | 980 Pro
 
+[Full compatibility list](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579)
+
 ### NVMe HAT for Raspberry Pi 5:
 
 | Brand   | Link*                                                                                       |
