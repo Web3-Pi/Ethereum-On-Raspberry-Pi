@@ -10,16 +10,17 @@ A few generations of Raspberry Pi devices allow running an **Ethereum Node**. Ea
 
 The most straightforward configuration to run a Raspberry Pi 4-based setup requires two **Raspberry Pi 4 Model B** (8GB) devices acting as a single **Ethereum Node**. Follow the [Raspberry Pi 4 quick start guide](./devices/rpi4/README.md) to configure and run the node.
 
+### Raspberry Pi 5
+
+The most straightforward configuration to run **Ethereum Node** on a single **Raspberry Pi 5 (8GB)** device. Follow the [Raspberry Pi 5 quick start guide](./devices/rpi5/README.md) to configure and run the node.
+
 ### Compute Module 4
 
 🚧 _UNDER CONSTRUCTION_ 🚧 
 
-### Raspberry Pi 5
-
-🚧 _UNDER CONSTRUCTION_ 🚧 
 
 ## Troubleshooting
 
-To go to troubleshooting section follow this [link](./troubleshooting.md).
+To go to the troubleshooting section follow this [link](./troubleshooting.md).
 
-If you have any problem, please feel welcome to post an issue on Github.
+If you have any problem, please feel welcome to post an issue on GitHub.
