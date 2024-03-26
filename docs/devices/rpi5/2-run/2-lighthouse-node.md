@@ -35,7 +35,7 @@ To ensure the client is synchronized, compare the output with the provided refer
 
 #### Lighthouse in an entry state
 
-⚠️ **TODO** ⚠️
+![Lighthouse synced](./screenshot-lighhouse-begin-sync.png)
 
 #### Lighthouse - checkpoint syncing:
 
@@ -43,11 +43,11 @@ Synced, but backfilling blocks.
 
 The node is operational, but there are still some historical blocks to download. For additional information, consult the [Lighthouse Book](https://lighthouse-book.sigmaprime.io/checkpoint-sync.html#checkpoint-sync).
 
-![geth synced](./screenshot-lighhouse-backfilling.png)
+![Lighthouse synced](./screenshot-lighhouse-backfilling.png)
 
 #### Lighthouse in a synced state:
 
-![geth synced](./screenshot-lighthouse-synced.png)
+![Lighthouse synced](./screenshot-lighthouse-synced.png)
 
 ## Next Step
 
