@@ -4,24 +4,38 @@ The following section describes a step-by-step process of configuring, deploying
 ⚠️ **To avoid errors during the first setup, please follow the instructions precisely.** ⚠️
 
 ## Device Setup
-Here, you can find a full description of how to set up an **Ethereum Full Node** using onw Raspberry Pi 5 device. Following those steps will give you access to your Ethereum RPC.
+Here, you can find a full description of how to set up an **Ethereum Full Node** using a single Raspberry Pi 5 device. Following those steps will give you access to your Ethereum RPC.
 
 ### 1. Hardware requirements
 The default setup requires the following hardware components
 - 1 x Raspberry Pi 5 (8GB)
-- 1 x 2TB SSD drive (NVMe m.2 or externa USB SSD) 
+- 1 x 2TB SSD drive (external USB SSD or NVMe m.2 with adapter) 
 - 1 x SD Card reader/writer
-- 1 x Fast MicroSD Card 32 GB or bigger
+- 1 x microSD memory card 32 GB or bigger
 - 1 x Compatible power supply
+
+
+2 TB fast drive is required. 
+With Raspberry Pi 5 you have two options for storage:
+- external USB SSD drive 
+- m.2 NVMe drive with NVMe HAT for Raspberry Pi 5
+
+Raspberry Pi 5 has a PCIe x1 connector on board so with a special adapter m.2 NVMe drive can be used.
+This option gives the maximum possible performance.
+For more information visit: [recommended storage](./1a-recommended-storage.md)
+
+As a power supply, we recommend an official 5,1V / 5A PSU for Raspberry Pi 5
+https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html
+Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
 
 ### 2. Accessories and Network Setup
 The basic setup requires the following steps
-- Connecting Raspberry Pi 5 devices to the local network with the Internet access (DHCP)
+- Connecting Raspberry Pi 5 devices to the local network with Internet access (DHCP)
 - Connecting the control device (PC) to the same network
 
 ### 3. OS Image
 There are two steps to prepare an image:
-- Download the latest release of the _Ethereum on Pi_ image  for Raspberry Pi 5
+- Download the latest release of the _Ethereum on Pi_ image for Raspberry Pi 5
 - Write the image to an SD Card closely following the detailed instruction
 
 ### 4. Installation
@@ -32,10 +46,8 @@ The following instructions describe the configuration of a Raspberry Pi 5 device
 - Optionally: _Connect HDMI cable to the monitor and the device using HDMI 0 port_
 - Connect the default Raspberry Pi 5 power supply to the device
 
-Connect power and run system only when every things is proppery connected.
-Afterr connecting power Raspberry Pi 5 starts booting automaticly. During startup rc.local confgure storage. There will be a reboot. Pleace give 5 min for first time boot.
-
-
+Connect power and run the system only when every thing is properly connected.
+After connecting power Raspberry Pi 5 starts booting automatically. During startup rc.local configure storage. There will be a reboot. Please give 5 min for the first-time boot.
 
 
 
