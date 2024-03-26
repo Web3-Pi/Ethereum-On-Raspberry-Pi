@@ -11,7 +11,7 @@ Below, you can see photos of an example setup:
 ### Sample configuration with USB drive
 ![Sample configuration with USB drive](./img-example-setup-USB.jpg)
 
-<be>
+<br>
 ---
 ### Sample configuration with NVMe drive
 ![Sample configuration with NVMe drive](./img-example-setup-NVMe.jpg)
