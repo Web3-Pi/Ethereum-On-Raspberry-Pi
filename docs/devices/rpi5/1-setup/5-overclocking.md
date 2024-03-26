@@ -1,5 +1,10 @@
 ## Overclocking
 
+There are two things wich can be tweaked at Raspberry po to increase Ethereum Node performance.
+- CPU frequency
+- PCIe generation
+
+### CPU Overclocking
 
 By default, the Raspberry Pi 5 CPU clock is set to 2.4 GHz, but it is relatively easy to overclock. An overclocked CPU with a significant load will require an active cooling solution or a high-quality cooling case. 
 
@@ -43,6 +48,30 @@ If the procedure is successful, the device should be up and running with the upd
 For more information about OC please visit: https://www.jeffgeerling.com/blog/2023/overclocking-and-underclocking-raspberry-pi-5
 
 
+### PCIe generation select
+
+Raspberry Pi by default use PCIe gen 2. But Broadcom BCM2712 offers PCIe generation 3 which is twice as fast.
+By default is set gen. 2 because of compatibility reasons with different adapters.
+In most cases, you can safely set gen.3, which improves the performance of NVMe drive twice.
+
+- Edit the _/boot/firmware/config.txt_ for editing:
+  ```bash
+  sudo nano /boot/firmware/config.txt
+  ```
+- Find the last `[all]` section, almost at the end of the file. Look for this comment:
+   ```bash
+   dtparam=pciex1_gen=3
+   ```
+- Exit the editor by pressing `Ctrl+x` and save changes
+- Restart the device:
+  ```bash
+  sudo reboot
+  ```
+  
+For more information please visit: https://www.jeffgeerling.com/blog/2023/nvme-ssd-boot-raspberry-pi-5
+
+
+  
 ## Next Step
 You are ready to run the **Ethereum Node** on your overclocked devices.
 
