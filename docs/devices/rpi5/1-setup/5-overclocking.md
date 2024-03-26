@@ -32,7 +32,7 @@ Raspberry Pi has enough power to handle Ethereum node without OC so our recommen
   sudo cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
    ```
 
-  It should output `2000000`
+  It should output `2600000`
 
 
 If the procedure is successful, the device should be up and running with the updated OC settings.
