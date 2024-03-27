@@ -3,7 +3,7 @@
 We recommend the following hardware:
 
 
-<br>
+
 #### External USB SSD drive
 
 | Brand   | Storage | Model                              | Link*                                                                                     | comment                            |
@@ -11,7 +11,7 @@ We recommend the following hardware:
 | Samsung | 2 TB    | T7 2TB USB 3.2                     | https://tweakers.net/pricewatch/1560668/samsung-portable-ssd-t7-2tb-grijs/specificaties/ | **recommended for most users**     |
 
 
-<br>
+
 #### m.2 NVME drive
 Those drives need adapters
 
@@ -37,16 +37,17 @@ Those drives need adapters
 [Full compatibility list](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579)
 
 
-<br>
+
 ### NVMe HAT for Raspberry Pi 5:
 
 | Brand   | Link*                                                                                       |
 | ------- | ------------------------------------------------------------------------------------------ |
 | Pimoroni | https://shop.pimoroni.com/products/nvme-base?variant=41219587178579 | **recommended**     |
 | Pineberrypi  | https://pineberrypi.com/products/hatdrive-bottom-2230-2242-2280-for-rpi5 |   |
+| Waveshare  | https://www.waveshare.com/product/raspberry-pi/boards-kits/raspberry-pi-5/pcie-to-m.2-board-c.htm |   |
 
 
-<br>
+
 ### USB to NVMe adapters:
 
 | Brand   | Link*                                                                                       |
@@ -57,8 +58,7 @@ Those drives need adapters
 
 or other similar
 
-<be>
-<br>
+
 **Important information**
 
 Some M.2 disks are not compatible. Please check the availability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
