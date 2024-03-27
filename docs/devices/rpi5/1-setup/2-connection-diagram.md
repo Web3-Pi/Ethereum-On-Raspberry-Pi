@@ -1,10 +1,10 @@
-### Connection Diagram
+## Connection Diagram
 
 Once you have all the hardware collected, you will need to unbox the Raspberry Pi device and connect it according to the specifications below:
 
 ![device configuration](./img-rpi5-connection-diagram-1.png)
 
-### Photos
+## Photos
 
 Below, you can see photos of an example setup:
 
