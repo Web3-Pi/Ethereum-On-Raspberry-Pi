@@ -1,7 +1,12 @@
 # Devices
 
-We recommend the following hardware:
-
+You can use different storage configurations:
+- External USB SSD drive (recommended)
+- m.2 NVMe drive with PCIe x1 to m.2 adapter for Rpi 5 (recommended - max. performance)
+- m.2 NVMw drive with USB ro m.2 adapter
+- USB to SATA adapter + SSD 2.5" drive
+ 
+List of possible hardware:
 
 
 ## External USB SSD drive
