@@ -70,9 +70,8 @@ Those drives need adapters
 or other similar
 
 
-**Important information**
-
-Some M.2 disks are not compatible. Please check the availability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
+> [!IMPORTANT]
+> Some M.2 disks are not compatible. Please check the availability list on [Pimoroni NVMe Base description](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579).
 
 
 ---
