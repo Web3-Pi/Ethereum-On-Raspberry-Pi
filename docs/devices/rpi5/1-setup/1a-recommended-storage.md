@@ -11,9 +11,9 @@ We recommend the following hardware:
 | Samsung | 2 TB    | T7 2TB USB 3.2                     | https://tweakers.net/pricewatch/1560668/samsung-portable-ssd-t7-2tb-grijs/specificaties/ | **recommended for most users**     |
 
 > [!TIP]
-> Some external disks consume more power than Raspberry Pi can deliver via USB.
-> For Raspberry Pi 5 max power output of USB ports is 600mA if using a 3A supply, 1600mA if using a 5A supply
-> At /boot/firmware/config.txt you can add usb_max_current_enable=1 to enable limit.
+> Some external disks consume more power than Raspberry Pi can deliver via USB. 
+> For Raspberry Pi 5 max power output of USB ports is 600mA if using a 3A supply, 1600mA if using a 5A supply. 
+> You can edit /boot/firmware/config.txt and add usb_max_current_enable=1 to disable current limit. 
 > Please read the documentation: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
 
 
