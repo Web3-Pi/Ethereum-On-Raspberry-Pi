@@ -1,10 +1,10 @@
-### Devices
+# Devices
 
 We recommend the following hardware:
 
 
 
-#### External USB SSD drive
+## External USB SSD drive
 
 | Brand   | Storage | Model                              | Link*                                                                                     | comment                            |
 | ------- | ------- | ---------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------- |
@@ -18,7 +18,7 @@ We recommend the following hardware:
 
 
 
-#### m.2 NVME drive
+## m.2 NVME drive
 Those drives need adapters
 
 | Brand   | Storage | Model                              |
@@ -44,7 +44,7 @@ Those drives need adapters
 
 
 
-### NVMe HAT for Raspberry Pi 5:
+## NVMe HAT for Raspberry Pi 5:
 
 | Brand   | Link*                                                                                       |
 | ------- | ------------------------------------------------------------------------------------------ |
@@ -54,7 +54,7 @@ Those drives need adapters
 
 
 
-### USB to NVMe adapters:
+## USB to NVMe adapters:
 
 | Brand   | Link*                                                                                       |
 | ------- | ------------------------------------------------------------------------------------------ |
