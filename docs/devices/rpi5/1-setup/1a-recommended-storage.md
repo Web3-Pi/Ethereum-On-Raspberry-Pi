@@ -23,29 +23,19 @@ List of possible hardware:
 
 
 
-## m.2 NVME drive
+## m.2 NVMe drive
 Those drives need adapters
 
 | Brand   | Storage | Model                              |
 | ------- | ------- | ---------------------------------- |
 | Kingston    |         | KC3000 
-| AData   |         | Legend 700
-| AData   |         | Legend 800
-| AData   |         | XPG SX8200 Pro
-| Crucial    |         | P2 M.2
-| Crucial    |         | P3 M.2
-| Crucial    |         | P3 Plus M.2
-| Kioxia    |         | Exceria NVMe SSD
-| Kioxia    |         | Exceria G2 NVMe SSD
-| Lexar    |         | NM620
-| Lexar   |         | NM710
-| PNY     |         | CS1030
-| Sabrent    |         | Rocket 4.0
-| Sabrent    |         | Rocket Nano
-| Samsung    |         | 980
+| AData   |         | XPG Gammix S70
+| Crucial    |         | P5 Plus
 | Samsung    |         | 980 Pro
 
-[Full compatibility list](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579)
+
+[Full compatibility list for Ethereum node](https://gist.github.com/yorickdowne/f3a3e79a573bf35767cd002cc977b038)
+[Full compatibility list for Pimoroni adapter](https://shop.pimoroni.com/products/nvme-base?variant=41219587178579)
 
 
 
