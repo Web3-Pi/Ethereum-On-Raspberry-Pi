@@ -24,7 +24,7 @@ if [ ! -f $FLAG ]; then
   mkdir -p /opt/web3pi/
   chmod 777 /opt/web3pi/
 
-  apt install git-extras
+  apt-get -y install git-extras
   
   # Clone Web3Pi repo
   echo "RC.LOCAL - Clone Web3Pi repo"
