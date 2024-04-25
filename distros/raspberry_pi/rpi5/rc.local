@@ -3,10 +3,13 @@
 # rc.local
 #
 
+echo "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START"
+
+FLAG="/root/first-run.flag"
 if [ ! -f $FLAG ]; then
 
   # Wait for the ethernet interface to configure
-  echo "Waiting 60 seconds for ethernet initialization to finish"
+  echo "RC.LOCAL - Waiting 60 seconds for ethernet initialization to finish"
   sleep 60
 
   # Check for internet connection (Borrowed from Armbian)
@@ -16,14 +19,19 @@ if [ ! -f $FLAG ]; then
     exit 1
   fi
   
-  # Create directory for Web3Pi files
+  # Create a directory for Web3Pi files
+  echo "RC.LOCAL - Create a directory for Web3Pi files"
   mkdir -p /opt/web3pi/
   chmod 777 /opt/web3pi/
+
+  apt install git-extras
   
   # Clone Web3Pi repo
+  echo "RC.LOCAL - Clone Web3Pi repo"
   git-force-clone --branch dev https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   
   # Run installation script
+  echo "RC.LOCAL - Run installation script"
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/install.sh
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/install.sh
 
