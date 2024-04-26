@@ -7,6 +7,8 @@ Type=simple
 WorkingDirectory=/home/ethereum
 ExecStart=/home/ethereum/clients/geth/geth.sh
 User=ethereum
+Restart=always
+RestartSec=120s
 
 [Install]
 WantedBy=multi-user.target
