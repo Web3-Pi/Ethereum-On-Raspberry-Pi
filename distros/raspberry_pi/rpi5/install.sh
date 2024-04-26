@@ -186,7 +186,7 @@ function configure_clients_sessions() {
   local nimbus_lf="screen-consensus-nimbus-cli.sh"
 
   # https://geth.ethereum.org/docs/fundamentals/command-line-options
-  local geth_cmd="geth --authrpc.port=8551 --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --authrpc.jwtsecret /home/ethereum/locclients/secrets/jwt.hex --state.scheme=path --discovery.port 30303 --port 30303 "
+  local geth_cmd="geth --authrpc.port=8551 --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --state.scheme=path --discovery.port 30303 --port 30303"
   
   # https://lighthouse-book.sigmaprime.io/help_bn.html
   local lighthouse_cmd="lighthouse bn --network mainnet --execution-endpoint http://localhost:8551 --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000"
