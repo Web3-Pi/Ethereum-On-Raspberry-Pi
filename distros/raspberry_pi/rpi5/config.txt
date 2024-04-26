@@ -1,3 +1,25 @@
+# Web3Pi config
+[web3pi]
+geth=true
+lighthouse=false
+nimbus=true
+
+influxdb=true
+grafana=true
+bms=true
+nodemonitor=true
+
+[nimbus]
+# Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
+# full_sync   - before run Nimbus sync db with trusted node
+# quick_sync  - before run Numbus sync only head an backfill later
+# run         - do not sync before run Numbus. Just run Nimbus client
+nimbus-run-mode=full_sync
+nimbus-trusted-node-url=http://18.194.243.122:30307
+
+# End of Web3Pi config
+
+
 [all]
 kernel=vmlinuz
 cmdline=cmdline.txt
