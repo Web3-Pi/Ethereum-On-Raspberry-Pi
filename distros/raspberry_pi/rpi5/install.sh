@@ -428,6 +428,48 @@ if [ ! -f $FLAG ]; then
   # Delete raspberry user
   deluser raspberry
 
+
+# Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
+  echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
+  
+  if [ "$(config_get bsm)" = "true" ]; then
+    echo "Service config: Enable w3p_bsm.service"
+    systemctl enable w3p_bsm.service
+  # systemctl start w3p_bsm.service
+  else
+    echo "Service config: Disable w3p_bsm.service"
+    systemctl disable w3p_bsm.service
+  fi
+  
+  if [ "$(config_get geth)" = "true" ]; then
+    echo "Service config: Enable w3p_geth.service"
+    systemctl enable w3p_geth.service
+  # systemctl start w3p_geth.service
+  else
+    echo "Service config: Disable w3p_geth.service"
+    systemctl disable w3p_geth.service
+  fi
+
+  if [ "$(config_get lighthouse)" = "true" ]; then
+    echo "Service config: Enable w3p_lighthouse-beacon.service"
+    systemctl enable w3p_lighthouse-beacon.service
+  # systemctl start w3p_lighthouse-beacon.service
+  else
+    echo "Service config: Disable w3p_lighthouse-beacon.service"
+    systemctl disable w3p_lighthouse-beacon.service
+  fi
+
+  if [ "$(config_get nimbus)" = "true" ]; then
+    echo "Service config: Enable w3p_nimbus-beacon.service"
+    systemctl enable w3p_nimbus-beacon.service
+  # systemctl start w3p_nimbus-beacon.service
+  else
+    echo "Service config: Disable w3p_nimbus-beacon.service"
+    systemctl disable w3p_nimbus-beacon.service
+  fi
+
+  
+
   #the next line creates an empty file so it won't run the next boot
   touch $FLAG
   grep "rc.local" /var/log/syslog >> $FLAG
@@ -435,6 +477,8 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
+
+  
   echo "Setting up screen sessions"
   sudo -u ethereum /home/ethereum/init/screen.sh
 fi
