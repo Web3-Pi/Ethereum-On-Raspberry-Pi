@@ -9,6 +9,19 @@ DEV_NVME="/dev/nvme0n1"
 DEV_USB="/dev/sda"
 MIN_VALID_DISK_SIZE=$((50 * 1024 * 1024 * 1024))
 
+# Read custom config flags from /boot/firmware/config.txt
+config_read_file() {
+    (grep -E "^${2}=" -m 1 "${1}" 2>/dev/null || echo "VAR=UNDEFINED") | head -n 1 | cut -d '=' -f 2-;
+}
+
+config_get() {
+    val="$(config_read_file /boot/firmware/config.txt "${1}")";
+    printf -- "%s" "${val}";
+}
+# use example 
+# echo "$(config_get lighthouse)";
+
+
 
 # STORAGE-RELATED SECTION
 
