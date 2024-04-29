@@ -367,6 +367,7 @@ if [ ! -f $FLAG ]; then
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
@@ -443,6 +444,15 @@ if [ ! -f $FLAG ]; then
   else
     echo "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
+  fi
+
+  if [ "$(config_get bnm)" = "true" ]; then
+    echo "Service config: Enable w3p_bnm.service"
+    systemctl enable w3p_bnm.service
+  # systemctl start w3p_bnm.service
+  else
+    echo "Service config: Disable w3p_bnm.service"
+    systemctl disable w3p_bnm.service
   fi
   
   if [ "$(config_get geth)" = "true" ]; then
