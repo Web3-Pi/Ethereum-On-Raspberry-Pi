@@ -6,7 +6,7 @@ nimbus=true
 
 influxdb=true
 grafana=true
-bms=true
+bsm=true
 nodemonitor=true
 
 [nimbus]
