@@ -465,8 +465,8 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
-  #echo "Setting up screen sessions"
-  #sudo -u ethereum /home/ethereum/init/screen.sh
+  echo "Setting up screen sessions"
+  sudo -u ethereum /home/ethereum/init/screen.sh
 fi
 
 
