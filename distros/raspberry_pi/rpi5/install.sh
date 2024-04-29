@@ -4,7 +4,6 @@
 #
 
 SWAPFILE_SIZE=16384
-UPLINK_WAIT_SECS=60
 DEV_NVME="/dev/nvme0n1"
 DEV_USB="/dev/sda"
 MIN_VALID_DISK_SIZE=$((50 * 1024 * 1024 * 1024))
@@ -20,7 +19,6 @@ config_get() {
 }
 # use example 
 # echo "$(config_get lighthouse)";
-
 
 
 # STORAGE-RELATED SECTION
@@ -229,23 +227,11 @@ function configure_clients_sessions() {
 
 
 # MAIN 
-
 FLAG="/root/first-run.flag"
-
 if [ ! -f $FLAG ]; then
-  # 0. INSTALLATION INIT PHASE
-  # Wait for the ethernet interface to configure
-  echo "Waiting $UPLINK_WAIT_SECS seconds for ethernet initialization to finish"
-  sleep $UPLINK_WAIT_SECS
-
-  # Check for internet connection (Borrowed from Armbian)
-  wget -q -t 1 --timeout=30 --spider http://github.com
-  if [[ $? -ne 0 ]]; then
-    echo "Stopping the installation, internet access is necessary"
-    exit 1
-  fi
-
-  # 0. Install some necessary deps
+ 
+  
+## 0. Add some necessary repositories ######################################################  
   echo "Adding Ethereum repositories"
   wget -q -O - http://apt.ethereumonarm.com/eoa.apt.keyring.gpg | tee /etc/apt/trusted.gpg.d/eoa.apt.keyring.gpg > /dev/null
   add-apt-repository -y -n "deb http://apt.ethereumonarm.com jammy main"
@@ -259,14 +245,16 @@ if [ ! -f $FLAG ]; then
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
+
+## 1. Install some required dependencies ####################################################
+ 
   echo "Installing required dependencies"
   apt-get update
   apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https
 
-
   
+## 2. STORAGE SETUP ##########################################################################
 
-  # 1. STORAGE SETUP
   # Prepare drive to mount /home
   echo "Looking for a valid drive"
   DRIVE="$(get_best_disk)"
@@ -275,16 +263,14 @@ if [ ! -f $FLAG ]; then
   prepare_disk $DRIVE
 
 
-  # 2. ACCOUNT CONFIGURATION
+## 3. ACCOUNT CONFIGURATION ###################################################################
+
   # Create Ethereum account
   echo "Creating ethereum user"
   if ! id -u ethereum >/dev/null 2>&1; then
     adduser --disabled-password --gecos "" ethereum
   fi
 
-
-  # sudo netdev audio video dialout plugdev
-  # users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
   echo "ethereum:ethereum" | chpasswd
   for GRP in sudo netdev audio video dialout plugdev; do
     adduser ethereum $GRP
@@ -294,7 +280,8 @@ if [ ! -f $FLAG ]; then
   chage -d 0 ethereum
 
 
-  # 3. SWAP SPACE CONFIGURATION
+## 4. SWAP SPACE CONFIGURATION ###################################################################
+  
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
 
@@ -305,41 +292,45 @@ if [ ! -f $FLAG ]; then
 
   # Enable dphys-swapfile service
   systemctl enable dphys-swapfile
+#  {
+#    echo "vm.min_free_kbytes=65536"
+#    echo "vm.swappiness=100"
+#    echo "vm.vfs_cache_pressure=500"
+#    echo "vm.dirty_background_ratio=1"
+#    echo "vm.dirty_ratio=50"
+#  } >> /etc/sysctl.conf
+  
+  echo "vm.swappiness=10" >>/etc/sysctl.conf  
+  sysctl -p
+  
 
-  # Increasing how aggressively the kernel will swap memory pages since we are using ZRAM first
-  # Increases cache pressure, which increases the tendency of the kernel to reclaim memory used for caching of directory and inode objects. You will use less memory over a longer period of time
-  # Background processes will start writing right away when it hits the 1% limit but the system won’t force synchronous I/O until it gets to 50% dirty_ratio
-  # Page allocation error workout
-  {
-    echo "vm.min_free_kbytes=65536"
-    echo "vm.swappiness=100"
-    echo "vm.vfs_cache_pressure=500"
-    echo "vm.dirty_background_ratio=1"
-    echo "vm.dirty_ratio=50"
-  } >> /etc/sysctl.conf
-
-
-  # 4. ETHEREUM INSTALLATION
+## 5. ETHEREUM INSTALLATION #######################################################################
+ 
   # Ethereum software installation
+  
   # Install Ethereum packages
   echo "Installing Ethereum packages"
   # Install Layer 1
   apt-get -y install geth lighthouse nimbus-beacon-node
   # Install validator clients
-#  apt-get -y install staking-deposit-cli nimbus-validator-client
+  #  apt-get -y install staking-deposit-cli nimbus-validator-client
   # install Layer 2
   # apt-get -y install arbitrum-nitro optimism-op-geth optimism-op-node polygon-bor polygon-heimdall starknet-juno
 
 
-  # 5. MISC CONF STEPS
-  #Install ufw
+## 6. MISC CONF STEPS ##############################################################################
+
+  # Install ufw
   apt-get -y install ufw
   ufw --force disable
 
   # Install some extra dependencies
   apt-get -y install libraspberrypi-bin iotop screen bpytop
 
-  
+ 
+## 7. MONITORING ####################################################################################
+ 
+  # Installing InfluxDB
   echo "Installing InfluxDB"
   # This file can be added to .img file (48 MB)
   wget https://dl.influxdata.com/influxdb/releases/influxdb_1.8.10_arm64.deb
@@ -349,63 +340,48 @@ if [ ! -f $FLAG ]; then
   systemctl enable influxdb
   systemctl start influxdb
   sleep 5
-  #curl -XPOST "http://localhost:8086/query" --data-urlencode "q=CREATE USER dbadmin WITH PASSWORD 'dbadmin' WITH ALL PRIVILEGES"
-  #or
-  #influx -execute "CREATE USER dbadmin WITH PASSWORD 'dbadmin' WITH ALL PRIVILEGES"
-  # old style
-  #influx -username 'dbadmin' -password 'dbadmin' -execute 'CREATE DATABASE ethonrpi'
-  #influx -username 'dbadmin' -password 'dbadmin' -execute "CREATE USER geth WITH PASSWORD 'geth'"
-  # new style
   influx -execute 'CREATE DATABASE ethonrpi'
   influx -execute "CREATE USER geth WITH PASSWORD 'geth'"
   
-  
+  # Installing Grafana
   echo "Installing Grafana"
   apt-get install -y grafana
 
-  distros/raspberry_pi/rpi5/grafana/yaml
   # Copy datasources.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/yaml/datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
+
  
   # Copy dashboards.yaml for grafana
   #cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
   
-#  sudo -u ethereum mkdir -p /home/ethereum/clients/grafana
-#  sudo -u ethereum mkdir -p /home/ethereum/clients/grafana/dashboards
+  # Copy dashboard_Web3Pi.json for grafana
+  #cp /root/web3pi/dashboard_Web3Pi.json /home/ethereum/clients/grafana/dashboards/dashboard_Web3Pi.json
+  #chmod 744 /home/ethereum/clients/grafana/dashboards/dashboard_Web3Pi.json
   
-#  cp /root/web3pi/dashboard_Web3Pi.json /home/ethereum/clients/grafana/dashboards/dashboard_Web3Pi.json
-#  chmod 744 /home/ethereum/clients/grafana/dashboards/dashboard_Web3Pi.json
-  
+ 
   systemctl enable grafana-server
   systemctl start grafana-server
  
  
-  # 6. BASIC SCREEN-BASED MONITORING
-  echo "Configuring monitoring scripts and screen sessions"
-  configure_monitoring_sessions
+  # BASIC SCREEN-BASED MONITORING
+  #echo "Configuring monitoring scripts and screen sessions"
+  #configure_monitoring_sessions
 
 
+## 8. CLIENTS CONFIGURATION ############################################################################
   # 7. CLIENTS CONFIGURATION
   echo "Configuring clients screen sessions"
   configure_clients_sessions
 
-
-  # 8. ADDITIONAL DIRECTORIES
+## 9. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
   sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
-#jwt secret jest już po instalacji geth w /etc/ethereum/jwtsecret
-#35b00ddb47880cf5f03764a272725ee41effb3203aeeb71b43d7fd480f11253e dla sprawdzenia czy za każdym razem jest inny
 
-  # 8. ADDITIONAL DIRECTORIES
-#  echo "Adding client directories required to run the node"
-#  sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /etc/ethereum/jwtsecret
-#  echo " "
+## 10. CONVENIENCE CONFIGURATION ########################################################################
 
-
-  # 9. CONVENIENCE CONFIGURATION
   # Force colored prompt
   echo "Setting up a colored prompt"
   if [[ ! -f "/home/ethereum/.bashrc" ]]; then
@@ -415,8 +391,8 @@ if [ ! -f $FLAG ]; then
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
 
+## 11. CLEANUP ###########################################################################################
 
-  # 10. CLEANUP
   # RPi imager fix
   chown root:root /etc
 
@@ -425,9 +401,12 @@ if [ ! -f $FLAG ]; then
 
   # Delete ubuntu user
   deluser ubuntu
+
   # Delete raspberry user
   deluser raspberry
 
+
+## 12. READ CONFIG FROM CONFIG.TXT ########################################################################
 
 # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
@@ -468,6 +447,7 @@ if [ ! -f $FLAG ]; then
     systemctl disable w3p_nimbus-beacon.service
   fi
 
+
   
 
   #the next line creates an empty file so it won't run the next boot
@@ -477,10 +457,8 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
-
-  
-  echo "Setting up screen sessions"
-  sudo -u ethereum /home/ethereum/init/screen.sh
+  #echo "Setting up screen sessions"
+  #sudo -u ethereum /home/ethereum/init/screen.sh
 fi
 
 
