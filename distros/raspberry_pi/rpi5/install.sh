@@ -331,12 +331,8 @@ if [ ! -f $FLAG ]; then
 ## 7. MONITORING ####################################################################################
  
   # Installing InfluxDB
-  echo "Installing InfluxDB"
-  # This file can be added to .img file (48 MB)
-  #wget https://dl.influxdata.com/influxdb/releases/influxdb_1.8.10_arm64.deb
-  #dpkg -i influxdb_1.8.10_arm64.deb
+  echo "Installing InfluxDB v1.8.10"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
-  rm influxdb_1.8.10_arm64.deb
   sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
   systemctl enable influxdb
   systemctl start influxdb
