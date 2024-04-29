@@ -368,20 +368,27 @@ if [ ! -f $FLAG ]; then
   #echo "Configuring monitoring scripts and screen sessions"
   #configure_monitoring_sessions
 
+## 8. SERVICES CONFIGURATION ###########################################################################
 
-## 8. CLIENTS CONFIGURATION ############################################################################
-  # 7. CLIENTS CONFIGURATION
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
+
+
+## 9. CLIENTS CONFIGURATION ############################################################################
+
   echo "Configuring clients screen sessions"
   configure_clients_sessions
 
-## 9. ADDITIONAL DIRECTORIES ###########################################################################
+## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
   sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
 
-## 10. CONVENIENCE CONFIGURATION ########################################################################
+## 11. CONVENIENCE CONFIGURATION ########################################################################
 
   # Force colored prompt
   echo "Setting up a colored prompt"
@@ -392,7 +399,7 @@ if [ ! -f $FLAG ]; then
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
 
-## 11. CLEANUP ###########################################################################################
+## 12. CLEANUP ###########################################################################################
 
   # RPi imager fix
   chown root:root /etc
@@ -407,7 +414,7 @@ if [ ! -f $FLAG ]; then
   deluser raspberry
 
 
-## 12. READ CONFIG FROM CONFIG.TXT ########################################################################
+## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
 
 # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
