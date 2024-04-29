@@ -378,8 +378,16 @@ if [ ! -f $FLAG ]; then
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
 
-  echo "Configuring clients screen sessions"
-  configure_clients_sessions
+  #echo "Configuring clients screen sessions"
+  #configure_clients_sessions
+  
+  echo "Configuring clients run scripts"
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/geth.sh /home/ethereum/clients/geth/geth.sh
+  chmod +x /home/ethereum/clients/geth/geth.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/lighthouse.sh /home/ethereum/clients/lighthouse/lighthouse.sh
+  chmod +x /home/ethereum/clients/lighthouse/lighthouse.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
+  chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
