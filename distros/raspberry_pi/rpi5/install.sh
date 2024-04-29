@@ -325,7 +325,7 @@ if [ ! -f $FLAG ]; then
   ufw --force disable
 
   # Install some extra dependencies
-  apt-get -y install libraspberrypi-bin iotop screen bpytop
+  apt-get -y install libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
 
  
 ## 7. MONITORING ####################################################################################
@@ -398,6 +398,15 @@ if [ ! -f $FLAG ]; then
 
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
+
+  echo "basic-system-monitor venv conf"
+  cd /opt/web3pi/basic-system-monitor
+  python3 -m venv venv
+
+  echo "simple-eth2-node-monitor venv conf"
+  cd /opt/web3pi/simple-eth2-node-monitor
+  python3 -m venv venv
+
 
 ## 12. CLEANUP ###########################################################################################
 
