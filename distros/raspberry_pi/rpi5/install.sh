@@ -409,9 +409,11 @@ if [ ! -f $FLAG ]; then
 
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
   
-  echo "simple-eth2-node-monitor venv conf"
-  cd /opt/web3pi/simple-eth2-node-monitor
+  echo "basic-eth2-node-monitor venv conf"
+  cd /opt/web3pi/basic-eth2-node-monitor
   python3 -m venv venv
+
+  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
 
 ## 12. CLEANUP ###########################################################################################
