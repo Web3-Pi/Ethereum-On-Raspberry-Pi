@@ -352,9 +352,9 @@ if [ ! -f $FLAG ]; then
 
   
   # Copy dashboard_Web3Pi.json for grafana
-  mkdir -p /home/ethereum/clients/grafana/dashboards
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/dashboards/node_monitoring.json /home/ethereum/clients/grafana/dashboards/node_monitoring.json
-  chmod 744 /home/ethereum/clients/grafana/dashboards/node_monitoring.jso
+  # mkdir -p /home/ethereum/clients/grafana/dashboards
+  # cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/dashboards/node_monitoring.json /home/ethereum/clients/grafana/dashboards/node_monitoring.json
+  # chmod 744 /home/ethereum/clients/grafana/dashboards/node_monitoring.jso
   
  
   systemctl enable grafana-server
