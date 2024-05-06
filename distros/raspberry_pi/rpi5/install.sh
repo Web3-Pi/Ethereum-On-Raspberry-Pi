@@ -292,16 +292,16 @@ if [ ! -f $FLAG ]; then
 
   # Enable dphys-swapfile service
   systemctl enable dphys-swapfile
-#  {
-#    echo "vm.min_free_kbytes=65536"
-#    echo "vm.swappiness=100"
-#    echo "vm.vfs_cache_pressure=500"
-#    echo "vm.dirty_background_ratio=1"
-#    echo "vm.dirty_ratio=50"
-#  } >> /etc/sysctl.conf
+  {
+    echo "vm.min_free_kbytes=65536"
+    echo "vm.swappiness=100"
+    echo "vm.vfs_cache_pressure=500"
+    echo "vm.dirty_background_ratio=1"
+    echo "vm.dirty_ratio=50"
+  } >> /etc/sysctl.conf
   
-  echo "vm.swappiness=10" >>/etc/sysctl.conf  
-  sysctl -p
+#  echo "vm.swappiness=10" >>/etc/sysctl.conf  
+#  sysctl -p
   
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
