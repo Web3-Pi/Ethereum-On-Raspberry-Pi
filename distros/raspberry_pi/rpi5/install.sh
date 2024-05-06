@@ -250,7 +250,7 @@ if [ ! -f $FLAG ]; then
  
   echo "Installing required dependencies"
   apt-get update
-  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc
+  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq
 
   
 ## 2. STORAGE SETUP ##########################################################################
