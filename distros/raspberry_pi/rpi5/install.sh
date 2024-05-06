@@ -380,6 +380,10 @@ if [ ! -f $FLAG ]; then
   #configure_clients_sessions
   
   echo "Configuring clients run scripts"
+  sudo -u ethereum mkdir -p /home/ethereum/clients/geth
+  sudo -u ethereum mkdir -p /home/ethereum/clients/lighthouse
+  sudo -u ethereum mkdir -p /home/ethereum/clients/nimbus
+  
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/geth.sh /home/ethereum/clients/geth/geth.sh
   chmod +x /home/ethereum/clients/geth/geth.sh
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/lighthouse.sh /home/ethereum/clients/lighthouse/lighthouse.sh
