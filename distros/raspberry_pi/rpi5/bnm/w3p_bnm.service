@@ -6,8 +6,8 @@ After=network.target
 ExecStart=/opt/web3pi/basic-eth2-node-monitor/run.sh
 Restart=always
 RestartSec=30s
-User=ethereum
-Group=ethereum
+#User=ethereum
+#Group=ethereum
 
 [Install]
 WantedBy=multi-user.target
