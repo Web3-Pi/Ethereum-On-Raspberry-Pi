@@ -1,0 +1,14 @@
+[Unit]
+Description=Web3Pi Nimbus Consensus Client
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ethereum
+ExecStart=/home/ethereum/clients/nimbus/nimbus.sh
+User=ethereum
+Restart=always
+RestartSec=120s
+
+[Install]
+WantedBy=multi-user.target

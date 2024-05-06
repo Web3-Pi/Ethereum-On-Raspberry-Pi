@@ -1,0 +1,14 @@
+[Unit]
+Description=Web3Pi Geth Client
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ethereum
+ExecStart=/home/ethereum/clients/geth/geth.sh
+User=ethereum
+Restart=always
+RestartSec=120s
+
+[Install]
+WantedBy=multi-user.target
