@@ -440,11 +440,13 @@ if [ ! -f $FLAG ]; then
     echo "Service config: Enable w3p_bsm.service"
     systemctl enable w3p_bsm.service
   # systemctl start w3p_bsm.service
-  else
+  elif  [ "$(config_get bsm)" = "false" ]; then
     echo "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
+  else
+    echo "Service config: NoChange w3p_bsm.service"
   fi
-
+  
   if [ "$(config_get bnm)" = "true" ]; then
     echo "Service config: Enable w3p_bnm.service"
     systemctl enable w3p_bnm.service
