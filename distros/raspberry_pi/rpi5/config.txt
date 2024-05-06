@@ -1,9 +1,11 @@
 # Web3Pi config
 [web3pi]
 geth=true
+nimbus_light=true
+nimbus=false
 lighthouse=false
-nimbus=true
 
+# Monitoring
 influxdb=true
 grafana=true
 bsm=true
