@@ -6,6 +6,6 @@ providers:
   type: file
   disableDeletion: false
   editable: true
-  updateIntervalSeconds: 10
+  updateIntervalSeconds: 7
   options:
     path: /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/dashboards
