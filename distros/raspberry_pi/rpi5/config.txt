@@ -10,7 +10,6 @@ influxdb=true
 grafana=true
 bsm=true
 bnm=true
-nodemonitor=true
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
