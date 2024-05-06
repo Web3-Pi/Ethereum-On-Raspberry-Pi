@@ -9,6 +9,7 @@ lighthouse=false
 influxdb=true
 grafana=true
 bsm=true
+bnm=true
 nodemonitor=true
 
 [nimbus]
