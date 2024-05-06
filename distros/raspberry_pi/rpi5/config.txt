@@ -1,8 +1,8 @@
 # Web3Pi config
 [web3pi]
 geth=true
-nimbus_light=true
-nimbus=false
+#nimbus_light=true
+nimbus=true
 lighthouse=false
 
 # Monitoring
