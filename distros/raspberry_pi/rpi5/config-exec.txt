@@ -11,7 +11,7 @@ bsm=true
 bnm=false
 
 #Execution endpoint address
-exec-addr=localhost
+exec-addr=eop-exec.local
 exec-port=8551
 exec-ws-port=8546
 
