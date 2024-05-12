@@ -11,7 +11,7 @@ bsm=true
 bnm=true
 
 #Execution endpoint address
-exec-addr=exec.local
+exec-addr=eop-exec.local
 exec-port=8551
 
 #Consensus endpoint address
