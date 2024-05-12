@@ -16,11 +16,11 @@ exec-port=8551
 exec-ws-port=8546
 
 #Consensus endpoint address
-consensus-addr=localhost
+consensus-addr=eop-consensus.local
 consensus-port=5052
 
 #InfluxDB address
-influx-addr=localhost
+influx-addr=eop-consensus.local
 influx-port=8086
 
 [nimbus]
