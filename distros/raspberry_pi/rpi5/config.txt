@@ -1,7 +1,6 @@
 # Web3Pi config
 [web3pi]
 geth=true
-#nimbus_light=true
 nimbus=true
 lighthouse=false
 
@@ -10,6 +9,9 @@ influxdb=true
 grafana=true
 bsm=true
 bnm=true
+
+#Execution endpoint address
+exe-addr=http://127.0.0.1:8551
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
