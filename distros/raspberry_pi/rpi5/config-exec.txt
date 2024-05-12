@@ -13,6 +13,7 @@ bnm=false
 #Execution endpoint address
 exec-addr=localhost
 exec-port=8551
+exec-ws-port=8546
 
 #Consensus endpoint address
 consensus-addr=eop-consensus.local
