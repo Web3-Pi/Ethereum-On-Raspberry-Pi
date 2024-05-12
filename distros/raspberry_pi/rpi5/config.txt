@@ -1,34 +1,37 @@
-# Web3Pi config
+# Web3Pi config - single node
 [web3pi]
 geth=true
-nimbus=false
+nimbus=true
 lighthouse=false
 
 # Monitoring
-influxdb=false
-grafana=false
+influxdb=true
+grafana=true
 bsm=true
-bnm=false
+bnm=true
 
 #Execution endpoint address
 exec-addr=localhost
 exec-port=8551
 
-#Consensud endpoint address
+#Consensus endpoint address
 consensus-addr=localhost
 consensus-port=5052
 
-#IncluxDB address
+#InfluxDB address
 influx-addr=localhost
 influx-port=8086
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
-# full_sync   - before run Nimbus sync db with trusted node
-# quick_sync  - before run Numbus sync only head and backfill later
-# run         - do not sync before run Numbus. Just run Nimbus client
+# full_sync   - before running Nimbus sync the db with a trusted node
+# quick_sync  - before running Numbus sync only the head and backfill later
+# run         - do not sync before running Numbus. Just run the Nimbus client
 nimbus-run-mode=full_sync
-nimbus-trusted-node-url=http://18.194.243.122:30307
+nimbus-trusted-node-url=http://93.174.26.241:5052
+
+[lighthouse]
+checkpoint-sync-url=https://mainnet.checkpoint.sigp.io
 
 # End of Web3Pi config
 
