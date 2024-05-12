@@ -32,11 +32,12 @@ if [ ! -f $FLAG ]; then
   mkdir -p /opt/web3pi/
   chmod 777 /opt/web3pi/
 
-  apt-get -y install git-extras
+  echo "RC.LOCAL - install git-extras avahi-daemon"
+  apt-get -y install git-extras avahi-daemon
   
   # Clone Web3Pi repo
   echo "RC.LOCAL - Clone Web3Pi repo"
-  git-force-clone --branch dev https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  git-force-clone https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   
   # Run the installation script
   echo "RC.LOCAL - Run installation script"
