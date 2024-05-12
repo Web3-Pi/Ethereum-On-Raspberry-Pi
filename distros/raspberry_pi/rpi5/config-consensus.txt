@@ -1,4 +1,4 @@
-# Web3Pi config - Execution endpoint
+# Web3Pi config - Consensus endpoint
 [web3pi]
 geth=false
 nimbus=true
