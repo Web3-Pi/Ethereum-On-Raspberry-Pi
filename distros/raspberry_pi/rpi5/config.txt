@@ -11,17 +11,7 @@ bsm=true
 bnm=true
 
 #Execution endpoint address
-exec-addr=localhost
-exec-port=8551
-exec-ws-port=8546
-
-#Consensus endpoint address
-consensus-addr=localhost
-consensus-port=5052
-
-#InfluxDB address
-influx-addr=localhost
-influx-port=8086
+exec-url=http://localhost:8551
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
