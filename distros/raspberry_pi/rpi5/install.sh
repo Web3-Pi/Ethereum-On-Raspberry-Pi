@@ -391,6 +391,13 @@ if [ ! -f $FLAG ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
+
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
+  chmod +x /opt/web3pi/basic-system-monitor/run.sh
+
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
+  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
