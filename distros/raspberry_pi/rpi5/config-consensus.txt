@@ -5,23 +5,13 @@ nimbus=true
 lighthouse=false
 
 # Monitoring
-influxdb=true
-grafana=true
+influxdb=false
+grafana=false
 bsm=true
-bnm=true
+bnm=false
 
 #Execution endpoint address
-exec-addr=eop-exec.local
-exec-port=8551
-exec-ws-port=8546
-
-#Consensus endpoint address
-consensus-addr=eop-consensus.local
-consensus-port=5052
-
-#InfluxDB address
-influx-addr=eop-consensus.local
-influx-port=8086
+exec-url=http://eop-exec.local:8551
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
