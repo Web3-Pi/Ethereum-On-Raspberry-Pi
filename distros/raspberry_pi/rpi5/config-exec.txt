@@ -11,17 +11,7 @@ bsm=true
 bnm=false
 
 #Execution endpoint address
-exec-addr=eop-exec.local
-exec-port=8551
-exec-ws-port=8546
-
-#Consensus endpoint address
-consensus-addr=eop-consensus.local
-consensus-port=5052
-
-#InfluxDB address
-influx-addr=eop-consensus.local
-influx-port=8086
+exec-url=http://localhost:8551
 
 [nimbus]
 # Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
@@ -35,6 +25,7 @@ nimbus-trusted-node-url=http://93.174.26.241:5052
 checkpoint-sync-url=https://mainnet.checkpoint.sigp.io
 
 # End of Web3Pi config
+
 
 
 [all]
