@@ -1,14 +1,14 @@
-# Web3Pi config - single node
+# Web3Pi config - Execution endpoint
 [web3pi]
 geth=true
-nimbus=true
+nimbus=false
 lighthouse=false
 
 # Monitoring
-influxdb=true
-grafana=true
+influxdb=false
+grafana=false
 bsm=true
-bnm=true
+bnm=false
 
 #Execution endpoint address
 exec-url=http://localhost:8551
@@ -20,12 +20,12 @@ exec-url=http://localhost:8551
 # run         - do not sync before running Numbus. Just run the Nimbus client
 nimbus-run-mode=full_sync
 nimbus-trusted-node-url=http://93.174.26.241:5052
-#http://testing.mainnet.beacon-api.nimbus.team/
 
 [lighthouse]
 checkpoint-sync-url=https://mainnet.checkpoint.sigp.io
 
 # End of Web3Pi config
+
 
 
 [all]
