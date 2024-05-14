@@ -401,7 +401,8 @@ if [ ! -f $FLAG ]; then
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
-  sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
+  #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
+  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
 
