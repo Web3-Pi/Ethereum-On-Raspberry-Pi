@@ -229,7 +229,9 @@ function configure_clients_sessions() {
 # MAIN 
 FLAG="/root/first-run.flag"
 if [ ! -f $FLAG ]; then
- 
+
+  echo "stop unattended-upgrades.service"
+  systemctl stop unattended-upgrades
   
 ## 0. Add some necessary repositories ######################################################  
   echo "Adding Ethereum repositories"
@@ -329,7 +331,10 @@ if [ ! -f $FLAG ]; then
 
  
 ## 7. MONITORING ####################################################################################
- 
+
+  echo "stop unattended-upgrades.service"
+  systemctl stop unattended-upgrades
+  
   # Installing InfluxDB
   echo "Installing InfluxDB v1.8.10"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
