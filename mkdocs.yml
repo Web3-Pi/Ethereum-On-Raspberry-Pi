@@ -1,0 +1,112 @@
+# Project information
+site_name: Ethereum-On-Raspberry-Pi
+#site_url: https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi
+#site_author: Robert Mordzon
+
+# Repository
+repo_name: Ethereum-On-Raspberry-Pi
+repo_url: https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+#    - navigation.path
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+    
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+#      primary: teal
+#      accent: purple 
+    - scheme: slate 
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode    
+#      primary: teal
+#      accent: lime
+
+
+
+nav:
+  - Home:
+    - Ethereum On Raspbery Pi: 'index.md'
+
+  - Getting started:
+    - Quick start: 'GetStart/quick-start.md'
+    - Single device: 'GetStart/single-device.md'
+    - Pair devices: 'GetStart/pair-devices.md'
+  - Reference:
+    - 'Advanced/Networking.md'
+    - UPnP: "Advanced/UPnP.md"
+    - Overclocking: 'Advanced/OC.md'
+    - Monitoring: 'Monitoring/monitoring.md'
+    - Managing Clients: 'Advanced/services.md'
+ #   - Boot from external drive: 'foo.md'
+    - Config.txt: 'Advanced/config_txt.md'
+    - mDSN: "Advanced/mDNS.md"
+  - Hardware:
+    - Storage: 'Hardware/storage.md'
+    - microSD: 'Hardware/microSD.md'
+    - Backup power: 'Hardware/UPS.md'
+    - PoE: 'Hardware/PoE.md'
+    - Raspberry Pi 5: 'Hardware/pi5.md'
+    - Raspberry Pi 4: 'Hardware/pi4.md'
+    - Raspberry CM4: 'Hardware/CM4.md'
+  - Downloads: 'downloads.md'
+
+
+plugins:
+#  - social
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/Ethereum-On-Raspberry-Pi
+    - icon: fontawesome/brands/discord
+      link: https://www.discord.com
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+copyright: |
+  &copy; 2023 <a href="https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi"  target="_blank" rel="noopener">Ethereum-On-Raspberry-Pi</a>
