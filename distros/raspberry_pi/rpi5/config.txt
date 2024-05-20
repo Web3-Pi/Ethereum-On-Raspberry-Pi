@@ -94,13 +94,13 @@ dtoverlay=dwc2,dr_mode=host
 over_voltage=6
 arm_freq=1800
 
-[rpi4]
+[pi4]
 # Overclocking form Raspberry Pi 4
 # Active cooling is required
 over_voltage=6
 arm_freq=1800
 
-[rpi5]
+[pi5]
 # Overclocking form Raspberry Pi 5
 # Active cooling is required
 over_voltage_delta=50000
