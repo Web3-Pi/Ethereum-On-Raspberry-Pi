@@ -27,7 +27,7 @@ while [ $? -ne 0 ]; do
   echo -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
   sleep 6
   let "ping_n+=1"
-  [[ ${ping_n} -gt ${ping_max} ]] && echo "Stopping the installation, internet access is necessary" && exit 1
+  [[ ${ping_n} -gt ${ping_max} ]] && echo "Internet access is necessary" && exit 1
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
