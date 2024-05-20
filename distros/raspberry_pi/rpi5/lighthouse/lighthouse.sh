@@ -13,5 +13,24 @@ config_get() {
 
 el_url="$(config_get exec-url)";
 
+# Checking internet connection
+echo "Checking internet connection"
+
+pingServerAdr="github.com"
+ping_n=0
+ping_max=10
+
+ping -c 1 $pingServerAdr > /dev/null 2>&1
+while [ $? -ne 0 ]; do
+  echo -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
+  sleep 6
+  let "ping_n+=1"
+  [[ ${ping_n} -gt ${ping_max} ]] && echo "Internet access is necessary" && exit 1
+  ping -c 1 $pingServerAdr > /dev/null 2>&1
+done
+
+echo "$(date): Connected - ${pingServerAdr}"
+echo "el_url = ${el_url}"
+
 
 lighthouse bn --network mainnet --execution-endpoint ${el_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000
