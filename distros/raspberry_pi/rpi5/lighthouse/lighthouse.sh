@@ -12,6 +12,8 @@ config_get() {
 
 
 el_url="$(config_get exec-url)";
+cs_url="$(config_get checkpoint-sync-url)";
+
 
 # Checking internet connection
 echo "Checking internet connection"
@@ -31,6 +33,6 @@ done
 
 echo "$(date): Connected - ${pingServerAdr}"
 echo "el_url = ${el_url}"
+echo "cs_url = ${cs_url}"
 
-
-lighthouse bn --network mainnet --execution-endpoint ${el_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000
+lighthouse bn --network mainnet --execution-endpoint ${el_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${cs_url} --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000
