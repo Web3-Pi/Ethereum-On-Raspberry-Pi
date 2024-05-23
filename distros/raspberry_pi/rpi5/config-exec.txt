@@ -1,6 +1,6 @@
 # Web3Pi config - Execution endpoint
 [web3pi]
-geth=false
+geth=true
 nimbus=false
 lighthouse=false
 
