@@ -467,14 +467,14 @@ if [ ! -f $FLAG ]; then
   fi
 
   if [ "$(config_get grafana)" = "true" ]; then
-    echo "Service config: Enable grafana.service"
-    systemctl enable grafana.service
- #   systemctl start grafana.service
+    echo "Service config: Enable grafana-server.service"
+    systemctl enable grafana-server.service
+ #   systemctl start grafana-server.service
   elif  [ "$(config_get grafana)" = "false" ]; then
-    echo "Service config: Disable grafana.service"
-    systemctl disable grafana.service
+    echo "Service config: Disable grafana-server.service"
+    systemctl disable grafana-server.service
   else
-    echo "Service config: NoChange grafana.service"
+    echo "Service config: NoChange grafana-server.service"
   fi
  
   if [ "$(config_get bsm)" = "true" ]; then
@@ -560,14 +560,14 @@ else
   fi
 
   if [ "$(config_get grafana)" = "true" ]; then
-    echo "Service config: Enable grafana.service"
-    systemctl enable grafana.service
-    systemctl start grafana.service
+    echo "Service config: Enable grafana-server.service"
+    systemctl enable grafana-server.service
+    systemctl start grafana-server.service
   elif  [ "$(config_get grafana)" = "false" ]; then
-    echo "Service config: Disable grafana.service"
-    systemctl disable grafana.service
+    echo "Service config: Disable grafana-server.service"
+    systemctl disable grafana-server.service
   else
-    echo "Service config: NoChange grafana.service"
+    echo "Service config: NoChange grafana-server.service"
   fi
   
   if [ "$(config_get bsm)" = "true" ]; then
