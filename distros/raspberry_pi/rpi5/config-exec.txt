@@ -18,7 +18,7 @@ exec-url=http://localhost:8551
 # full_sync   - before running Nimbus sync the db with a trusted node
 # quick_sync  - before running Numbus sync only the head and backfill later
 # run         - do not sync before running Numbus. Just run the Nimbus client
-nimbus-run-mode=full_sync
+nimbus-run-mode=quick_sync
 nimbus-trusted-node-url=http://nimbus.web3pi.io
 #http://testing.mainnet.beacon-api.nimbus.team/
 #https://nimbus.web3pi.io
