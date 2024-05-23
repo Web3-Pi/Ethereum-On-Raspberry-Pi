@@ -511,26 +511,26 @@ if [ ! -f $FLAG ]; then
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
-    echo "Service config: Enable w3p_lighthouse.service"
-    systemctl enable w3p_lighthouse.service
-  # systemctl start w3p_lighthouse.service
+    echo "Service config: Enable w3p_lighthouse-beacon.service"
+    systemctl enable w3p_lighthouse-beacon.service
+  # systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
-    echo "Service config: Disable w3p_lighthouse.service"
-    systemctl disable w3p_lighthouse.service
+    echo "Service config: Disable w3p_lighthouse-beacon.service"
+    systemctl disable w3p_lighthouse-beacon.service
   else
-    echo "Service config: NoChange w3p_lighthouse.service"
+    echo "Service config: NoChange w3p_lighthouse-beacon.service"
   fi
 
 
   if [ "$(config_get nimbus)" = "true" ]; then
-    echo "Service config: Enable w3p_nimbus.service"
-    systemctl enable w3p_nimbus.service
-  # systemctl start w3p_nimbus.service
+    echo "Service config: Enable w3p_nimbus-beacon.service"
+    systemctl enable w3p_nimbus-beacon.service
+  # systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
-    echo "Service config: Disable w3p_nimbus.service"
-    systemctl disable w3p_nimbus.service
+    echo "Service config: Disable w3p_nimbus-beacon.service"
+    systemctl disable w3p_nimbus-beacon.service
   else
-    echo "Service config: NoChange w3p_nimbus.service"
+    echo "Service config: NoChange w3p_nimbus-beacon.service"
   fi
   
 
@@ -604,26 +604,26 @@ else
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
-    echo "Service config: Enable w3p_lighthouse.service"
-    systemctl enable w3p_lighthouse.service
-    systemctl start w3p_lighthouse.service
+    echo "Service config: Enable w3p_lighthouse-beacon.service"
+    systemctl enable w3p_lighthouse-beacon.service
+    systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
-    echo "Service config: Disable w3p_lighthouse.service"
-    systemctl disable w3p_lighthouse.service
+    echo "Service config: Disable w3p_lighthouse-beacon.service"
+    systemctl disable w3p_lighthouse-beacon.service
   else
-    echo "Service config: NoChange w3p_lighthouse.service"
+    echo "Service config: NoChange w3p_lighthouse-beacon.service"
   fi
 
 
   if [ "$(config_get nimbus)" = "true" ]; then
-    echo "Service config: Enable w3p_nimbus.service"
-    systemctl enable w3p_nimbus.service
-    systemctl start w3p_nimbus.service
+    echo "Service config: Enable w3p_nimbus-beacon.service"
+    systemctl enable w3p_nimbus-beacon.service
+    systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
-    echo "Service config: Disable w3p_nimbus.service"
-    systemctl disable w3p_nimbus.service
+    echo "Service config: Disable w3p_nimbus-beacon.service"
+    systemctl disable w3p_nimbus-beacon.service
   else
-    echo "Service config: NoChange w3p_nimbus.service"
+    echo "Service config: NoChange w3p_nimbus-beacon.service"
   fi
 
   
