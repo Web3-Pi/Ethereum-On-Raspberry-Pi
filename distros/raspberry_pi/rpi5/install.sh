@@ -339,7 +339,7 @@ if [ ! -f $FLAG ]; then
   echo "Installing InfluxDB v1.8.10"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
   sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
-  systemctl enable influxdb
+#  systemctl enable influxdb
   systemctl start influxdb
   sleep 5
   influx -execute 'CREATE DATABASE ethonrpi'
@@ -362,7 +362,7 @@ if [ ! -f $FLAG ]; then
   # chmod 744 /home/ethereum/clients/grafana/dashboards/node_monitoring.jso
   
  
-  systemctl enable grafana-server
+#  systemctl enable grafana-server
   systemctl start grafana-server
  
  
@@ -454,7 +454,29 @@ if [ ! -f $FLAG ]; then
 
 # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
-  
+
+  if [ "$(config_get influxdb)" = "true" ]; then
+    echo "Service config: Enable influxdb.service"
+    systemctl enable influxdb.service
+#    systemctl start influxdb.service
+  elif  [ "$(config_get influxdb)" = "false" ]; then
+    echo "Service config: Disable influxdb.service"
+    systemctl disable influxdb.service
+  else
+    echo "Service config: NoChange influxdb.service"
+  fi
+
+  if [ "$(config_get grafana)" = "true" ]; then
+    echo "Service config: Enable grafana.service"
+    systemctl enable grafana.service
+ #   systemctl start grafana.service
+  elif  [ "$(config_get grafana)" = "false" ]; then
+    echo "Service config: Disable grafana.service"
+    systemctl disable grafana.service
+  else
+    echo "Service config: NoChange grafana.service"
+  fi
+ 
   if [ "$(config_get bsm)" = "true" ]; then
     echo "Service config: Enable w3p_bsm.service"
     systemctl enable w3p_bsm.service
@@ -465,45 +487,53 @@ if [ ! -f $FLAG ]; then
   else
     echo "Service config: NoChange w3p_bsm.service"
   fi
-  
+
   if [ "$(config_get bnm)" = "true" ]; then
     echo "Service config: Enable w3p_bnm.service"
     systemctl enable w3p_bnm.service
   # systemctl start w3p_bnm.service
-  else
+  elif  [ "$(config_get bnm)" = "false" ]; then
     echo "Service config: Disable w3p_bnm.service"
     systemctl disable w3p_bnm.service
+  else
+    echo "Service config: NoChange w3p_bnm.service"
   fi
-  
+
   if [ "$(config_get geth)" = "true" ]; then
     echo "Service config: Enable w3p_geth.service"
     systemctl enable w3p_geth.service
   # systemctl start w3p_geth.service
-  else
+  elif  [ "$(config_get geth)" = "false" ]; then
     echo "Service config: Disable w3p_geth.service"
     systemctl disable w3p_geth.service
+  else
+    echo "Service config: NoChange w3p_geth.service"
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
-    echo "Service config: Enable w3p_lighthouse-beacon.service"
-    systemctl enable w3p_lighthouse-beacon.service
-  # systemctl start w3p_lighthouse-beacon.service
+    echo "Service config: Enable w3p_lighthouse.service"
+    systemctl enable w3p_lighthouse.service
+  # systemctl start w3p_lighthouse.service
+  elif  [ "$(config_get lighthouse)" = "false" ]; then
+    echo "Service config: Disable w3p_lighthouse.service"
+    systemctl disable w3p_lighthouse.service
   else
-    echo "Service config: Disable w3p_lighthouse-beacon.service"
-    systemctl disable w3p_lighthouse-beacon.service
+    echo "Service config: NoChange w3p_lighthouse.service"
   fi
+
 
   if [ "$(config_get nimbus)" = "true" ]; then
-    echo "Service config: Enable w3p_nimbus-beacon.service"
-    systemctl enable w3p_nimbus-beacon.service
-  # systemctl start w3p_nimbus-beacon.service
+    echo "Service config: Enable w3p_nimbus.service"
+    systemctl enable w3p_nimbus.service
+  # systemctl start w3p_nimbus.service
+  elif  [ "$(config_get nimbus)" = "false" ]; then
+    echo "Service config: Disable w3p_nimbus.service"
+    systemctl disable w3p_nimbus.service
   else
-    echo "Service config: Disable w3p_nimbus-beacon.service"
-    systemctl disable w3p_nimbus-beacon.service
+    echo "Service config: NoChange w3p_nimbus.service"
   fi
-
-
   
+
 
   #the next line creates an empty file so it won't run the next boot
   touch $FLAG
@@ -512,8 +542,91 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
-  echo "Setting up screen sessions"
-  sudo -u ethereum /home/ethereum/init/screen.sh
+#  echo "Setting up screen sessions"
+#  sudo -u ethereum /home/ethereum/init/screen.sh
+
+  # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
+  echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
+
+  if [ "$(config_get influxdb)" = "true" ]; then
+    echo "Service config: Enable influxdb.service"
+    systemctl enable influxdb.service
+    systemctl start influxdb.service
+  elif  [ "$(config_get influxdb)" = "false" ]; then
+    echo "Service config: Disable influxdb.service"
+    systemctl disable influxdb.service
+  else
+    echo "Service config: NoChange influxdb.service"
+  fi
+
+  if [ "$(config_get grafana)" = "true" ]; then
+    echo "Service config: Enable grafana.service"
+    systemctl enable grafana.service
+    systemctl start grafana.service
+  elif  [ "$(config_get grafana)" = "false" ]; then
+    echo "Service config: Disable grafana.service"
+    systemctl disable grafana.service
+  else
+    echo "Service config: NoChange grafana.service"
+  fi
+  
+  if [ "$(config_get bsm)" = "true" ]; then
+    echo "Service config: Enable w3p_bsm.service"
+    systemctl enable w3p_bsm.service
+    systemctl start w3p_bsm.service
+  elif  [ "$(config_get bsm)" = "false" ]; then
+    echo "Service config: Disable w3p_bsm.service"
+    systemctl disable w3p_bsm.service
+  else
+    echo "Service config: NoChange w3p_bsm.service"
+  fi
+
+  if [ "$(config_get bnm)" = "true" ]; then
+    echo "Service config: Enable w3p_bnm.service"
+    systemctl enable w3p_bnm.service
+    systemctl start w3p_bnm.service
+  elif  [ "$(config_get bnm)" = "false" ]; then
+    echo "Service config: Disable w3p_bnm.service"
+    systemctl disable w3p_bnm.service
+  else
+    echo "Service config: NoChange w3p_bnm.service"
+  fi
+
+  if [ "$(config_get geth)" = "true" ]; then
+    echo "Service config: Enable w3p_geth.service"
+    systemctl enable w3p_geth.service
+    systemctl start w3p_geth.service
+  elif  [ "$(config_get geth)" = "false" ]; then
+    echo "Service config: Disable w3p_geth.service"
+    systemctl disable w3p_geth.service
+  else
+    echo "Service config: NoChange w3p_geth.service"
+  fi
+
+  if [ "$(config_get lighthouse)" = "true" ]; then
+    echo "Service config: Enable w3p_lighthouse.service"
+    systemctl enable w3p_lighthouse.service
+    systemctl start w3p_lighthouse.service
+  elif  [ "$(config_get lighthouse)" = "false" ]; then
+    echo "Service config: Disable w3p_lighthouse.service"
+    systemctl disable w3p_lighthouse.service
+  else
+    echo "Service config: NoChange w3p_lighthouse.service"
+  fi
+
+
+  if [ "$(config_get nimbus)" = "true" ]; then
+    echo "Service config: Enable w3p_nimbus.service"
+    systemctl enable w3p_nimbus.service
+    systemctl start w3p_nimbus.service
+  elif  [ "$(config_get nimbus)" = "false" ]; then
+    echo "Service config: Disable w3p_nimbus.service"
+    systemctl disable w3p_nimbus.service
+  else
+    echo "Service config: NoChange w3p_nimbus.service"
+  fi
+
+  
 fi
 
 
