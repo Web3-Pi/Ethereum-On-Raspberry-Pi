@@ -9,7 +9,7 @@ You can use:
 or any other configuration including CM4.
 
 Device with execution client needs 2TB+ fast storage.
-Device with consensus client needs 256GB+ fast storage
+Device with consensus client needs 256GB+ fast storage.
 
 
 ## Device Setup
@@ -17,15 +17,25 @@ The following section describes a step-by-step process of configuring, deploying
 
 ⚠️ To avoid errors during the first setup, please follow the instructions precisely. ⚠️
 
-### 1. Hardware requirements
-The default setup requires the following hardware components
+### Hardware requirements
+The default setup requires the following hardware components:
 
   - 2 x Raspberry Pi (8GB) starter kits
   - 2 x SSD (one for each device)
   - 1 x SD Card reader/writer
   - 2 x Fast MicroSD Card
 
-### Storage
+#### Raspberry Pi
+
+You can use:
+
+- [Raspberry Pi 5](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active cooling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/)
+- [Raspberry Pi 4](https://botland.store/raspberry-pi-4b-modules-and-kits/16579-raspberry-pi-4-model-b-wifi-dualband-bluetooth-8gb-ram-18ghz-5056561800356.html) with [Active cooling](https://botland.store/raspberry-pi-4b-cases/15106-case-justpi-for-raspberry-pi-4b-aluminum-with-dual-fan-black-lt-4b02-5903351242660.html)
+- CM4 with motherboard
+
+8GB RAM is required.
+
+#### Storage
 **2 TB** fast drive is required for device running **execution** client (Geth)  
 **256 GB+** fast drive is required for device running **consensus** client (Nimbus/Lighthouse)
 
@@ -46,14 +56,13 @@ With **Raspberry Pi 4** you have two options for storage:
 
 > **If you use USB always choose USB 3.0 ports (blue)**
 
-## Power supply
+#### Power supply
 As a power supply, we recommend an [official 15W PSU](https://www.raspberrypi.com/products/type-c-power-supply/) for Raspberry Pi 4 or [official 27W PSU](https://www.raspberrypi.com/products/27w-power-supply/) for Raspberry Pi 5.
 
-### Cooling
-Active colling is required to avoid throttling and keep sufficient performance/stability of the system.
-Please see "Hardware" section for more informations.
+#### Cooling
+Active colling is required to avoid throttling and keep sufficient performance/stability on the system. Please see "Hardware" section for more information.
 
-### microSD Card
+#### microSD Card
 
 Flashing a microSD card takes time, but it can be reduced by using a fast device. Additionally, using a fast micro SD card results in a shorter booting time. A few examples:
 
@@ -61,7 +70,7 @@ Flashing a microSD card takes time, but it can be reduced by using a fast device
 - [SanDisk Extreme Pro](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-great-speeds-best-for-pi-3)
 - [Kingston Canvas React](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-fastest-booting-raspberry-pi-microsd)
 
-!!! note "More informations"
+!!! note "More information"
     [https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards).
 
 
@@ -72,7 +81,7 @@ Once you have all the hardware collected, you will need to unbox the Raspberry P
 ![Image title](/img/img-rpi4-connection-diagram-1.png)
 
 
-⚠️ **It is crucial for the mDNS mechanism to work that all devices are connected within the same local network.** ⚠️
+⚠️ **For the mDNS mechanism to work, it is crucial that all devices are connected within the same local network.** ⚠️
 
 _Optimally using one network switch._
 
@@ -92,12 +101,12 @@ To write an image on an SD card, it is recommended to use the official tool prov
 
 - [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 
-After installing it to your PC, you can download the newest **Ethereum on Pi** image.  
+After installing it on your PC, you can download the newest Ethereum on Pi image. 
 
 You need two image files:
 
-  - one for execution client ([download](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.5.1/EthOnRpi_v0_5_1-execution.img.xz))
-  - second for consensus client ([download](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.5.1/EthOnRpi_v0_5.1-consensus.img.xz))
+  - one for execution client ([download](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.5.2/EthOnRpi_v0_5_2-execution.img.xz))
+  - second for consensus client ([download](https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi/releases/download/v0.5.2/EthOnRpi_v0_5.2-consensus.img.xz))
 
 List of all images: [Ethereum on Raspberry Pi images](../downloads.md)
 
@@ -121,7 +130,7 @@ Follow the instructions below to write images to both devices.
 - Do not ommit verify step
 
 !!! note "Remember the hostname" 
-    We use mDNS so after proper istalation user can connect to Raspberry Pi using hostname istead IP adress.
+    We use mDNS so after proper installation user can connect to Raspberry Pi using hostname instead of IP address.
     
     ``` sh
     eop-exec.local
@@ -150,7 +159,7 @@ An example screenshot with settings for the geth node:
 
 
 !!! note "Remember the hostname" 
-    We use mDNS so after proper istalation user can connect to Raspberry Pi using hostname istead IP adress.
+    We use mDNS so after proper installation user can connect to Raspberry Pi using hostname instead of IP address.
     
     ``` sh
     eop-consensus.local
@@ -189,7 +198,7 @@ Repeat this for both devices.
 
 ### Installation verification
 
-Chceck when it is finish by opening:  
+Check when it is finished by opening:  
 
 [http://eop-exec.local:7197/node/system/status](http://eop-exec.local:7197/node/system/status)
 
@@ -197,12 +206,12 @@ and
 
 [http://eop-consensus.local:7197/node/system/status](http://eop-consensus.local:7197/node/system/status)
 
-When instalation is completed you will see JSON like that
+When installation is completed you will see JSON like this:
 ``` sh
 {"host_name": "eop-exec", "num_cores": 4, "cpu_percent": 14.9, "mem_total": 8324055040, "mem_used": 6542295040, "mem_free": 503726080, "mem_percent": 81.8, "swap_total": 0, "swap_used": 4642058240, "swap_free": 12537806848, "swap_percent": 27.0, "disk_used": 1207331737600}
 ```
 
-If site is not anavaible **please wait and try again**. Instalation can take up to 15 minutes.
+If the site is not available, **please wait and try again**. Installation can take up to 15 minutes.
 
 !!! note "mDNS"
     mDNS service needs some time to start.  
@@ -215,8 +224,7 @@ Both devices have to establish a secure communication channel. This is achieved 
 
 The installation script has already generated a common directory structure to store the JWT secret file.  
 To finish the configuration, the secret file has to be populated across devices.  
-Finish the process by executing the following commands:
-
+Finish the process by executing the following commands.
 
 Copy the secret file from consensus device to the execution device:
 
@@ -249,7 +257,7 @@ sudo systemctl start w3p_geth.service
 ```
 
 !!! tip "TIP: service monitoring"
-    Service output can be monitoring using command:  
+    Service output can be monitored using command:  
     ``` sh
     journalctl -xefu w3p_geth.service 
     ```
@@ -262,7 +270,7 @@ After providing manual configuration they can be enabled and used. More informat
 
 #### Account verification
 - SSH login into the device as _ethereum/ethereum_
-  - If the _ethereum_ user does not exist, it means that the installation failed unexpectedly (in such case, _contact the support_)
+  - If the _ethereum_ user does not exist, it means that the installation failed unexpectedly (in such case, _contact support_)
 - By default, _ethereum_ user is forced to change the password during the first login
 
 #### Network configuration verification
@@ -272,9 +280,9 @@ After providing manual configuration they can be enabled and used. More informat
   ```
 
 ### Summary
-At this point, devices is configured and ready to host and **Ethereum Node**.
 
-If you have default config.txt Geth, Nimbus software will start automaticly as a service.
+At this point, devices are configured and ready to host an **Ethereum Node**.
 
-For more information how to configure/modify elements of Ethereum On Raspberry Pi read "Reference" part of this documentation.
+If you have default config.txt Geth, Nimbus software will start automatically as a service.
 
+For more information on how to configure/modify elements of Ethereum On Raspberry Pi, please read the "Reference" part of this documentation.

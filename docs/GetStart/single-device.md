@@ -11,13 +11,27 @@ Here, you can find a full description of how to set up an **Ethereum Full Node**
 
 The default setup requires the following hardware components
 
-- 1 x [Raspberry Pi 5 (8GB)](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active colling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html)
+- 1 x [Raspberry Pi 5 (8GB)](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active cooling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html)
 - 1 x 2TB SSD drive (external USB SSD or NVMe m.2 with adapter) - [recommended storage](../Hardware/storage.md)
 - 1 x SD Card reader/writer 
 - 1 x [microSD Card](../Hardware/microSD.md)
 - 1 x [Power supply](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html)
 
-### Storage
+#### Raspberry Pi
+
+You can use:
+
+- [Raspberry Pi 5](https://botland.store/raspberry-pi-5-modules-and-kits/23905-raspberry-pi-5-8gb-5056561803326.html) with [Active cooling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/)
+- [Raspberry Pi 4](https://botland.store/raspberry-pi-4b-modules-and-kits/16579-raspberry-pi-4-model-b-wifi-dualband-bluetooth-8gb-ram-18ghz-5056561800356.html) with [Active cooling](https://botland.store/raspberry-pi-4b-cases/15106-case-justpi-for-raspberry-pi-4b-aluminum-with-dual-fan-black-lt-4b02-5903351242660.html)
+- CM4 with motherboard
+
+8GB RAM is required.
+
+
+#### Cooling
+[Active cooling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html) is required to avoid throttling and keep sufficient performance/stability on the system.
+
+#### Storage
 2 TB fast drive is required. 
 With Raspberry Pi 5 you have three options for storage:
 
@@ -31,15 +45,7 @@ For more information visit: [recommended storage](./1a-recommended-storage.md)
 
 > **If you use USB always choose USB 3.0 ports (blue)**
 
-### Power supply
-As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
-Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
-
-### Cooling
-[Active colling](https://botland.com.pl/elementy-montazowe-raspberry-pi-5/23925-raspberry-pi-active-cooler-aktywne-chlodzenie-radiator-wentylator-do-raspberry-pi-5-5056561803357.html) is required to avoid throttling and keep sufficient performance/stability of the system.
-
-
-### microSD Card
+#### microSD Card
 
 Flashing a microSD card takes time, but it can be reduced by using a fast device. Additionally, using a fast micro SD card results in a shorter booting time. A few examples:
 
@@ -47,8 +53,13 @@ Flashing a microSD card takes time, but it can be reduced by using a fast device
 - [SanDisk Extreme Pro](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-great-speeds-best-for-pi-3)
 - [Kingston Canvas React](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards#section-fastest-booting-raspberry-pi-microsd)
 
-!!! note "More informations"
+!!! note "More information"
     [https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards](https://www.tomshardware.com/best-picks/raspberry-pi-microsd-cards).
+
+#### Power supply
+As a power supply, we recommend an [official PSU 5,1V / 5A](https://botland.store/raspberry-pi-5-power-supply/23907-raspberry-pi-27w-usb-c-power-supply-official-51v-5a-psu-for-raspberry-pi-5-black-5056561803418.html) for Raspberry Pi 5.
+Raspberry Pi 5 + 2TB drive can use a significant amount of power so a sufficient power supply is important for stability.
+
 
 
 ## Connection Diagram
@@ -79,13 +90,13 @@ To write an image on an SD card, it is recommended to use the official tool prov
 
 - [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 
-After installing it to your PC, you can download the newest **Ethereum on Pi** image. This image will be used on each of the devices, so only one copy is required:
+After installing it on your PC, you can download the newest **Ethereum on Pi** image. This image will be used on each device, so only one copy is required:
 
 - [Ethereum on Pi image for Raspberry Pi](../downloads.md)
 
 
 ### Writing Images
-Follow the instructions below to write images o microSD card.
+Follow the instructions below to write images on a microSD card.
 
 - Insert a blank SD Card into a card reader and connect the reader to your PC
 - Open the Raspberry Pi Imager on your PC
@@ -99,10 +110,10 @@ Follow the instructions below to write images o microSD card.
   - uncheck "Eject media when finished"
 - Write the image to the SD card
 - Eject the card and insert it into the device
-- Do not ommit verify step
+- Do not omit verify step
 
 !!! note "Remember the hostname" 
-    We use mDNS so after proper istalation user can connect to Raspberry Pi using hostname istead IP adress.
+    We use mDNS so after proper installation user can connect to Raspberry Pi using hostname instead of IP address.
     
     ``` sh
     eop-1.local
@@ -113,14 +124,12 @@ An example screenshot with settings for the geth node:
 
 ![Sample Raspbberyy Pi Imager configuration](/img/img-raspberry-imager-example-eop-1.png)
 
-_If some steps remain unclear, you can visit the [Raspberry Pi "getting started" page](https://www.raspberrypi.com/documentation/computers/getting-started.html) for more information on Imager settings and usage._
+_If some steps remain unclear, you can visit the [Raspberry Pi "getting started" page](https://www.raspberrypi.com/documentation/computers/getting-started.html) for more information on Image settings and usage._
 
 
 ## Initial configuration
 
-Ethereum On Rapberry Pi image use clasic /boot/firmware/config.txt as config file. This way you can customize your setup before first run.
-After writing image to SD card you shold see new drive in your PC.
-There is config.txt file. This config is for Raspberry Pi but Ethereum On Raspberry Pi adds own sections to it. 
+Ethereum On Rapberry Pi image uses clasic /boot/firmware/config.txt as config file. This way you can customize your setup before first run. After writing the image to the SD card you should see a new drive in your PC. There is config.txt file. This config is for Raspberry Pi but Ethereum On Raspberry Pi adds own sections to it.
 
 ``` sh
 # Web3Pi config
@@ -138,10 +147,10 @@ bnm=true
 
 it is recommended to always leave  bsm=true
 
-!!! note "More informations about config file"
+!!! note "More information about config file"
     [config_txt.md](../Advanced/config_txt.md)
 
-Here you can choose witch services will automaticly start during boot.
+Here you can choose which services will automatically start during boot.
 
 true = service enable  
 false = service disable  
@@ -149,7 +158,7 @@ other value or no value = no change
 
 !!! tip "Lighthous vs. Nimbus"
 
-    Nimbus need less resurces so it is ideal for devices like Raspeberry Pi
+    Nimbus need less resources so it is ideal for devices like Raspberry Pi
 
 
 
@@ -194,28 +203,28 @@ This process can take up to 15 minutes.
 Chceck when it is finish by opening 
 [http://eop-1.local:7197/node/system/status](http://eop-1.local:7197/node/system/status)
 
-If instalation is completed you will see JSON like that
+If the installation is completed you will see JSON like this:
 ``` sh
 {"host_name": "eos-1", "num_cores": 4, "cpu_percent": 14.9, "mem_total": 8324055040, "mem_used": 6542295040, "mem_free": 503726080, "mem_percent": 81.8, "swap_total": 0, "swap_used": 4642058240, "swap_free": 12537806848, "swap_percent": 27.0, "disk_used": 1207331737600}
 ```
 
-If site is not anavaible **please wait and try again**. Instalation can take up to 15 minutes.
+If the site is not available, **please wait and try again**. Installation can take up to 15 minutes.
 
 !!! note "mDNS"
     mDNS service needs some time to start.  
-    Raspberry Pi over IP address will be accesible quicker than using host name "eop-1.local"  
+    Raspberry Pi over IP address will be accessible quicker than using host name "eop-1.local"   
     mDNS should be available in less than 15 min from the start. 
 
 
 #### Grafana Monitoring verification
 
-Chceck if Grafana is working. Open at webbrowser:
+Check if Grafana is working. Open a web browser:
 [http://eop-1.local:3000](http://eop-1.local:3000)
 
 default login and password is: "admin"
-You need to change it at first login.
+You need to change it during first login.
 
-Go to Dashboards menu and then "Ethereum Nodes Monitor" panel.
+Go to “Dashboards” menu and then to "Ethereum Nodes Monitor" panel.
 
 === "Node just started"
 
@@ -247,9 +256,9 @@ Go to Dashboards menu and then "Ethereum Nodes Monitor" panel.
   ```
 
 ### Summary
-At this point, device is configured and ready to host and **Ethereum Node**.
+At this point, the device is configured and ready to host an **Ethereum Node**.
 
-If you have default config.txt Geth, Nimbus and monitoring software will start automaticly as a service.
+If you have default config.txt Geth, Nimbus and monitoring software will start automatically as a service.
 
-For more information how to configure/modify elements of Ethereum On Raspberry Pi read "Reference" part of this documentation.
+For more information on how to configure/modify elements of Ethereum On Raspberry Pi, please read the "Reference" part of this documentation.
 
