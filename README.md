@@ -4,12 +4,9 @@ Basic suite of tools and references to existing projects to create and host Ethe
 
 The main goal of this project is to provide a lightweight image creation suite that can be used to deploy Ethereum nodes on various devices from the Raspberry Pi family, including:
 
-- [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) with 8GB of RAM
 - [Raspberry Pi 5 ](https://www.raspberrypi.com/products/raspberry-pi-5/) with 8GB of RAM
-
-Those configurations will be added in future releases:
-- 🚧 ~~[Compute Module 4](https://www.raspberrypi.com/products/compute-module-4/) with 8GB of RAM~~ 🚧 
-- 🚧 ~~Multiple carrier boards for [Compute Module 4](https://www.raspberrypi.com/products/compute-module-4)~~ 🚧 
+- [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) with 8GB of RAM
+- [Compute Module 4](https://www.raspberrypi.com/products/compute-module-4/) with 8GB of RAM
 
 Additionally, this project is supposed to:
 
