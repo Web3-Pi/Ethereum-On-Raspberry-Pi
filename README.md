@@ -1,4 +1,4 @@
-## Ethereum On Raspberry Pi
+## Web3Pi
 
 Basic suite of tools and references to existing projects to create and host Ethereum Nodes on the devices from the Raspberry Pi family.
 
@@ -10,12 +10,6 @@ The main goal of this project is to provide a lightweight image creation suite t
 
 Additionally, this project is supposed to:
 
-- Allow node customization (multidevice support with custom networking setup)
-- Simplify building clusters of Ethereum nodes deployed on multiple Raspberry Pi-based devices
-
-### Ethereum on ARM
-
-This project is based on the project [Ethereum on ARM](https://github.com/EOA-Blockchain-Labs/ethereumonarm) and, more specifically, on [EOA image for Raspberry Pi](https://ethereumonarm-my.sharepoint.com/:u:/p/dlosada/Ec_VmUvr80VFjf3RYSU-NzkBmj2JOteDECj8Bibde929Gw?download=1). The provided images are designed to make the configuration of a node as easy as possible; from the [Ethereum on ARM](https://github.com/EOA-Blockchain-Labs/ethereumonarm):
 
 > **The image takes care of all the necessary steps to run a node, from setting up the environment and formatting the disk to installing, managing, and running the Execution and Consensus clients.**
 
