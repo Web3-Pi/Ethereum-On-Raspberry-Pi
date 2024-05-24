@@ -232,6 +232,7 @@ if [ ! -f $FLAG ]; then
 
   echo "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
+  systemctl disable unattended-upgrades
   
 ## 0. Add some necessary repositories ######################################################  
   echo "Adding Ethereum repositories"
@@ -332,8 +333,8 @@ if [ ! -f $FLAG ]; then
  
 ## 7. MONITORING ####################################################################################
 
-  echo "stop unattended-upgrades.service"
-  systemctl stop unattended-upgrades
+  #echo "stop unattended-upgrades.service"
+  #systemctl stop unattended-upgrades
   
   # Installing InfluxDB
   echo "Installing InfluxDB v1.8.10"
@@ -626,6 +627,7 @@ else
     echo "Service config: NoChange w3p_nimbus-beacon.service"
   fi
 
+  #systemctl enable unattended-upgrades
   
 fi
 
