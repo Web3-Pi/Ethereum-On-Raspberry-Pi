@@ -19,9 +19,6 @@ This project is based on the project [Ethereum on ARM](https://github.com/EOA-Bl
 
 > **The image takes care of all the necessary steps to run a node, from setting up the environment and formatting the disk to installing, managing, and running the Execution and Consensus clients.**
 
-### Development Environment
-
-Scripts provided by **Ethereum On Pi** have been developed on **Ubuntu 20.04.6 LTS** and tested on **Ubuntu 20.04.6 LTS** and **Ubuntu 23.10** _(scripts to build Raspberry Pi images and edit rc.local file)_.
 
 ## 🚀 Node Setup 🚀
 
