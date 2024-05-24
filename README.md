@@ -28,13 +28,12 @@ Scripts provided by **Ethereum On Pi** have been developed on **Ubuntu 20.04.6 L
 
 ## 🚀 Node Setup 🚀
 
-To configure an **Ethereum Node**, follow the [instructions](./docs/README.md) from the installation manual.
+To configure an **Ethereum Node**, follow the [instructions](https://web3-pi.github.io/setup-guide/) from the installation manual.
 
 You can also follow the instructions for a particular device setup:
 
-- [Raspberry Pi 4](./docs/devices/rpi4/README.md)
-- [Raspberry Pi 5](./docs/devices/rpi5/README.md)
-- 🚧 ~~Compute Module 4~~ 🚧
+- [Single device](https://web3-pi.github.io/setup-guide/GetStart/single-device/)
+- [Pair device](https://web3-pi.github.io/setup-guide/GetStart/pair-devices/)
 
 
 ## Acknowledgements
