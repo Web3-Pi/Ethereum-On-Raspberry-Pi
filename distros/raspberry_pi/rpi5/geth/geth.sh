@@ -11,7 +11,7 @@ config_get() {
 }
 
 
-geth-port="$(config_get geth-port)";
+geth_port="$(config_get geth_port)";
 
 # Checking internet connection
 echo "Checking internet connection"
@@ -31,7 +31,7 @@ done
 
 
 echo "$(date): Connected - ${pingServerAdr}"
-echo "geth-port = ${geth-port}"
+echo "geth_port = ${geth_port}"
 
 echo "Run Geth"
-geth --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth-port} --port ${geth-port} --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --state.scheme=path
+geth --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth_port} --port ${geth_port} --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --state.scheme=path

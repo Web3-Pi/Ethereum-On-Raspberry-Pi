@@ -11,16 +11,16 @@ bsm=true
 bnm=false
 
 #Execution endpoint address
-exec-url=http://localhost:8551
+exec_url=http://localhost:8551
 
 [geth]
-geth-port=30303
+geth_port=30303
 
 [nimbus]
-nimbus-port=9000
+nimbus_port=9000
 
 [lighthouse]
-lighthouse-port=9000
+lighthouse_port=9000
 
 # End of Web3Pi config
 

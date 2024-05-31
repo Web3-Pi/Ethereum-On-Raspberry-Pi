@@ -11,8 +11,8 @@ config_get() {
 }
 
 
-lighthouse-port="$(config_get lighthouse-port)";
-exec-url="$(config_get exec-url)";
+lighthouse_port="$(config_get lighthouse_port)";
+exec_url="$(config_get exec_url)";
 
 # Checking internet connection
 echo "Checking internet connection"
@@ -32,8 +32,8 @@ done
 
 
 echo "$(date): Connected - ${pingServerAdr}"
-echo "exec-url = ${exec-url}"
-echo "lighthouse-port = ${lighthouse-port}"
+echo "exec_url = ${exec_url}"
+echo "lighthouse_port = ${lighthouse_port}"
 
 echo "Run Lighthouse beacon node"
-lighthouse bn --network mainnet --execution-endpoint ${exec-url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse-port}
+lighthouse bn --network mainnet --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}

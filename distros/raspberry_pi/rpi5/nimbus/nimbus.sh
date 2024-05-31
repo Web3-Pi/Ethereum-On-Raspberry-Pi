@@ -11,8 +11,8 @@ config_get() {
 }
 
 
-nimbus-port="$(config_get nimbus-port)";
-exec-url="$(config_get exec-url)";
+nimbus_port="$(config_get nimbus_port)";
+exec_url="$(config_get exec_url)";
 
 # Checking internet connection
 echo "Checking internet connection"
@@ -32,8 +32,8 @@ done
 
 
 echo "$(date): Connected - ${pingServerAdr}"
-echo "exec-url = ${exec-url}"
-echo "nimbus-port = ${nimbus-port}"
+echo "exec_url = ${exec_url}"
+echo "nimbus_port = ${nimbus_port}"
 
 echo "Run Nimbus beacon node"
-nimbus_beacon_node --non-interactive --tcp-port=${nimbus-port} --udp-port=${nimbus-port} --el=${exec-url} --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
