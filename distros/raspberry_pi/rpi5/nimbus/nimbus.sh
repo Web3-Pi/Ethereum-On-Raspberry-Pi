@@ -35,7 +35,7 @@ echo "$(date): Connected - ${pingServerAdr}"
 echo "exec_url = ${exec_url}"
 echo "nimbus_port = ${nimbus_port}"
 
-echo "Run Nimbus beacon node - quick synch"
+echo "Run Nimbus beacon node - quick sync"
 nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=https://mainnet.checkpoint.sigp.io --backfill=false
 
 echo "Run Nimbus beacon node"
