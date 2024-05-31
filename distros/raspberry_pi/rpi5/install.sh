@@ -627,15 +627,16 @@ else
     echo "Service config: NoChange w3p_nimbus-beacon.service"
   fi
 
-  #systemctl enable unattended-upgrades
-  
+  echo "start unattended-upgrades.service"
+  systemctl enable unattended-upgrades
+
 fi
 
 
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
-  printf "\n\n\nMy IP address is %s\n\n\n" "$_IP"
+  printf "\n\n\nRaspberry Pi IP address is %s\n\n\n" "$_IP"
 fi
 
 
