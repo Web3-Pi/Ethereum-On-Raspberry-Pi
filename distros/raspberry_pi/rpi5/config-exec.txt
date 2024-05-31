@@ -107,6 +107,7 @@ arm_freq=2800
 #2400MHz is default
 #3000MHz is max (not all boards will work stable)
 #2800MHz is reasonable OC
+usb_max_current_enable=1
 
 #Enable PCIe
 dtparam=pciex1

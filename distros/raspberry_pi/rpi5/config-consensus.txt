@@ -11,7 +11,7 @@ bsm=true
 bnm=false
 
 #Execution endpoint address
-exec_url=http://localhost:8551
+exec_url=http://eop-exec.local:8551
 
 [geth]
 geth_port=30303
@@ -106,6 +106,7 @@ arm_freq=2800
 #2400MHz is default
 #3000MHz is max (not all boards will work stable)
 #2800MHz is reasonable OC
+usb_max_current_enable=1
 
 #Enable PCIe
 dtparam=pciex1
