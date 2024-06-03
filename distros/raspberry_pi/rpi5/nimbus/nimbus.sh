@@ -36,7 +36,7 @@ echo "exec_url = ${exec_url}"
 echo "nimbus_port = ${nimbus_port}"
 
 echo "Run Nimbus beacon node - quick sync"
-nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=https://mainnet.checkpoint.sigp.io --backfill=false
+nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=https://beaconstate.info --backfill=false
 
 echo "Run Nimbus beacon node"
 nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
