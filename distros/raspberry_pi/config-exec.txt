@@ -11,24 +11,19 @@ bsm=true
 bnm=false
 
 #Execution endpoint address
-exec-url=http://localhost:8551
+exec_url=http://localhost:8551
+
+[geth]
+geth_port=30303
 
 [nimbus]
-# Choose how to run Nimbus by setting "nimbus_run_mode" to one of the below options: 
-# full_sync   - before running Nimbus sync the db with a trusted node
-# quick_sync  - before running Numbus sync only the head and backfill later
-# run         - do not sync before running Numbus. Just run the Nimbus client
-nimbus-run-mode=quick_sync
-nimbus-trusted-node-url=http://nimbus.web3pi.io
-#http://testing.mainnet.beacon-api.nimbus.team/
-#https://nimbus.web3pi.io
+nimbus_port=9000
 
 [lighthouse]
-checkpoint-sync-url=http://lighthouse.web3pi.io
-#https://mainnet.checkpoint.sigp.io
-#https://lighthouse.web3pi.io
+lighthouse_port=9000
 
 # End of Web3Pi config
+
 
 
 
@@ -98,13 +93,13 @@ dtoverlay=dwc2,dr_mode=host
 over_voltage=6
 arm_freq=1800
 
-[rpi4]
+[pi4]
 # Overclocking form Raspberry Pi 4
 # Active cooling is required
 over_voltage=6
 arm_freq=1800
 
-[rpi5]
+[pi5]
 # Overclocking form Raspberry Pi 5
 # Active cooling is required
 over_voltage_delta=50000
@@ -112,6 +107,7 @@ arm_freq=2800
 #2400MHz is default
 #3000MHz is max (not all boards will work stable)
 #2800MHz is reasonable OC
+usb_max_current_enable=1
 
 #Enable PCIe
 dtparam=pciex1

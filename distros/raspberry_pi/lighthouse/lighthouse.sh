@@ -11,9 +11,8 @@ config_get() {
 }
 
 
-el_url="$(config_get exec-url)";
-cs_url="$(config_get checkpoint-sync-url)";
-
+lighthouse_port="$(config_get lighthouse_port)";
+exec_url="$(config_get exec_url)";
 
 # Checking internet connection
 echo "Checking internet connection"
@@ -31,8 +30,10 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
-echo "$(date): Connected - ${pingServerAdr}"
-echo "el_url = ${el_url}"
-echo "cs_url = ${cs_url}"
 
-lighthouse bn --network mainnet --execution-endpoint ${el_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${cs_url} --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port 9000
+echo "$(date): Connected - ${pingServerAdr}"
+echo "exec_url = ${exec_url}"
+echo "lighthouse_port = ${lighthouse_port}"
+
+echo "Run Lighthouse beacon node"
+lighthouse bn --network mainnet --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://beaconstate.info --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}
