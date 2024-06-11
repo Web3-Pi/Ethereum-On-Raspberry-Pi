@@ -8,4 +8,4 @@ providers:
   editable: true
   updateIntervalSeconds: 7
   options:
-    path: /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/dashboards
+    path: /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/dashboards

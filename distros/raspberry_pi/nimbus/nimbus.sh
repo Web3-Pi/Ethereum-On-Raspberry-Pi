@@ -30,7 +30,7 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
-source /opt/web3pi/Ethereum-On-Raspberry-Pi/scripts/pingServers.sh
+source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/pingServers.sh
 
 echo "$(date): Connected - ${pingServerAdr}"
 echo "exec_url = ${exec_url}"
