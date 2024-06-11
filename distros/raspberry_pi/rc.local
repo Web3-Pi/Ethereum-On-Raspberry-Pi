@@ -28,21 +28,21 @@ if [ ! -f $FLAG ]; then
 
   
   # Create a directory for Web3Pi files
-  echo "RC.LOCAL - Create a directory for Web3Pi files"
-  mkdir -p /opt/web3pi/
-  chmod 777 /opt/web3pi/
+  #echo "RC.LOCAL - Create a directory for Web3Pi files"
+  #mkdir -p /opt/web3pi/
+  #chmod 777 /opt/web3pi/
 
   echo "RC.LOCAL - install git-extras avahi-daemon"
   apt-get -y install git-extras avahi-daemon
   
   # Clone Web3Pi repo
   echo "RC.LOCAL - Clone Web3Pi repo"
-  git-force-clone --branch dev https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  git-force-clone --branch r2 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   
   # Run the installation script
   echo "RC.LOCAL - Run installation script"
-  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/install.sh
-  ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/install.sh
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
+  ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 
 fi
 

@@ -30,13 +30,15 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
+source /opt/web3pi/Ethereum-On-Raspberry-Pi/scripts/pingServers.sh
 
 echo "$(date): Connected - ${pingServerAdr}"
 echo "exec_url = ${exec_url}"
 echo "nimbus_port = ${nimbus_port}"
+echo "best_server = ${best_server}"
 
 echo "Run Nimbus beacon node - quick sync"
-nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=https://beaconstate.info --backfill=false
+nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=${best_server} --backfill=false
 
 echo "Run Nimbus beacon node"
 nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update

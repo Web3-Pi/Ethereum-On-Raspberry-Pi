@@ -1,0 +1,9 @@
+https://beaconstate.info
+https://sync-mainnet.beaconcha.in
+https://mainnet-checkpoint-sync.stakely.io
+https://mainnet.checkpoint.sigp.io
+https://beaconstate-mainnet.chainsafe.io
+https://checkpointz.pietjepuk.net
+https://mainnet-checkpoint-sync.attestant.io
+https://sync.invis.tools
+https://beaconstate.ethstaker.cc
