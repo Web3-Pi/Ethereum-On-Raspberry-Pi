@@ -1,6 +1,6 @@
 #!/bin/bash
 
-servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/scripts/serversList.txt"
+servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/serversList.txt"
 best_server=""
 best_ping=1000000  # set a very high initial value
 
