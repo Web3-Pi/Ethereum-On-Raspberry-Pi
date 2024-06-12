@@ -5,7 +5,7 @@
 
 # check for required privileges
 if [ "$EUID" -ne 0 ]
-  then echo "Root privileges are required. Re-run as root."
+  then echo "Root privileges are required. Re-run with sudo"
   exit 1
 fi
 
