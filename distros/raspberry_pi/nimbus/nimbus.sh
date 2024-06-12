@@ -30,12 +30,13 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
+# Script for finding the best server
 source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/pingServers.sh
 
 echo "$(date): Connected - ${pingServerAdr}"
 echo "exec_url = ${exec_url}"
 echo "nimbus_port = ${nimbus_port}"
-echo "best_server = ${best_server}"
+echo "best_server = ${best_server} ($best_ping ms)"
 
 echo "Run Nimbus beacon node - quick sync"
 nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=${best_server} --backfill=false

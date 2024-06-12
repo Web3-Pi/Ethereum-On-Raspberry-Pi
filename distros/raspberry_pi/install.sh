@@ -409,6 +409,8 @@ if [ ! -f $FLAG ]; then
   sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
+  ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh
 
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
 
