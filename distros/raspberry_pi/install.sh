@@ -172,58 +172,58 @@ function add_user_screen_session() {
   chown ethereum:ethereum "$script_file"
 }
 
-function configure_monitoring_sessions() {
-  local sdir="/home/ethereum/init/sessions"
-  local ldir="/home/ethereum/init"
-  local lf="screen.sh"
+# function configure_monitoring_sessions() {
+#   local sdir="/home/ethereum/init/sessions"
+#   local ldir="/home/ethereum/init"
+#   local lf="screen.sh"
 
-  # Sanity cleanup so that the commands are not duplicated
-  local tf="$ldir/$lf"
-  if [[ -f "$tf" ]]; then
-    rm "$tf"
-  fi
+#   # Sanity cleanup so that the commands are not duplicated
+#   local tf="$ldir/$lf"
+#   if [[ -f "$tf" ]]; then
+#     rm "$tf"
+#   fi
 
-  # Add commands
-  add_user_screen_session "watch -n 5 vcgencmd measure_temp" "temp" "$lf" "$sdir" "$ldir"
-  add_user_screen_session "watch -n 5 vcgencmd measure_clock arm" "freq" "$lf" "$sdir" "$ldir"
-  add_user_screen_session "iotop -oa -d 5" "iotop" "$lf" "$sdir" "$ldir" "amend_sudoer"
-}
+#   # Add commands
+#   add_user_screen_session "watch -n 5 vcgencmd measure_temp" "temp" "$lf" "$sdir" "$ldir"
+#   add_user_screen_session "watch -n 5 vcgencmd measure_clock arm" "freq" "$lf" "$sdir" "$ldir"
+#   add_user_screen_session "iotop -oa -d 5" "iotop" "$lf" "$sdir" "$ldir" "amend_sudoer"
+# }
 
-function configure_clients_sessions() {
-  local sdir="/home/ethereum/clients"
+# function configure_clients_sessions() {
+#   local sdir="/home/ethereum/clients"
   
-  local geth_lf="screen-exec-cli.sh"
-  local lighthouse_lf="screen-consensus-lighthouse-cli.sh"
-  local nimbus_lf="screen-consensus-nimbus-cli.sh"
+#   local geth_lf="screen-exec-cli.sh"
+#   local lighthouse_lf="screen-consensus-lighthouse-cli.sh"
+#   local nimbus_lf="screen-consensus-nimbus-cli.sh"
 
-  # https://geth.ethereum.org/docs/fundamentals/command-line-options
-  local geth_cmd="geth --authrpc.port=8551 --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --state.scheme=path --discovery.port 30303 --port 30303"
+#   # https://geth.ethereum.org/docs/fundamentals/command-line-options
+#   local geth_cmd="geth --authrpc.port=8551 --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --state.scheme=path --discovery.port 30303 --port 30303"
   
-  # https://lighthouse-book.sigmaprime.io/help_bn.html
-  local lighthouse_cmd="lighthouse bn --network mainnet --execution-endpoint http://localhost:8551 --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000"
+#   # https://lighthouse-book.sigmaprime.io/help_bn.html
+#   local lighthouse_cmd="lighthouse bn --network mainnet --execution-endpoint http://localhost:8551 --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000"
   
-  # https://nimbus.guide/options.html
-  local nimbus_cmd="nimbus_beacon_node --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --el=http://127.0.0.1:8551 --tcp-port=9000 --udp-port=9000 --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*'"
+#   # https://nimbus.guide/options.html
+#   local nimbus_cmd="nimbus_beacon_node --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --el=http://127.0.0.1:8551 --tcp-port=9000 --udp-port=9000 --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*'"
 
  
-  # Sanity cleanup so that the commands are not duplicated
-  if [[ -f "$sdir/screen/$geth_lf" ]]; then
-    rm "$sdir/screen/$geth_lf"
-  fi
+#   # Sanity cleanup so that the commands are not duplicated
+#   if [[ -f "$sdir/screen/$geth_lf" ]]; then
+#     rm "$sdir/screen/$geth_lf"
+#   fi
 
-  if [[ -f "$sdir/screen/$lighthouse_lf" ]]; then
-    rm "$sdir/screen/$lighthouse_lf"
-  fi
+#   if [[ -f "$sdir/screen/$lighthouse_lf" ]]; then
+#     rm "$sdir/screen/$lighthouse_lf"
+#   fi
   
-  if [[ -f "$sdir/screen/$nimbus_lf" ]]; then
-    rm "$sdir/screen/$nimbus_lf"
-  fi
+#   if [[ -f "$sdir/screen/$nimbus_lf" ]]; then
+#     rm "$sdir/screen/$nimbus_lf"
+#   fi
 
-  # Prepare scripts and add sessions
-  add_user_screen_session "$geth_cmd" "geth" "$geth_lf" "$sdir/geth" "$sdir/screen"
-  add_user_screen_session "$lighthouse_cmd" "lighthouse" "$lighthouse_lf" "$sdir/lighthouse" "$sdir/screen"
-  add_user_screen_session "$nimbus_cmd" "nimbus" "$nimbus_lf" "$sdir/nimbus" "$sdir/screen"
-}
+#   # Prepare scripts and add sessions
+#   add_user_screen_session "$geth_cmd" "geth" "$geth_lf" "$sdir/geth" "$sdir/screen"
+#   add_user_screen_session "$lighthouse_cmd" "lighthouse" "$lighthouse_lf" "$sdir/lighthouse" "$sdir/screen"
+#   add_user_screen_session "$nimbus_cmd" "nimbus" "$nimbus_lf" "$sdir/nimbus" "$sdir/screen"
+# }
 
 
 # MAIN 
@@ -236,8 +236,7 @@ if [ ! -f $FLAG ]; then
   
 ## 0. Add some necessary repositories ######################################################  
   echo "Adding Ethereum repositories"
-  wget -q -O - http://apt.ethereumonarm.com/eoa.apt.keyring.gpg | tee /etc/apt/trusted.gpg.d/eoa.apt.keyring.gpg > /dev/null
-  add-apt-repository -y -n "deb http://apt.ethereumonarm.com jammy main"
+  sudo add-apt-repository -y ppa:ethereum/ethereum
   
   echo "Adding nimbus repositories"
   echo 'deb https://apt.status.im/nimbus all main' | tee /etc/apt/sources.list.d/nimbus.list
@@ -314,12 +313,24 @@ if [ ! -f $FLAG ]; then
   # Install Ethereum packages
   echo "Installing Ethereum packages"
   # Install Layer 1
-  apt-get -y install geth lighthouse nimbus-beacon-node
-  # Install validator clients
-  #  apt-get -y install staking-deposit-cli nimbus-validator-client
-  # install Layer 2
-  # apt-get -y install arbitrum-nitro optimism-op-geth optimism-op-node polygon-bor polygon-heimdall starknet-juno
+  apt-get -y install geth nimbus-beacon-node
+  
+ 
+  LH_RELEASE_URL="https://api.github.com/repos/sigp/lighthouse/releases/latest"
+  LH_BINARIES_URL="$(curl -s $LH_RELEASE_URL | jq -r ".assets[] | select(.name) | .browser_download_url" | grep aarch64-unknown-linux-gnu.tar.gz$)"
 
+  echo Downloading Lighthouse URL: $LH_BINARIES_URL
+
+  # Download
+  wget -O /tmp/lighthouse.tar.gz $LH_BINARIES_URL
+  # Untar
+  tar -xzvf /tmp/lighthouse.tar.gz -C /tmp/
+  # Cleanup
+  rm /tmp/lighthouse.tar.gz
+
+  cp /tmp/lighthouse /usr/bin
+
+  lighthouse --version
 
 ## 6. MISC CONF STEPS ##############################################################################
 
@@ -351,57 +362,44 @@ if [ ! -f $FLAG ]; then
   apt-get install -y grafana
 
   # Copy datasources.yaml for grafana
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/yaml/datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
 
   # Copy dashboards.yaml for grafana
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
 
-  
-  # Copy dashboard_Web3Pi.json for grafana
-  # mkdir -p /home/ethereum/clients/grafana/dashboards
-  # cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/grafana/dashboards/node_monitoring.json /home/ethereum/clients/grafana/dashboards/node_monitoring.json
-  # chmod 744 /home/ethereum/clients/grafana/dashboards/node_monitoring.jso
-  
  
 #  systemctl enable grafana-server
   systemctl start grafana-server
  
- 
-  # BASIC SCREEN-BASED MONITORING
-  #echo "Configuring monitoring scripts and screen sessions"
-  #configure_monitoring_sessions
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
 
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
-
-  #echo "Configuring clients screen sessions"
-  #configure_clients_sessions
   
   echo "Configuring clients run scripts"
   sudo -u ethereum mkdir -p /home/ethereum/clients/geth
   sudo -u ethereum mkdir -p /home/ethereum/clients/lighthouse
   sudo -u ethereum mkdir -p /home/ethereum/clients/nimbus
   
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/geth/geth.sh /home/ethereum/clients/geth/geth.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/geth.sh /home/ethereum/clients/geth/geth.sh
   chmod +x /home/ethereum/clients/geth/geth.sh
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/lighthouse/lighthouse.sh /home/ethereum/clients/lighthouse/lighthouse.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/lighthouse.sh /home/ethereum/clients/lighthouse/lighthouse.sh
   chmod +x /home/ethereum/clients/lighthouse/lighthouse.sh
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
 
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
 
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/rpi5/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
@@ -411,6 +409,8 @@ if [ ! -f $FLAG ]; then
   sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
+  ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh
 
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
 
@@ -443,9 +443,6 @@ if [ ! -f $FLAG ]; then
 
   # Disable root user
   passwd -l root
-
-  # Delete ubuntu user
-  deluser ubuntu
 
   # Delete raspberry user
   deluser raspberry
@@ -543,8 +540,6 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
-#  echo "Setting up screen sessions"
-#  sudo -u ethereum /home/ethereum/init/screen.sh
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 

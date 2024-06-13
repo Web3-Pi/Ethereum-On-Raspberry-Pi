@@ -1,14 +1,17 @@
 [Unit]
-Description=Web3Pi Lighthouse Beacon chain
+Description=Web3Pi Lighthouse Consensus Layer Client service
 After=network.target
+Documentation=https://setup-guide.web3pi.io
 
 [Service]
 Type=simple
 WorkingDirectory=/home/ethereum
 ExecStart=/home/ethereum/clients/lighthouse/lighthouse.sh
 User=ethereum
-Restart=always
-RestartSec=120s
+Restart=on-failure
+RestartSec=120
+KillSignal=SIGINT
+TimeoutStopSec=900
 
 [Install]
 WantedBy=multi-user.target

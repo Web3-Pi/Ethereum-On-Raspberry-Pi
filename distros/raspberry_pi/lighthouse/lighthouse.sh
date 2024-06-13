@@ -30,10 +30,13 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
+# Script for finding the best server
+source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/pingServers.sh
 
 echo "$(date): Connected - ${pingServerAdr}"
 echo "exec_url = ${exec_url}"
 echo "lighthouse_port = ${lighthouse_port}"
+echo "best_server = ${best_server} ($best_ping ms)"
 
 echo "Run Lighthouse beacon node"
-lighthouse bn --network mainnet --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://beaconstate.info --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}
+lighthouse bn --network mainnet --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${best_server} --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}
