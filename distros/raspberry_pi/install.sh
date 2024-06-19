@@ -6,7 +6,19 @@
 SWAPFILE_SIZE=16384
 DEV_NVME="/dev/nvme0n1"
 DEV_USB="/dev/sda"
-MIN_VALID_DISK_SIZE=$((50 * 1024 * 1024 * 1024))
+W3P_DRIVE="NA"
+MIN_VALID_DISK_SIZE=$((150 * 1024 * 1024 * 1024))
+FLAG="/root/first-run.flag"
+ELOG="/root/elog.txt"
+
+# Terminate the script with saving logs
+terminateScript()
+{
+  echo "terminateScript()"
+  touch $ELOG
+  grep "rc.local" /var/log/syslog >> $ELOG 
+  exit 1
+}
 
 # Read custom config flags from /boot/firmware/config.txt
 config_read_file() {
@@ -20,22 +32,19 @@ config_get() {
 # use example 
 # echo "$(config_get lighthouse)";
 
-
 # STORAGE-RELATED SECTION
 
 get_best_disk() {
-  local retval=""
-
   if stat $DEV_NVME >/dev/null 2>&1; then
-    retval=$DEV_NVME
+    W3P_DRIVE=$DEV_NVME
   elif stat $DEV_USB >/dev/null 2>&1; then
-    retval=$DEV_USB
+    W3P_DRIVE=$DEV_USB
   else
+    W3P_DRIVE="NA"
     echo "No suitable disk found"
-    exit 1
+    terminateScript
+    #kill -9 $$
   fi
-
-  echo "$retval"
 }
 
 verify_size() {
@@ -44,7 +53,8 @@ verify_size() {
 
   if [[ ${#loc_array[@]} != 2 ]]; then
     echo "Unexpected error while reading disk size"
-    exit 1
+    terminateScript
+    #kill -9 $$
   fi
 
   if [[ ${loc_array[1]} -lt $MIN_VALID_DISK_SIZE ]]; then
@@ -72,7 +82,8 @@ prepare_disk() {
     # Verify that the provided disk is large enough to store at least part of the swap file and least significant part of consensus client state 
     if ! verify_size $PARTITION; then
       echo "Disk to small to proceed with installation"
-      exit 1
+      terminateScript
+      #kill -9 $$
     fi
 
     # Mount disk if it exists and is a Linux partition
@@ -121,113 +132,8 @@ prepare_disk() {
   echo "$PARTITION /home ext4 defaults,noatime 0 2" >> /etc/fstab && mount /home
 }
 
-
-# SCREEN CONFIGURATION
-
-function add_user_screen_session() {
-  local command=$1
-  local session_name=$2
-  local launch_script=$3
-
-  # Ensure correctnes of the directory structure
-  if [[ ! -d "$4" ]]; then
-    sudo -u ethereum mkdir -p "$4"
-  fi
-
-  if [[ ! -d "$5" ]]; then
-    sudo -u ethereum mkdir -p "$5"
-  fi
-
-  local script_dir="$(realpath $4)"
-  local launch_dir="$(realpath $5)"
-
-  local script_file="$script_dir/$session_name.sh"
-  local launch_file="$launch_dir/$launch_script"
-
-  # Change permissions and owner upon creation
-  local launch_update_required=false
-
-  if [[ -f "$launch_file" ]]; then
-    launch_update_required=true
-  fi
-
-  # Amend sudo commands
-  if [[ $# -gt 5 ]]; then
-    echo -e "sudo $command" > "$script_file"
-
-    # FIXME: hack - works only if session_name corresponds to an existing executable
-    echo "ethereum ALL=(root) NOPASSWD: $(command -v $session_name)" > "/etc/sudoers.d/sudo-amend-$session_name"
-  else
-    echo -e "$command" > "$script_file"
-  fi
-
-  echo -e "screen -dmS $session_name\nscreen -S $session_name -X screen $script_file\n" >> "$launch_file"
-
-  if [ $launch_update_required ]; then
-    chmod +x "$launch_file"
-    chown ethereum:ethereum "$launch_file"
-  fi
-
-  chmod +x "$script_file"
-  chown ethereum:ethereum "$script_file"
-}
-
-# function configure_monitoring_sessions() {
-#   local sdir="/home/ethereum/init/sessions"
-#   local ldir="/home/ethereum/init"
-#   local lf="screen.sh"
-
-#   # Sanity cleanup so that the commands are not duplicated
-#   local tf="$ldir/$lf"
-#   if [[ -f "$tf" ]]; then
-#     rm "$tf"
-#   fi
-
-#   # Add commands
-#   add_user_screen_session "watch -n 5 vcgencmd measure_temp" "temp" "$lf" "$sdir" "$ldir"
-#   add_user_screen_session "watch -n 5 vcgencmd measure_clock arm" "freq" "$lf" "$sdir" "$ldir"
-#   add_user_screen_session "iotop -oa -d 5" "iotop" "$lf" "$sdir" "$ldir" "amend_sudoer"
-# }
-
-# function configure_clients_sessions() {
-#   local sdir="/home/ethereum/clients"
-  
-#   local geth_lf="screen-exec-cli.sh"
-#   local lighthouse_lf="screen-consensus-lighthouse-cli.sh"
-#   local nimbus_lf="screen-consensus-nimbus-cli.sh"
-
-#   # https://geth.ethereum.org/docs/fundamentals/command-line-options
-#   local geth_cmd="geth --authrpc.port=8551 --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --state.scheme=path --discovery.port 30303 --port 30303"
-  
-#   # https://lighthouse-book.sigmaprime.io/help_bn.html
-#   local lighthouse_cmd="lighthouse bn --network mainnet --execution-endpoint http://localhost:8551 --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync --http --http-port 5052 --http-address=0.0.0.0 --port 9000"
-  
-#   # https://nimbus.guide/options.html
-#   local nimbus_cmd="nimbus_beacon_node --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --el=http://127.0.0.1:8551 --tcp-port=9000 --udp-port=9000 --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*'"
-
- 
-#   # Sanity cleanup so that the commands are not duplicated
-#   if [[ -f "$sdir/screen/$geth_lf" ]]; then
-#     rm "$sdir/screen/$geth_lf"
-#   fi
-
-#   if [[ -f "$sdir/screen/$lighthouse_lf" ]]; then
-#     rm "$sdir/screen/$lighthouse_lf"
-#   fi
-  
-#   if [[ -f "$sdir/screen/$nimbus_lf" ]]; then
-#     rm "$sdir/screen/$nimbus_lf"
-#   fi
-
-#   # Prepare scripts and add sessions
-#   add_user_screen_session "$geth_cmd" "geth" "$geth_lf" "$sdir/geth" "$sdir/screen"
-#   add_user_screen_session "$lighthouse_cmd" "lighthouse" "$lighthouse_lf" "$sdir/lighthouse" "$sdir/screen"
-#   add_user_screen_session "$nimbus_cmd" "nimbus" "$nimbus_lf" "$sdir/nimbus" "$sdir/screen"
-# }
-
-
 # MAIN 
-FLAG="/root/first-run.flag"
+
 if [ ! -f $FLAG ]; then
 
   echo "stop unattended-upgrades.service"
@@ -259,10 +165,11 @@ if [ ! -f $FLAG ]; then
 
   # Prepare drive to mount /home
   echo "Looking for a valid drive"
-  DRIVE="$(get_best_disk)"
+  get_best_disk
+  echo "W3P_DRIVE=$W3P_DRIVE"
 
-  echo "Preparing $DRIVE for installation"
-  prepare_disk $DRIVE
+  echo "Preparing $W3P_DRIVE for installation"
+  prepare_disk $W3P_DRIVE
 
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
