@@ -149,7 +149,7 @@ if [ ! -f $FLAG ]; then
     touch $RFLAG
     echo "RFLAG created"
     echo "Rebooting after rpi-eeprom-update"
-    delay 3s
+    sleep 3
     reboot
     exit 1
   fi
