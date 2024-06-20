@@ -9,6 +9,7 @@ DEV_USB="/dev/sda"
 W3P_DRIVE="NA"
 MIN_VALID_DISK_SIZE=$((150 * 1024 * 1024 * 1024))
 FLAG="/root/first-run.flag"
+RFLAG="/root/rflag.flag"
 ELOG="/root/elog.txt"
 
 # Terminate the script with saving logs
@@ -139,6 +140,20 @@ if [ ! -f $FLAG ]; then
   echo "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
+
+  # Firmware update
+  echo "rpi-eeprom-update -a"
+  sudo rpi-eeprom-update -a
+
+  if [ ! -f $RFLAG ]; then
+    touch $RFLAG
+    echo "RFLAG created"
+    echo "Rebooting after rpi-eeprom-update"
+    delay 3s
+    reboot
+    exit 1
+  fi
+
   
 ## 0. Add some necessary repositories ######################################################  
   echo "Adding Ethereum repositories"
