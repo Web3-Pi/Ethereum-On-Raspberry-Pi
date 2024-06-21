@@ -26,12 +26,6 @@ if [ ! -f $FLAG ]; then
 
   echo "$(date): Connected - ${pingServerAdr}"
 
-  
-  # Create a directory for Web3Pi files
-  #echo "RC.LOCAL - Create a directory for Web3Pi files"
-  #mkdir -p /opt/web3pi/
-  #chmod 777 /opt/web3pi/
-
   echo "RC.LOCAL - install git-extras avahi-daemon"
   apt-get -y install git-extras avahi-daemon
   

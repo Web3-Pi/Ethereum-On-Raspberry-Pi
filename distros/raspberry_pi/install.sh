@@ -142,10 +142,9 @@ if [ ! -f $FLAG ]; then
   systemctl disable unattended-upgrades
 
   # Firmware update
-  echo "rpi-eeprom-update -a"
-  sudo rpi-eeprom-update -a
-
   if [ ! -f $RFLAG ]; then
+    echo "rpi-eeprom-update -a"
+    sudo rpi-eeprom-update -a
     touch $RFLAG
     echo "RFLAG created"
     echo "Rebooting after rpi-eeprom-update"
