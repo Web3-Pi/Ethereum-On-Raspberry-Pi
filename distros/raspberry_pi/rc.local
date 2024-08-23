@@ -26,8 +26,8 @@ if [ ! -f $FLAG ]; then
 
   echo "$(date): Connected - ${pingServerAdr}"
 
-  echo "RC.LOCAL - apt-get -y update"
-  apt-get -y update
+  echo "RC.LOCAL - apt-get update"
+  apt-get update
 
   echo "RC.LOCAL - install git-extras avahi-daemon"
   apt-get -y install chrony git-extras avahi-daemon

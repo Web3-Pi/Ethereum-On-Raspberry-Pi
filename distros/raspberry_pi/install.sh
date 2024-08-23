@@ -189,18 +189,18 @@ if [ ! -f $FLAG ]; then
 ## 3. ACCOUNT CONFIGURATION ###################################################################
 
   # Create Ethereum account
-  echo "Creating ethereum user"
-  if ! id -u ethereum >/dev/null 2>&1; then
-    adduser --disabled-password --gecos "" ethereum
-  fi
+  #echo "Creating ethereum user"
+  #if ! id -u ethereum >/dev/null 2>&1; then
+  #  adduser --disabled-password --gecos "" ethereum
+  #fi
 
-  echo "ethereum:ethereum" | chpasswd
-  for GRP in sudo netdev audio video dialout plugdev; do
-    adduser ethereum $GRP
-  done
+  #echo "ethereum:ethereum" | chpasswd
+  #for GRP in sudo netdev audio video dialout plugdev; do
+  #  adduser ethereum $GRP
+  #done
 
   # Force password change on first login
-  chage -d 0 ethereum
+  #chage -d 0 ethereum
 
 
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
@@ -342,7 +342,7 @@ if [ ! -f $FLAG ]; then
   fi
 
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
-  chown ethereum:ethereum /home/ethereum/.bashrc
+  chown ethereum /home/ethereum/.bashrc
 
   echo "basic-system-monitor venv conf"
   cd /opt/web3pi/basic-system-monitor
@@ -360,13 +360,13 @@ if [ ! -f $FLAG ]; then
 ## 12. CLEANUP ###########################################################################################
 
   # RPi imager fix
-  chown root:root /etc
+  # chown root:root /etc
 
   # Disable root user
-  passwd -l root
+  # passwd -l root
 
   # Delete raspberry user
-  deluser raspberry
+  # deluser raspberry
 
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
