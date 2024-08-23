@@ -5,7 +5,7 @@ Documentation=https://setup-guide.web3pi.io
 
 [Service]
 Type=simple
-ExecStart=/opt/web3pi/clients/lighthouse/lighthouse.sh
+ExecStart=/home/ethereum/clients/geth/lighthouse.sh
 Restart=on-failure
 RestartSec=120
 KillSignal=SIGINT

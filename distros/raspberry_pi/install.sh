@@ -201,7 +201,7 @@ if [ ! -f $FLAG ]; then
   done
 
   # Force password change on first login
-  chage -d 0 ethereum
+  #chage -d 0 ethereum
 
 
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
@@ -210,7 +210,7 @@ if [ ! -f $FLAG ]; then
   apt-get -y install dphys-swapfile
 
   # Configure swap file location and size
-  sed -i "s|#CONF_SWAPFILE=.*|CONF_SWAPFILE=/home/ethereum/swapfile|" /etc/dphys-swapfile
+  sed -i "s|#CONF_SWAPFILE=.*|CONF_SWAPFILE=/mnt/storage/swapfile|" /etc/dphys-swapfile
   sed -i "s|#CONF_SWAPSIZE=.*|CONF_SWAPSIZE=$SWAPFILE_SIZE|" /etc/dphys-swapfile
   sed -i "s|#CONF_MAXSWAP=.*|CONF_MAXSWAP=$SWAPFILE_SIZE|" /etc/dphys-swapfile
 
@@ -326,9 +326,9 @@ if [ ! -f $FLAG ]; then
 
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
-  sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
+  sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
   #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
-  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /opt/web3pi/clients/secrets/jwt.hex
+  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
   echo " "
 
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
