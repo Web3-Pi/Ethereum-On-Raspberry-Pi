@@ -130,6 +130,7 @@ prepare_disk() {
   fi
 
   echo "Mounting $PARTITION as /mnt/storage"
+  mkdir /mnt/storage
   echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
 }
 
@@ -203,7 +204,8 @@ if [ ! -f $FLAG ]; then
   # Force password change on first login
   #chage -d 0 ethereum
 
-
+  chown ethereum:ethereum /mnt/storage/
+  
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
   
   # Install dphys-swapfile package
@@ -306,9 +308,11 @@ if [ ! -f $FLAG ]; then
 ## 9. CLIENTS CONFIGURATION ############################################################################
   
   echo "Configuring clients run scripts"
-  sudo -u ethereum mkdir -p /home/ethereum/clients/geth
-  sudo -u ethereum mkdir -p /home/ethereum/clients/lighthouse
-  sudo -u ethereum mkdir -p /home/ethereum/clients/nimbus
+  mkdir /home/ethereum/clients
+  
+  mkdir /home/ethereum/clients/geth
+  mkdir /home/ethereum/clients/lighthouse
+  mkdir /home/ethereum/clients/nimbus
   
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/geth.sh /home/ethereum/clients/geth/geth.sh
   chmod +x /home/ethereum/clients/geth/geth.sh
@@ -317,13 +321,14 @@ if [ ! -f $FLAG ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
+  chown -R ethereum:ethereum /home/ethereum/clients
+  
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
@@ -333,7 +338,9 @@ if [ ! -f $FLAG ]; then
 
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh
-
+  
+  chown -R ethereum:ethereum /home/ethereum/clients/secrets
+  
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
 
   # Force colored prompt
@@ -357,6 +364,7 @@ if [ ! -f $FLAG ]; then
 
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
+  chown -R ethereum:ethereum /opt/web3pi
 
 ## 12. CLEANUP ###########################################################################################
 

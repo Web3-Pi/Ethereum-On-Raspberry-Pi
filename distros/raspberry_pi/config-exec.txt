@@ -115,3 +115,5 @@ dtparam=pciex1
 #dtparam=pciex1_gen=3
 
 [all]
+
+hdmi_force_hotplug=1
