@@ -4,6 +4,8 @@
 #
 
 echo "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START"
+echo date | tee -a /root/log.txt
+timedatectl | tee -a /root/log.txt
 
 FLAG="/root/first-run.flag"
 if [ ! -f $FLAG ]; then

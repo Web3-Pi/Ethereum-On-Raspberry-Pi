@@ -112,4 +112,6 @@ dtparam=pciex1
 #Enable PCIe gen.3 (default is gen.2)
 #dtparam=pciex1_gen=3
 
+hdmi_force_hotplug=1
+
 [all]
