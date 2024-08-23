@@ -39,7 +39,7 @@ echo "nimbus_port = ${nimbus_port}"
 echo "best_server = ${best_server} ($best_ping ms)"
 
 echo "Run Nimbus beacon node - quick sync"
-nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --trusted-node-url=${best_server} --backfill=false
+nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/mnt/storage/.nimbus/data/shared_mainnet_0 --trusted-node-url=${best_server} --backfill=false
 
 echo "Run Nimbus beacon node"
-nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/home/ethereum/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/mnt/storage/.nimbus/data/shared_mainnet_0 --jwt-secret=/opt/web3pi/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update

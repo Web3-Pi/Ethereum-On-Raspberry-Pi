@@ -93,19 +93,19 @@ prepare_disk() {
       mount "$PARTITION" "$TMP_DIR"
     fi
 
-    # Check if the path /home/ethereum exists on the mounted disk
-    if [ -d "$TMP_DIR/ethereum" ]; then
-      echo "/home/ethereum already exists on the disk."
+    # Check if the .ethereum exists on the mounted disk
+    if [ -d "$TMP_DIR/.ethereum" ]; then
+      echo ".ethereum already exists on the disk."
 
-      # Check if the .format_me file exists in the /home/ethereum path
-      if [ -f "$TMP_DIR/ethereum/.format_me" ]; then
-        echo "The .format_me file was found in /home/ethereum. Formatting and mounting..."
+      # Check if the .format_me file exists in the .ethereum path
+      if [ -f "$TMP_DIR/.format_me" ]; then
+        echo "The .format_me file was found. Formatting and mounting..."
       else
-        echo "The .format_me file was not found in /home/ethereum. Skipping formatting."
+        echo "The .format_me file was not found. Skipping formatting."
         proceed_with_format=false
       fi
     else
-      echo "The path /home/ethereum does not exist on the disk. Formatting and mounting..."
+      echo "The .ethereum does not exist on the disk. Formatting and mounting..."
     fi
 
     # Unmount the disk from the temporary directory
@@ -129,9 +129,10 @@ prepare_disk() {
     tune2fs -m 0 $PARTITION
   fi
 
-  echo "Mounting $PARTITION as /home"
-  echo "$PARTITION /home ext4 defaults,noatime 0 2" >> /etc/fstab && mount /home
+  echo "Mounting $PARTITION as /mnt/storage"
+  echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
 }
+
 
 # MAIN 
 
@@ -172,12 +173,12 @@ if [ ! -f $FLAG ]; then
  
   echo "Installing required dependencies"
   apt-get update
-  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq
+  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq chrony
 
   
 ## 2. STORAGE SETUP ##########################################################################
 
-  # Prepare drive to mount /home
+  # Prepare drive to mount /mnt/storage
   echo "Looking for a valid drive"
   get_best_disk
   echo "W3P_DRIVE=$W3P_DRIVE"
@@ -200,7 +201,7 @@ if [ ! -f $FLAG ]; then
   done
 
   # Force password change on first login
-  # chage -d 0 ethereum
+  chage -d 0 ethereum
 
 
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
@@ -327,7 +328,7 @@ if [ ! -f $FLAG ]; then
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets
   #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
-  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
+  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /opt/web3pi/clients/secrets/jwt.hex
   echo " "
 
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
@@ -366,7 +367,7 @@ if [ ! -f $FLAG ]; then
   passwd -l root
 
   # Delete raspberry user
-  #deluser raspberry
+  deluser raspberry
 
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################

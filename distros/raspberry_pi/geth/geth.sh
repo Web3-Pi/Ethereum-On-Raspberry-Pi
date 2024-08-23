@@ -34,4 +34,4 @@ echo "$(date): Connected - ${pingServerAdr}"
 echo "geth_port = ${geth_port}"
 
 echo "Run Geth"
-geth --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth_port} --port ${geth_port} --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --state.scheme=path
+geth --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth_port} --port ${geth_port} --authrpc.jwtsecret /opt/web3pi/clients/secrets/jwt.hex --datadir /mnt/storage/.ethereum --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --state.scheme=path

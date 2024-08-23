@@ -5,9 +5,7 @@ Documentation=https://setup-guide.web3pi.io
 
 [Service]
 Type=simple
-WorkingDirectory=/home/ethereum
-ExecStart=/home/ethereum/clients/geth/geth.sh
-User=ethereum
+ExecStart=/opt/web3pi/clients/geth/geth.sh
 Restart=on-failure
 RestartSec=120
 KillSignal=SIGINT
