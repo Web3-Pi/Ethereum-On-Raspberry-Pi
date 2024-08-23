@@ -26,12 +26,21 @@ if [ ! -f $FLAG ]; then
 
   echo "$(date): Connected - ${pingServerAdr}"
 
+  echo "RC.LOCAL - apt-get -y update"
+  apt-get -y update
+
   echo "RC.LOCAL - install git-extras avahi-daemon"
-  apt-get -y install git-extras avahi-daemon
+  apt-get -y install chrony git-extras avahi-daemon
+
+  echo "RC.LOCAL - chronyd -q"
+  chronyd -q
+
+  echo date | tee -a /root/log.txt
+  timedatectl | tee -a /root/log.txt
   
   # Clone Web3Pi repo
   echo "RC.LOCAL - Clone Web3Pi repo"
-  git-force-clone --branch r3 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  git-force-clone --branch dev4 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   
   # Run the installation script
   echo "RC.LOCAL - Run installation script"
