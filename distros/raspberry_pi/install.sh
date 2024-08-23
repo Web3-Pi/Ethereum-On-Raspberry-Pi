@@ -237,7 +237,7 @@ if [ ! -f $FLAG ]; then
   # Install Ethereum packages
   echo "Installing Ethereum packages"
   # Install Layer 1
-  apt-get -y install geth nimbus-beacon-node
+  apt-get -y install ethereum nimbus-beacon-node
   
  
   LH_RELEASE_URL="https://api.github.com/repos/sigp/lighthouse/releases/latest"

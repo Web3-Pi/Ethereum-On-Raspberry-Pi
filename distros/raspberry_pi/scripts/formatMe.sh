@@ -15,7 +15,7 @@ ask_confirmation() {
 # Call the function and take appropriate actions based on the response
 if ask_confirmation; then
     # user chooses 'yes'
-    touch .format_me
+    touch /mnt/storage/.format_me
     echo "success"
 else
     # user chooses 'no'

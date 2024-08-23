@@ -5,7 +5,7 @@ Documentation=https://setup-guide.web3pi.io
 
 [Service]
 Type=simple
-ExecStart=/home/ethereum/clients/geth/nimbus.sh
+ExecStart=/home/ethereum/clients/nimbus/nimbus.sh
 Restart=on-failure
 RestartSec=120
 KillSignal=SIGINT
