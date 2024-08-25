@@ -183,7 +183,7 @@ if [ ! -f $FLAG ]; then
  
   echo "Installing required dependencies"
   apt-get update
-  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git
+  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
 
 
   echo "Configuring Basic Status Http service"
@@ -296,7 +296,7 @@ if [ ! -f $FLAG ]; then
   ufw --force disable
 
   # Install some extra dependencies
-  apt-get -y install libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
+  #apt-get -y install libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
 
  
 ## 7. MONITORING ####################################################################################
