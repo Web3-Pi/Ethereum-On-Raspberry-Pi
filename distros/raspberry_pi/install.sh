@@ -183,13 +183,17 @@ if [ ! -f $FLAG ]; then
  
   echo "Installing required dependencies"
   apt-get update
-  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
+  apt-get -y install python3-dev libpython3.12-dev python3.12-venv
 
 
   echo "Configuring Basic Status Http service"
   set_status "1. Configure HTTP status service"
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/run.sh
+
+  cd /opt/web3pi/basic-status-http/
+  python3 -m venv venv
+
   systemctl daemon-reload
   systemctl enable w3p_bsh.service
   systemctl start w3p_bsh.service
@@ -198,6 +202,8 @@ if [ ! -f $FLAG ]; then
   cd web3-pi-dashboard
   chmod +x create_service.sh
   sudo ./create_service.sh
+
+  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop
 
   
 ## 2. STORAGE SETUP ##########################################################################
