@@ -21,4 +21,4 @@ sudo apt-get -y upgrade geth
 
 # Starting the node
 echo "Start Geth service"
-sudo systemctl stop w3p_geth.service
+sudo systemctl start w3p_geth.service

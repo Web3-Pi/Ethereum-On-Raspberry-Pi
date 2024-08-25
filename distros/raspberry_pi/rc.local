@@ -7,11 +7,20 @@ echo "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOC
 echo date | tee -a /root/log.txt
 timedatectl | tee -a /root/log.txt
 
+# Function to write a string to a file with status
+set_status() {
+    local text="$1"  # Assign the first argument to a local variable
+    echo "$text" > /opt/web3pi/status.txt  # Write the string to the file
+}
+
+set_status "RC.LOCAL START"
+
 FLAG="/root/first-run.flag"
 if [ ! -f $FLAG ]; then
 
   # Checking internet connection
   echo "Checking internet connection"
+  set_status "Checking internet connection"
 
   pingServerAdr="github.com"
   ping_n=0
@@ -28,11 +37,12 @@ if [ ! -f $FLAG ]; then
 
   echo "$(date): Connected - ${pingServerAdr}"
 
+  set_status "RC.LOCAL - apt-get update"
   echo "RC.LOCAL - apt-get update"
   apt-get update
 
-  echo "RC.LOCAL - install git-extras avahi-daemon"
-  apt-get -y install chrony git-extras avahi-daemon
+  echo "RC.LOCAL - install chrony avahi-daemon git-extras"
+  apt-get -y install chrony avahi-daemon git-extras
 
   echo "RC.LOCAL - chronyd -q"
   chronyd -q
@@ -45,10 +55,13 @@ if [ ! -f $FLAG ]; then
   git-force-clone --branch dev4 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   
   # Run the installation script
+  set_status "RC.LOCAL - Run installation script"
   echo "RC.LOCAL - Run installation script"
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 
 fi
+
+set_status "END RC.LOCAL exit 0"
 
 exit 0

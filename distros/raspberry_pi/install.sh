@@ -26,6 +26,12 @@ config_read_file() {
     (grep -E "^${2}=" -m 1 "${1}" 2>/dev/null || echo "VAR=UNDEFINED") | head -n 1 | cut -d '=' -f 2-;
 }
 
+# Function to write a string to a file with status
+set_status() {
+    local text="$1"  # Assign the first argument to a local variable
+    echo "$text" > /opt/web3pi/status.txt  # Write the string to the file
+}
+
 config_get() {
     val="$(config_read_file /boot/firmware/config.txt "${1}")";
     printf -- "%s" "${val}";
@@ -139,12 +145,15 @@ prepare_disk() {
 
 if [ ! -f $FLAG ]; then
 
+  set_status "first run"
+
   echo "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
   # Firmware update
   if [ ! -f $RFLAG ]; then
+    set_status "Firmware Update"
     echo "rpi-eeprom-update -a"
     sudo rpi-eeprom-update -a
     touch $RFLAG
@@ -174,10 +183,26 @@ if [ ! -f $FLAG ]; then
  
   echo "Installing required dependencies"
   apt-get update
-  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq chrony
+  apt-get -y install gdisk software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git
+
+
+  echo "Configuring Basic Status Http service"
+  set_status "1. Configure HTTP status service"
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/run.sh
+  systemctl daemon-reload
+  systemctl enable w3p_bsh.service
+  systemctl start w3p_bsh.service
+
+  git clone https://github.com/Web3-Pi/web3-pi-dashboard.git
+  cd web3-pi-dashboard
+  chmod +x create_service.sh
+  sudo ./create_service.sh
 
   
 ## 2. STORAGE SETUP ##########################################################################
+
+  set_status "2. Add some necessary repositories"
 
   # Prepare drive to mount /mnt/storage
   echo "Looking for a valid drive"
@@ -189,6 +214,8 @@ if [ ! -f $FLAG ]; then
 
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
+
+  set_status "3. STORAGE SETUP"
 
   # Create Ethereum account
   echo "Creating ethereum user"
@@ -207,6 +234,8 @@ if [ ! -f $FLAG ]; then
   chown ethereum:ethereum /mnt/storage/
   
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
+  
+  set_status "4. SWAP SPACE CONFIGURATION"
   
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
@@ -232,6 +261,8 @@ if [ ! -f $FLAG ]; then
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  
+  set_status "5. ETHEREUM INSTALLATION"
+
   # Ethereum software installation
   
   # Install Ethereum packages
@@ -258,6 +289,8 @@ if [ ! -f $FLAG ]; then
 
 ## 6. MISC CONF STEPS ##############################################################################
 
+  set_status "6. MISC CONF STEPS"
+
   # Install ufw
   apt-get -y install ufw
   ufw --force disable
@@ -267,6 +300,8 @@ if [ ! -f $FLAG ]; then
 
  
 ## 7. MONITORING ####################################################################################
+
+  set_status "7. MONITORING instalation"
 
   #echo "stop unattended-upgrades.service"
   #systemctl stop unattended-upgrades
@@ -298,6 +333,8 @@ if [ ! -f $FLAG ]; then
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
+  set_status "8. SERVICES CONFIGURATION"
+
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
@@ -307,6 +344,8 @@ if [ ! -f $FLAG ]; then
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
   
+  set_status "9. CLIENTS CONFIGURATION"
+
   echo "Configuring clients run scripts"
   mkdir /home/ethereum/clients
   
@@ -330,6 +369,9 @@ if [ ! -f $FLAG ]; then
   chown -R ethereum:ethereum /home/ethereum/clients
   
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
+
+  set_status "10. Adding client directories required to run the node"
+
   echo "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
   #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
@@ -342,6 +384,8 @@ if [ ! -f $FLAG ]; then
   chown -R ethereum:ethereum /home/ethereum/clients/secrets
   
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
+
+  set_status "11. CONVENIENCE CONFIGURATION"
 
   # Force colored prompt
   echo "Setting up a colored prompt"
@@ -368,6 +412,8 @@ if [ ! -f $FLAG ]; then
 
 ## 12. CLEANUP ###########################################################################################
 
+  set_status "12. CLEANUP"
+
   # RPi imager fix
   chown root:root /etc
 
@@ -380,7 +426,9 @@ if [ ! -f $FLAG ]; then
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
 
-# Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
+  set_status "13. READ CONFIG FROM CONFIG.TXT"
+
+  # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
 
   if [ "$(config_get influxdb)" = "true" ]; then
@@ -470,6 +518,8 @@ if [ ! -f $FLAG ]; then
   echo "Rebooting..."
   reboot
 else
+
+  set_status "Not First Fun - READ CONFIG FROM CONFIG.TXT"
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
@@ -564,5 +614,6 @@ if [ "$_IP" ]; then
   printf "\n\n\nRaspberry Pi IP address is %s\n\n\n" "$_IP"
 fi
 
+  set_status "END install.sh exit 0"
 
 exit 0
