@@ -74,7 +74,6 @@ set_status() {
   echolog " " 
 }
 
-set_install_stage 2
 set_status "install.sh - start"
 
 # Terminate the script with saving logs
@@ -200,20 +199,30 @@ prepare_disk() {
 }
 
 
-# Run basic-status-http ASAP
+# Install basic-status-http ASAP
 if [ "$(get_install_stage)" -eq 2 ]; then
 
+  set_status "Clone basic-status-http repository"
   git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/bsh/
 
-  set_status "Configure HTTP status service"
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
-  systemctl daemon-reload
-  systemctl enable w3p_bsh.service
-  systemctl start w3p_bsh.service
+  # set_status "Configure HTTP status service"
+  # cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
+  # systemctl daemon-reload
+  # systemctl enable w3p_bsh.service
+  # systemctl start w3p_bsh.service
 
   set_install_stage 3
 
 fi
+
+# Run basic-status-http ASAP
+if [ "$(get_install_stage)" -ge 3 ]; then
+
+  set_status "Run HTTP status service"
+  python3 /opt/web3pi/bsh/main.py
+
+fi
+
 
 # Firmwate updates
 if [ "$(get_install_stage)" -eq 3 ]; then
@@ -222,19 +231,20 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
+  set_install_stage 4
+
   # Firmware update
-  if [ ! -f $RFLAG ]; then
+  #if [ ! -f $RFLAG ]; then
     set_status "Firmware Update"
     sudo rpi-eeprom-update -a
-    touch $RFLAG
-    echolog "RFLAG created"
+    #touch $RFLAG
+    #echolog "RFLAG created"
     set_status "Rebooting after rpi-eeprom-update"
     sleep 10
     reboot
     exit 1
-  fi
+  #fi
 
-  set_install_stage 4
 fi
 
 # MAIN installation part
@@ -578,6 +588,9 @@ if [ "$(get_install_stage)" -eq 4 ]; then
   set_status "Rebooting..."
   sleep 10
   reboot
+
+fi
+
 
 if [ "$(get_install_stage)" -eq 100 ]; then
 
