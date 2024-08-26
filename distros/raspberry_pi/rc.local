@@ -3,65 +3,115 @@
 # rc.local
 #
 
-echo "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START"
-echo date | tee -a /root/log.txt
-timedatectl | tee -a /root/log.txt
 
-# Function to write a string to a file with status
-set_status() {
-    local text="$1"  # Assign the first argument to a local variable
-    echo "$text" > /opt/web3pi/status.txt  # Write the string to the file
+# Function: echolog
+# Description: Logs messages with a timestamp prefix. If no arguments are provided,
+#              reads from stdin and logs each line. Outputs to console and appends to $LOGI file.
+LOGI="/var/log/web3pi.log"
+echolog(){
+    if [ $# -eq 0 ]
+    then cat - | while read -r message
+        do
+                echo "$(date +"[%F %T %Z] -") $message" | tee -a $LOGI
+            done
+    else
+        echo -n "$(date +'[%F %T %Z]') - " | tee -a $LOGI
+        echo $* | tee -a $LOGI
+    fi
 }
 
-set_status "RC.LOCAL START"
+echolog " "
+echolog "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START"
+echolog " "
+timedatectl | echolog
 
-FLAG="/root/first-run.flag"
-if [ ! -f $FLAG ]; then
 
-  # Checking internet connection
-  echo "Checking internet connection"
-  set_status "Checking internet connection"
+# Function: set_install_stage
+# Description: A function that saves the installation stage to the file /root/.install_stage. The file stores a number as text. The beginning of the installation is marked by 0, and the higher the number, the further along the installation process is. A value of 100 indicates the installation is complete.
+set_install_stage() {
+  local number=$1
+  echo $number > /root/.install_stage
+}
 
-  pingServerAdr="github.com"
-  ping_n=0
-  ping_max=10
-
-  ping -c 1 $pingServerAdr > /dev/null 2>&1
-  while [ $? -ne 0 ]; do
-    echo -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
-    sleep 6
-    let "ping_n+=1"
-    [[ ${ping_n} -gt ${ping_max} ]] && echo "Stopping the installation, internet access is necessary" && exit 1
-    ping -c 1 $pingServerAdr > /dev/null 2>&1
-  done
-
-  echo "$(date): Connected - ${pingServerAdr}"
-
-  set_status "RC.LOCAL - apt-get update"
-  echo "RC.LOCAL - apt-get update"
-  apt-get update
-
-  echo "RC.LOCAL - install chrony avahi-daemon git-extras"
-  apt-get -y install chrony avahi-daemon git-extras
-
-  echo "RC.LOCAL - chronyd -q"
-  chronyd -q
-
-  echo date | tee -a /root/log.txt
-  timedatectl | tee -a /root/log.txt
-  
-  # Clone Web3Pi repo
-  echo "RC.LOCAL - Clone Web3Pi repo"
-  git-force-clone --branch dev4 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
-  
-  # Run the installation script
-  set_status "RC.LOCAL - Run installation script"
-  echo "RC.LOCAL - Run installation script"
-  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
-  ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
-
+# If the installation stage file does not exist, create it and initialize it with the value "0".
+if [ ! -f "/root/.install_stage" ]; then
+  echolog "/root/.install_stage not exist"
+  touch /root/.install_stage
+  set_install_stage "0" # initial value
+  echolog "/root/.install_stage file created and initialized to 0"
 fi
 
-set_status "END RC.LOCAL exit 0"
+# Function: get_install_stage
+# Description: A function that retrieves the installation stage from the file /root/.install_stage.
+get_install_stage() {
+    local file_path=$1
+    if [ -f "/root/.install_stage" ]; then
+        local number=$(cat "/root/.install_stage")
+        echo $number
+    else
+        echolog "File /root/.install_stage does not exist."
+        return 0
+    fi
+}
+
+
+# Function: set_status
+# Function to write a string to a file with status
+set_status() {
+  local status="$1"  # Assign the first argument to a local variable
+  echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
+  echolog " " 
+  echolog "STAGE $(get_install_stage): $status" 
+  echolog " " 
+}
+
+
+set_status "rc.local - started"
+
+# Checking internet connection
+set_status "Checking internet connection"
+
+pingServerAdr="github.com"
+ping_n=0
+ping_max=10
+
+ping -c 1 $pingServerAdr > /dev/null 2>&1
+while [ $? -ne 0 ]; do
+  echolog -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
+  sleep 6
+  let "ping_n+=1"
+  [[ ${ping_n} -gt ${ping_max} ]] && echolog "Stopping the installation, internet access is necessary" && exit 1
+  ping -c 1 $pingServerAdr > /dev/null 2>&1
+done
+
+echolog "$(date): Connected - ${pingServerAdr}"
+
+
+
+if [ "$(get_install_stage)" -eq 0 ]; then
+
+  # Install essential dependencies
+  set_status "rc.local - Install essential dependencies"
+  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-flask python3-netifaces
+
+  set_status "rc.local - time sync with NTP"
+  chronyd -q
+
+  timedatectl | echolog
+
+  set_status "rc.local - Ethereum-On-Raspberry-Pi repo clone"
+  git-force-clone --branch dev4 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
+
+  set_install_stage 1
+fi
+
+if [ "$(get_install_stage)" -ge 1 ]; then
+  # Run the installation script
+  set_status "rc.local - Run installation script"
+  ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
+fi
+
+set_status "rc.local exit 0"
 
 exit 0

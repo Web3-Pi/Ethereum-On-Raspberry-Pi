@@ -3,7 +3,7 @@ Description=Web3Pi Basic Status HTTP
 After=network.target
 
 [Service]
-ExecStart=/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/run.sh
+ExecStart=python3 /opt/web3pi/bsh/main.py
 Restart=always
 RestartSec=60s
 

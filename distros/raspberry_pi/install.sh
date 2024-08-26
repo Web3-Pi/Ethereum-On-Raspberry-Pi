@@ -12,10 +12,75 @@ FLAG="/root/first-run.flag"
 RFLAG="/root/rflag.flag"
 ELOG="/root/elog.txt"
 
+# Function: echolog
+# Description: Logs messages with a timestamp prefix. If no arguments are provided,
+#              reads from stdin and logs each line. Outputs to console and appends to $LOGI file.
+LOGI="/var/log/web3pi.log"
+echolog(){
+    if [ $# -eq 0 ]
+    then cat - | while read -r message
+        do
+                echo "$(date +"[%F %T %Z] -") $message" | tee -a $LOGI
+            done
+    else
+        echo -n "$(date +'[%F %T %Z]') - " | tee -a $LOGI
+        echo $* | tee -a $LOGI
+    fi
+}
+
+echolog " "
+echolog "Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START"
+echolog " "
+timedatectl | echolog
+
+
+# Function: set_install_stage
+# Description: A function that saves the installation stage to the file /root/.install_stage. The file stores a number as text. The beginning of the installation is marked by 0, and the higher the number, the further along the installation process is. A value of 100 indicates the installation is complete.
+set_install_stage() {
+  local number=$1
+  echo $number > /root/.install_stage
+}
+
+
+# If the installation stage file does not exist, create it and initialize it with the value "0".
+if [ ! -f "/root/.install_stage" ]; then
+  echolog "/root/.install_stage not exist"
+  touch /root/.install_stage
+  set_install_stage "0" # initial value
+  echolog "/root/.install_stage file created and initialized to 0"
+fi
+
+# Function: get_install_stage
+# Description: A function that retrieves the installation stage from the file /root/.install_stage.
+get_install_stage() {
+    local file_path=$1
+    if [ -f "/root/.install_stage" ]; then
+        local number=$(cat "/root/.install_stage")
+        echo $number
+    else
+        echolog "File /root/.install_stage does not exist."
+        return 0
+    fi
+}
+
+
+# Function: set_status
+# Function to write a string to a file with status
+set_status() {
+  local status="$1"  # Assign the first argument to a local variable
+  echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
+  echolog " " 
+  echolog "STAGE $(get_install_stage): $status" 
+  echolog " " 
+}
+
+set_install_stage 2
+set_status "install.sh - start"
+
 # Terminate the script with saving logs
 terminateScript()
 {
-  echo "terminateScript()"
+  echolog "terminateScript()"
   touch $ELOG
   grep "rc.local" /var/log/syslog >> $ELOG 
   exit 1
@@ -24,12 +89,6 @@ terminateScript()
 # Read custom config flags from /boot/firmware/config.txt
 config_read_file() {
     (grep -E "^${2}=" -m 1 "${1}" 2>/dev/null || echo "VAR=UNDEFINED") | head -n 1 | cut -d '=' -f 2-;
-}
-
-# Function to write a string to a file with status
-set_status() {
-    local text="$1"  # Assign the first argument to a local variable
-    echo "$text" > /opt/web3pi/status.txt  # Write the string to the file
 }
 
 config_get() {
@@ -48,7 +107,7 @@ get_best_disk() {
     W3P_DRIVE=$DEV_USB
   else
     W3P_DRIVE="NA"
-    echo "No suitable disk found"
+    echolog "No suitable disk found"
     terminateScript
     #kill -9 $$
   fi
@@ -59,7 +118,7 @@ verify_size() {
   local loc_array=($part_size)
 
   if [[ ${#loc_array[@]} != 2 ]]; then
-    echo "Unexpected error while reading disk size"
+    echolog "Unexpected error while reading disk size"
     terminateScript
     #kill -9 $$
   fi
@@ -84,11 +143,11 @@ prepare_disk() {
   fi
 
   if [[ $num_of_partitions != 1 ]]; then
-    echo "$DISK contains $num_of_partitions partitions (exactly one allowed). Formating."
+    echolog "$DISK contains $num_of_partitions partitions (exactly one allowed). Formating."
   else
     # Verify that the provided disk is large enough to store at least part of the swap file and least significant part of consensus client state 
     if ! verify_size $PARTITION; then
-      echo "Disk to small to proceed with installation"
+      echolog "Disk to small to proceed with installation"
       terminateScript
       #kill -9 $$
     fi
@@ -101,17 +160,17 @@ prepare_disk() {
 
     # Check if the .ethereum exists on the mounted disk
     if [ -d "$TMP_DIR/.ethereum" ]; then
-      echo ".ethereum already exists on the disk."
+      echolog ".ethereum already exists on the disk."
 
       # Check if the .format_me file exists in the .ethereum path
       if [ -f "$TMP_DIR/.format_me" ]; then
-        echo "The .format_me file was found. Formatting and mounting..."
+        echolog "The .format_me file was found. Formatting and mounting..."
       else
-        echo "The .format_me file was not found. Skipping formatting."
+        echolog "The .format_me file was not found. Skipping formatting."
         proceed_with_format=false
       fi
     else
-      echo "The .ethereum does not exist on the disk. Formatting and mounting..."
+      echolog "The .ethereum does not exist on the disk. Formatting and mounting..."
     fi
 
     # Unmount the disk from the temporary directory
@@ -123,108 +182,105 @@ prepare_disk() {
 
   if [ "$proceed_with_format" = true ]; then
     # Create a new partition and format it as ext4
-    echo "Creating new partition and formatting disk: $DISK..."
+    echolog "Creating new partition and formatting disk: $DISK..."
     wipefs -a "$DISK"
     sgdisk -n 0:0:0 "$DISK"
     mkfs.ext4 -F "$PARTITION" || {
-      echo "Unable to format $PARTITION"
+      echolog "Unable to format $PARTITION"
       return 1
     }
 
-    echo "Removing FS reserved blocks on partion $PARTITION"
+    echolog "Removing FS reserved blocks on partion $PARTITION"
     tune2fs -m 0 $PARTITION
   fi
 
-  echo "Mounting $PARTITION as /mnt/storage"
+  echolog "Mounting $PARTITION as /mnt/storage"
   mkdir /mnt/storage
   echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
 }
 
 
-# MAIN 
+# Run basic-status-http ASAP
+if [ "$(get_install_stage)" -eq 2 ]; then
 
-if [ ! -f $FLAG ]; then
+  git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/bsh/
 
-  set_status "first run"
+  set_status "Configure HTTP status service"
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
+  systemctl daemon-reload
+  systemctl enable w3p_bsh.service
+  systemctl start w3p_bsh.service
 
-  echo "stop unattended-upgrades.service"
+  set_install_stage 3
+
+fi
+
+# Firmwate updates
+if [ "$(get_install_stage)" -eq 3 ]; then
+  
+  set_status "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
   # Firmware update
   if [ ! -f $RFLAG ]; then
     set_status "Firmware Update"
-    echo "rpi-eeprom-update -a"
     sudo rpi-eeprom-update -a
     touch $RFLAG
-    echo "RFLAG created"
-    echo "Rebooting after rpi-eeprom-update"
-    #sleep 3
+    echolog "RFLAG created"
+    set_status "Rebooting after rpi-eeprom-update"
+    sleep 10
     reboot
     exit 1
   fi
 
-  
+  set_install_stage 4
+fi
+
+# MAIN installation part
+if [ "$(get_install_stage)" -eq 4 ]; then
+
+  set_status "stop unattended-upgrades.service"
+  systemctl stop unattended-upgrades
+  systemctl disable unattended-upgrades
+
 ## 0. Add some necessary repositories ######################################################  
-  echo "Adding Ethereum repositories"
+  set_status "Adding Ethereum repositories"
   sudo add-apt-repository -y ppa:ethereum/ethereum
   
-  echo "Adding nimbus repositories"
+  set_status "Adding nimbus repositories"
   echo 'deb https://apt.status.im/nimbus all main' | tee /etc/apt/sources.list.d/nimbus.list
   # Import the GPG key
   curl https://apt.status.im/pubkey.asc -o /etc/apt/trusted.gpg.d/apt-status-im.asc
 
-  echo "Adding Grafana repositories"
+  set_status "Adding Grafana repositories"
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
 
 ## 1. Install some required dependencies ####################################################
  
-  echo "Installing required dependencies"
+  set_status "Installing required dependencies"
   apt-get update
-  apt-get -y install python3-dev libpython3.12-dev python3.12-venv
-
-
-  echo "Configuring Basic Status Http service"
-  set_status "1. Configure HTTP status service"
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
-  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/run.sh
-
-  cd /opt/web3pi/basic-status-http/
-  python3 -m venv venv
-
-  systemctl daemon-reload
-  systemctl enable w3p_bsh.service
-  systemctl start w3p_bsh.service
-
-  git clone https://github.com/Web3-Pi/web3-pi-dashboard.git
-  cd web3-pi-dashboard
-  chmod +x create_service.sh
-  sudo ./create_service.sh
-
-  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop
-
+  apt-get -y install python3-dev libpython3.12-dev python3.12-venv software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop
   
 ## 2. STORAGE SETUP ##########################################################################
 
-  set_status "2. Add some necessary repositories"
-
   # Prepare drive to mount /mnt/storage
-  echo "Looking for a valid drive"
+  set_status "Looking for a valid drive"
   get_best_disk
-  echo "W3P_DRIVE=$W3P_DRIVE"
+  echolog "W3P_DRIVE=$W3P_DRIVE"
 
-  echo "Preparing $W3P_DRIVE for installation"
+  set_status "Preparing $W3P_DRIVE for installation"
   prepare_disk $W3P_DRIVE
 
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
 
-  set_status "3. STORAGE SETUP"
+  set_status "ACCOUNT CONFIGURATION"
 
   # Create Ethereum account
-  echo "Creating ethereum user"
+  echolog "Creating ethereum user"
   if ! id -u ethereum >/dev/null 2>&1; then
     adduser --disabled-password --gecos "" ethereum
   fi
@@ -241,7 +297,7 @@ if [ ! -f $FLAG ]; then
   
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
   
-  set_status "4. SWAP SPACE CONFIGURATION"
+  set_status "SWAP SPACE CONFIGURATION"
   
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
@@ -267,12 +323,12 @@ if [ ! -f $FLAG ]; then
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  
-  set_status "5. ETHEREUM INSTALLATION"
+  set_status "ETHEREUM INSTALLATION"
 
   # Ethereum software installation
   
   # Install Ethereum packages
-  echo "Installing Ethereum packages"
+  echolog "Installing Ethereum packages"
   # Install Layer 1
   apt-get -y install ethereum nimbus-beacon-node
   
@@ -280,7 +336,7 @@ if [ ! -f $FLAG ]; then
   LH_RELEASE_URL="https://api.github.com/repos/sigp/lighthouse/releases/latest"
   LH_BINARIES_URL="$(curl -s $LH_RELEASE_URL | jq -r ".assets[] | select(.name) | .browser_download_url" | grep aarch64-unknown-linux-gnu.tar.gz$)"
 
-  echo Downloading Lighthouse URL: $LH_BINARIES_URL
+  echolog Downloading Lighthouse URL: $LH_BINARIES_URL
 
   # Download
   wget -O /tmp/lighthouse.tar.gz $LH_BINARIES_URL
@@ -295,7 +351,7 @@ if [ ! -f $FLAG ]; then
 
 ## 6. MISC CONF STEPS ##############################################################################
 
-  set_status "6. MISC CONF STEPS"
+  set_status "MISC CONF STEPS"
 
   # Install ufw
   apt-get -y install ufw
@@ -307,23 +363,20 @@ if [ ! -f $FLAG ]; then
  
 ## 7. MONITORING ####################################################################################
 
-  set_status "7. MONITORING instalation"
-
-  #echo "stop unattended-upgrades.service"
-  #systemctl stop unattended-upgrades
+  set_status "MONITORING instalation"
   
   # Installing InfluxDB
-  echo "Installing InfluxDB v1.8.10"
+  echolog "Installing InfluxDB v1.8.10"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
   sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
 #  systemctl enable influxdb
   systemctl start influxdb
-  sleep 5
+  sleep 10
   influx -execute 'CREATE DATABASE ethonrpi'
   influx -execute "CREATE USER geth WITH PASSWORD 'geth'"
   
   # Installing Grafana
-  echo "Installing Grafana"
+  echolog "Installing Grafana"
   apt-get install -y grafana
 
   # Copy datasources.yaml for grafana
@@ -339,7 +392,7 @@ if [ ! -f $FLAG ]; then
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
-  set_status "8. SERVICES CONFIGURATION"
+  set_status "SERVICES CONFIGURATION"
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
@@ -350,9 +403,9 @@ if [ ! -f $FLAG ]; then
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
   
-  set_status "9. CLIENTS CONFIGURATION"
+  set_status "CLIENTS CONFIGURATION"
 
-  echo "Configuring clients run scripts"
+  echolog "Configuring clients run scripts"
   mkdir /home/ethereum/clients
   
   mkdir /home/ethereum/clients/geth
@@ -376,13 +429,13 @@ if [ ! -f $FLAG ]; then
   
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
 
-  set_status "10. Adding client directories required to run the node"
+  set_status "Adding client directories required to run the node"
 
-  echo "Adding client directories required to run the node"
+  echolog "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
   #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
   sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
-  echo " "
+  echolog " "
 
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh
@@ -391,10 +444,10 @@ if [ ! -f $FLAG ]; then
   
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
 
-  set_status "11. CONVENIENCE CONFIGURATION"
+  set_status "CONVENIENCE CONFIGURATION"
 
   # Force colored prompt
-  echo "Setting up a colored prompt"
+  echolog "Setting up a colored prompt"
   if [[ ! -f "/home/ethereum/.bashrc" ]]; then
     cp /etc/skel/.bashrc /home/ethereum
   fi
@@ -402,13 +455,13 @@ if [ ! -f $FLAG ]; then
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
 
-  echo "basic-system-monitor venv conf"
+  echolog "basic-system-monitor venv conf"
   cd /opt/web3pi/basic-system-monitor
   python3 -m venv venv
 
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
   
-  echo "basic-eth2-node-monitor venv conf"
+  echolog "basic-eth2-node-monitor venv conf"
   cd /opt/web3pi/basic-eth2-node-monitor
   python3 -m venv venv
 
@@ -418,7 +471,7 @@ if [ ! -f $FLAG ]; then
 
 ## 12. CLEANUP ###########################################################################################
 
-  set_status "12. CLEANUP"
+  set_status "CLEANUP"
 
   # RPi imager fix
   chown root:root /etc
@@ -432,183 +485,186 @@ if [ ! -f $FLAG ]; then
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
 
-  set_status "13. READ CONFIG FROM CONFIG.TXT"
+  set_status "READ CONFIG FROM CONFIG.TXT"
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
-  echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
+  echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
 
   if [ "$(config_get influxdb)" = "true" ]; then
-    echo "Service config: Enable influxdb.service"
+    echolog "Service config: Enable influxdb.service"
     systemctl enable influxdb.service
 #    systemctl start influxdb.service
   elif  [ "$(config_get influxdb)" = "false" ]; then
-    echo "Service config: Disable influxdb.service"
+    echolog "Service config: Disable influxdb.service"
     systemctl disable influxdb.service
   else
-    echo "Service config: NoChange influxdb.service"
+    echolog "Service config: NoChange influxdb.service"
   fi
 
   if [ "$(config_get grafana)" = "true" ]; then
-    echo "Service config: Enable grafana-server.service"
+    echolog "Service config: Enable grafana-server.service"
     systemctl enable grafana-server.service
  #   systemctl start grafana-server.service
   elif  [ "$(config_get grafana)" = "false" ]; then
-    echo "Service config: Disable grafana-server.service"
+    echolog "Service config: Disable grafana-server.service"
     systemctl disable grafana-server.service
   else
-    echo "Service config: NoChange grafana-server.service"
+    echolog "Service config: NoChange grafana-server.service"
   fi
  
   if [ "$(config_get bsm)" = "true" ]; then
-    echo "Service config: Enable w3p_bsm.service"
+    echolog "Service config: Enable w3p_bsm.service"
     systemctl enable w3p_bsm.service
   # systemctl start w3p_bsm.service
   elif  [ "$(config_get bsm)" = "false" ]; then
-    echo "Service config: Disable w3p_bsm.service"
+    echolog "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
   else
-    echo "Service config: NoChange w3p_bsm.service"
+    echolog "Service config: NoChange w3p_bsm.service"
   fi
 
   if [ "$(config_get bnm)" = "true" ]; then
-    echo "Service config: Enable w3p_bnm.service"
+    echolog "Service config: Enable w3p_bnm.service"
     systemctl enable w3p_bnm.service
   # systemctl start w3p_bnm.service
   elif  [ "$(config_get bnm)" = "false" ]; then
-    echo "Service config: Disable w3p_bnm.service"
+    echolog "Service config: Disable w3p_bnm.service"
     systemctl disable w3p_bnm.service
   else
-    echo "Service config: NoChange w3p_bnm.service"
+    echolog "Service config: NoChange w3p_bnm.service"
   fi
 
   if [ "$(config_get geth)" = "true" ]; then
-    echo "Service config: Enable w3p_geth.service"
+    echolog "Service config: Enable w3p_geth.service"
     systemctl enable w3p_geth.service
   # systemctl start w3p_geth.service
   elif  [ "$(config_get geth)" = "false" ]; then
-    echo "Service config: Disable w3p_geth.service"
+    echolog "Service config: Disable w3p_geth.service"
     systemctl disable w3p_geth.service
   else
-    echo "Service config: NoChange w3p_geth.service"
+    echolog "Service config: NoChange w3p_geth.service"
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
-    echo "Service config: Enable w3p_lighthouse-beacon.service"
+    echolog "Service config: Enable w3p_lighthouse-beacon.service"
     systemctl enable w3p_lighthouse-beacon.service
   # systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
-    echo "Service config: Disable w3p_lighthouse-beacon.service"
+    echolog "Service config: Disable w3p_lighthouse-beacon.service"
     systemctl disable w3p_lighthouse-beacon.service
   else
-    echo "Service config: NoChange w3p_lighthouse-beacon.service"
+    echolog "Service config: NoChange w3p_lighthouse-beacon.service"
   fi
 
 
   if [ "$(config_get nimbus)" = "true" ]; then
-    echo "Service config: Enable w3p_nimbus-beacon.service"
+    echolog "Service config: Enable w3p_nimbus-beacon.service"
     systemctl enable w3p_nimbus-beacon.service
   # systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
-    echo "Service config: Disable w3p_nimbus-beacon.service"
+    echolog "Service config: Disable w3p_nimbus-beacon.service"
     systemctl disable w3p_nimbus-beacon.service
   else
-    echo "Service config: NoChange w3p_nimbus-beacon.service"
+    echolog "Service config: NoChange w3p_nimbus-beacon.service"
   fi
   
 
 
   #the next line creates an empty file so it won't run the next boot
   touch $FLAG
+  set_install_stage 100
   grep "rc.local" /var/log/syslog >> $FLAG
   
-  echo "Rebooting..."
+  set_status "Rebooting..."
+  sleep 10
   reboot
-else
+
+if [ "$(get_install_stage)" -eq 100 ]; then
 
   set_status "Not First Fun - READ CONFIG FROM CONFIG.TXT"
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
-  echo "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
+  echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
 
   if [ "$(config_get influxdb)" = "true" ]; then
-    echo "Service config: Enable influxdb.service"
+    echolog "Service config: Enable influxdb.service"
     systemctl enable influxdb.service
     systemctl start influxdb.service
   elif  [ "$(config_get influxdb)" = "false" ]; then
-    echo "Service config: Disable influxdb.service"
+    echolog "Service config: Disable influxdb.service"
     systemctl disable influxdb.service
   else
-    echo "Service config: NoChange influxdb.service"
+    echolog "Service config: NoChange influxdb.service"
   fi
 
   if [ "$(config_get grafana)" = "true" ]; then
-    echo "Service config: Enable grafana-server.service"
+    echolog "Service config: Enable grafana-server.service"
     systemctl enable grafana-server.service
     systemctl start grafana-server.service
   elif  [ "$(config_get grafana)" = "false" ]; then
-    echo "Service config: Disable grafana-server.service"
+    echolog "Service config: Disable grafana-server.service"
     systemctl disable grafana-server.service
   else
-    echo "Service config: NoChange grafana-server.service"
+    echolog "Service config: NoChange grafana-server.service"
   fi
   
   if [ "$(config_get bsm)" = "true" ]; then
-    echo "Service config: Enable w3p_bsm.service"
+    echolog "Service config: Enable w3p_bsm.service"
     systemctl enable w3p_bsm.service
     systemctl start w3p_bsm.service
   elif  [ "$(config_get bsm)" = "false" ]; then
-    echo "Service config: Disable w3p_bsm.service"
+    echolog "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
   else
-    echo "Service config: NoChange w3p_bsm.service"
+    echolog "Service config: NoChange w3p_bsm.service"
   fi
 
   if [ "$(config_get bnm)" = "true" ]; then
-    echo "Service config: Enable w3p_bnm.service"
+    echolog "Service config: Enable w3p_bnm.service"
     systemctl enable w3p_bnm.service
     systemctl start w3p_bnm.service
   elif  [ "$(config_get bnm)" = "false" ]; then
-    echo "Service config: Disable w3p_bnm.service"
+    echolog "Service config: Disable w3p_bnm.service"
     systemctl disable w3p_bnm.service
   else
-    echo "Service config: NoChange w3p_bnm.service"
+    echolog "Service config: NoChange w3p_bnm.service"
   fi
 
   if [ "$(config_get geth)" = "true" ]; then
-    echo "Service config: Enable w3p_geth.service"
+    echolog "Service config: Enable w3p_geth.service"
     systemctl enable w3p_geth.service
     systemctl start w3p_geth.service
   elif  [ "$(config_get geth)" = "false" ]; then
-    echo "Service config: Disable w3p_geth.service"
+    echolog "Service config: Disable w3p_geth.service"
     systemctl disable w3p_geth.service
   else
-    echo "Service config: NoChange w3p_geth.service"
+    echolog "Service config: NoChange w3p_geth.service"
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
-    echo "Service config: Enable w3p_lighthouse-beacon.service"
+    echolog "Service config: Enable w3p_lighthouse-beacon.service"
     systemctl enable w3p_lighthouse-beacon.service
     systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
-    echo "Service config: Disable w3p_lighthouse-beacon.service"
+    echolog "Service config: Disable w3p_lighthouse-beacon.service"
     systemctl disable w3p_lighthouse-beacon.service
   else
-    echo "Service config: NoChange w3p_lighthouse-beacon.service"
+    echolog "Service config: NoChange w3p_lighthouse-beacon.service"
   fi
 
 
   if [ "$(config_get nimbus)" = "true" ]; then
-    echo "Service config: Enable w3p_nimbus-beacon.service"
+    echolog "Service config: Enable w3p_nimbus-beacon.service"
     systemctl enable w3p_nimbus-beacon.service
     systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
-    echo "Service config: Disable w3p_nimbus-beacon.service"
+    echolog "Service config: Disable w3p_nimbus-beacon.service"
     systemctl disable w3p_nimbus-beacon.service
   else
-    echo "Service config: NoChange w3p_nimbus-beacon.service"
+    echolog "Service config: NoChange w3p_nimbus-beacon.service"
   fi
 
-  echo "start unattended-upgrades.service"
+  echolog "start unattended-upgrades.service"
   systemctl enable unattended-upgrades
 
 fi
@@ -620,6 +676,6 @@ if [ "$_IP" ]; then
   printf "\n\n\nRaspberry Pi IP address is %s\n\n\n" "$_IP"
 fi
 
-  set_status "END install.sh exit 0"
+set_status "END install.sh exit 0"
 
 exit 0
