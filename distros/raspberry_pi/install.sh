@@ -200,7 +200,7 @@ prepare_disk() {
 
 
 # Install basic-status-http ASAP
-if [ "$(get_install_stage)" -eq 2 ]; then
+if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "Clone basic-status-http repository"
   git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/bsh/
@@ -210,12 +210,12 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   systemctl daemon-reload
   systemctl enable w3p_bsh.service
 
-  set_install_stage 3
+  set_install_stage 2
 
 fi
 
 # Run basic-status-http ASAP
-if [ "$(get_install_stage)" -ge 3 ]; then
+if [ "$(get_install_stage)" -ge 2 ]; then
 
   set_status "Run HTTP status service"
   systemctl start w3p_bsh.service
@@ -224,13 +224,13 @@ fi
 
 
 # Firmwate updates
-if [ "$(get_install_stage)" -eq 3 ]; then
+if [ "$(get_install_stage)" -eq 2 ]; then
   
+  set_install_stage 3
+
   set_status "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
-
-  set_install_stage 4
 
   # Firmware update
   #if [ ! -f $RFLAG ]; then
@@ -247,7 +247,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
 fi
 
 # MAIN installation part
-if [ "$(get_install_stage)" -eq 4 ]; then
+if [ "$(get_install_stage)" -eq 3 ]; then
 
   set_status "stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
