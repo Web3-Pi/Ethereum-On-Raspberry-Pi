@@ -29,7 +29,7 @@ echolog(){
 }
 
 echolog " "
-echolog "Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START"
+echolog "Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START"
 echolog " "
 timedatectl | echolog
 
@@ -254,6 +254,14 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   systemctl disable unattended-upgrades
 
 ## 0. Add some necessary repositories ######################################################  
+
+  set_status "time sync with NTP"
+  chronyd -q
+
+  timedatectl | echolog
+
+  sleep 3
+
   set_status "Adding Ethereum repositories"
   sudo add-apt-repository -y ppa:ethereum/ethereum
   
@@ -372,10 +380,10 @@ if [ "$(get_install_stage)" -eq 3 ]; then
  
 ## 7. MONITORING ####################################################################################
 
-  set_status "MONITORING instalation"
+  #set_status "MONITORING instalation"
   
   # Installing InfluxDB
-  echolog "Installing InfluxDB v1.8.10"
+  set_status "Installing InfluxDB v1.8.10"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
   sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
 #  systemctl enable influxdb
@@ -385,7 +393,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   influx -execute "CREATE USER geth WITH PASSWORD 'geth'"
   
   # Installing Grafana
-  echolog "Installing Grafana"
+  set_status "Installing Grafana"
   apt-get install -y grafana
 
   # Copy datasources.yaml for grafana
@@ -394,7 +402,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   # Copy dashboards.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
 
- 
+  set_status "Start Grafana"
 #  systemctl enable grafana-server
   systemctl start grafana-server
  
