@@ -4,6 +4,7 @@
 #
 
 echo "RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START - RC.LOCAL START"
+timedatectl
 
 FLAG="/root/first-run.flag"
 if [ ! -f $FLAG ]; then
@@ -27,8 +28,11 @@ if [ ! -f $FLAG ]; then
   echo "$(date): Connected - ${pingServerAdr}"
 
   echo "RC.LOCAL - install git-extras avahi-daemon"
-  apt-get -y install git-extras avahi-daemon
-  
+  apt-get -y install chrony avahi-daemon git-extras
+  echo "rc.local - time sync with NTP"
+  chronyd -q
+  timedatectl
+
   # Clone Web3Pi repo
   echo "RC.LOCAL - Clone Web3Pi repo"
   git-force-clone --branch r3 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
