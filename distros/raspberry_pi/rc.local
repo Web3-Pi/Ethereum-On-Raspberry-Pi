@@ -106,12 +106,16 @@ if [ "$(get_install_stage)" -eq 0 ]; then
   set_install_stage 1
 fi
 
-if [ "$(get_install_stage)" -ge 1 ] && [ "$(get_install_stage)" -lt 100 ]; then
+if [ "$(get_install_stage)" -ge 1 ]; then
   # Run the installation script
   set_status "rc.local - Run installation script"
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 fi
 
 set_status "rc.local exit 0"
+
+if [ "$(get_install_stage)" -eq 100 ]; then
+  set_status "Installation completed"
+fi
 
 exit 0
