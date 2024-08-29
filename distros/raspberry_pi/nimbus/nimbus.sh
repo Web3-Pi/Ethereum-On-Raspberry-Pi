@@ -61,7 +61,7 @@ ping_max=10
 
 ping -c 1 $pingServerAdr > /dev/null 2>&1
 while [ $? -ne 0 ]; do
-  echo -e "$(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
+  echolog -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
   sleep 6
   let "ping_n+=1"
   [[ ${ping_n} -gt ${ping_max} ]] && echolog "Internet access is necessary" && exit 1
