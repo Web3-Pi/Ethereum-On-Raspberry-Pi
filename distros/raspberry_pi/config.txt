@@ -88,23 +88,23 @@ dtoverlay=vc4-kms-v3d,cma-128
 dtoverlay=dwc2,dr_mode=host
 # Overclocking Raspberry Pi CM4
 # Active cooling is required
-over_voltage=6
-arm_freq=1800
+# over_voltage=6
+# arm_freq=1800
 
 [pi4]
 # Overclocking Raspberry Pi 4
 # Active cooling is required
-over_voltage=6
-arm_freq=1800
+# over_voltage=6
+# arm_freq=1800
 
 [pi5]
 # Overclocking Raspberry Pi 5
 # Active cooling is required
-over_voltage_delta=50000
-arm_freq=2800
-#2400MHz is default
-#3000MHz is max (not all boards will work stable)
-#2800MHz is reasonable OC
+# over_voltage_delta=50000
+# arm_freq=2800
+# 2400MHz is default
+# 3000MHz is max (not all boards will work stable)
+# 2800MHz is reasonable OC
 usb_max_current_enable=1
 
 #Enable PCIe
