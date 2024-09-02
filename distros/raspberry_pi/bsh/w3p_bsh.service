@@ -1,0 +1,11 @@
+[Unit]
+Description=Web3Pi Basic Status HTTP
+After=network.target
+
+[Service]
+ExecStart=python3 /opt/web3pi/bsh/main.py
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=multi-user.target
