@@ -214,6 +214,7 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   set_status "Clone web3-pi-dashboard repository"
   git-force-clone --branch dev1 https://github.com/Web3-Pi/web3-pi-dashboard.git /opt/web3pi/bhm/
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bhm/w3p_bhm.service /etc/systemd/system/w3p_bhm.service
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bhm/run.sh
   systemctl daemon-reload
   systemctl enable w3p_bhm.service
 
