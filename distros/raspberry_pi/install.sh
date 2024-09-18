@@ -210,6 +210,11 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   systemctl daemon-reload
   systemctl enable w3p_bsh.service
 
+  set_status "Clone web3-pi-dashboard repository"
+  git-force-clone --branch dev1 https://github.com/Web3-Pi/web3-pi-dashboard.git /opt/web3pi/bhm/
+  chmod +x /opt/web3pi/bhm/create_service.sh
+  ./opt/web3pi/bhm/create_service.sh
+
   set_install_stage 2
 
 fi
