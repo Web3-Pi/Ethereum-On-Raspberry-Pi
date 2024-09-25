@@ -308,7 +308,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   done
 
   # Force password change on first login
-  #chage -d 0 ethereum
+  chage -d 0 ethereum
 
   chown ethereum:ethereum /mnt/storage/
   
