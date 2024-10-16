@@ -92,6 +92,7 @@ if [ "$(get_install_stage)" -eq 0 ]; then
 
   # Install essential dependencies
   set_status "rc.local - Install essential dependencies"
+  apt-get update
   apt-get -y install chrony avahi-daemon git-extras python3-pip python3-flask python3-netifaces
 
   set_status "rc.local - time sync with NTP"
