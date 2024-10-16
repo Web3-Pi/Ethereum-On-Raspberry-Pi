@@ -7,7 +7,9 @@ lighthouse=false
 # Monitoring
 influxdb=true
 grafana=true
+# Basic System Monitor
 bsm=true
+# Basic Eth2 Node Monitor
 bnm=true
 
 #Execution endpoint address
@@ -110,7 +112,7 @@ usb_max_current_enable=1
 #Enable PCIe
 dtparam=pciex1
 #Enable PCIe gen.3 (default is gen.2)
-#dtparam=pciex1_gen=3
+dtparam=pciex1_gen=3
 
 [all]
 

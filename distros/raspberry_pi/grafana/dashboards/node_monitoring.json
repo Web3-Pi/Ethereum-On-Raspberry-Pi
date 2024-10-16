@@ -1,4 +1,53 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDB_V1",
+      "label": "InfluxDB_v1",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.2.2"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,7 +67,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -32,7 +81,10 @@
       "id": 19,
       "panels": [
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -123,7 +175,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "status_node",
@@ -154,7 +206,10 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -209,7 +264,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -257,7 +312,10 @@
           "type": "gauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -341,7 +399,7 @@
               "alias": "",
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -385,7 +443,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -491,7 +552,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "status_exec",
@@ -522,7 +583,10 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -628,7 +692,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "status_consensus",
@@ -659,7 +723,10 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -717,7 +784,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "chain",
@@ -746,7 +813,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "hide": false,
@@ -776,7 +843,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "hide": false,
@@ -806,7 +873,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "hide": false,
@@ -838,7 +905,10 @@
           "type": "bargauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -949,7 +1019,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -997,7 +1067,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1046,7 +1116,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1128,7 +1201,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1176,7 +1249,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1294,7 +1370,7 @@
               "alias": "",
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "status_node",
@@ -1327,7 +1403,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1382,7 +1461,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1430,7 +1509,10 @@
           "type": "gauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1514,7 +1596,7 @@
               "alias": "",
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1558,7 +1640,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1606,7 +1691,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [],
               "measurement": "chain",
@@ -1637,7 +1722,10 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1715,7 +1803,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1763,7 +1851,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1874,7 +1965,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1922,7 +2013,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -1971,7 +2062,10 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2053,7 +2147,7 @@
             {
               "datasource": {
                 "type": "influxdb",
-                "uid": "P4B5EB7AC8565B06F"
+                "uid": "${DS_INFLUXDB_V1}"
               },
               "groupBy": [
                 {
@@ -2120,7 +2214,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
+        "uid": "${DS_INFLUXDB_V1}"
       },
       "description": "",
       "fieldConfig": {
@@ -2184,7 +2278,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 2,
         "w": 4,
         "x": 0,
         "y": 2
@@ -2210,10 +2304,13 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.1.4",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [],
           "measurement": "status_node",
           "orderByTime": "ASC",
@@ -2247,819 +2344,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "displayName": "progress",
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 4,
-        "x": 4,
-        "y": 2
-      },
-      "id": 16,
-      "options": {
-        "displayMode": "lcd",
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 0,
-        "namePlacement": "auto",
-        "orientation": "vertical",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "text": {
-          "titleSize": 10,
-          "valueSize": 10
-        },
-        "valueMode": "text"
-      },
-      "pluginVersion": "11.1.4",
-      "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_0"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        },
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_1"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        },
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_2"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        },
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_3"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Sync progress",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds",
-            "seriesBy": "last"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisGridShow": false,
-            "axisLabel": "Sync status",
-            "axisPlacement": "auto",
-            "axisSoftMax": 100,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 31,
-            "gradientMode": "scheme",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "stepBefore",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 2,
-            "pointSize": 3,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "index": 0,
-                  "text": "0"
-                },
-                "to": 20
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 21,
-                "result": {
-                  "index": 1,
-                  "text": "S"
-                },
-                "to": 80
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 81,
-                "result": {
-                  "index": 2,
-                  "text": "1"
-                },
-                "to": 100
-              },
-              "type": "range"
-            }
-          ],
-          "min": 0,
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 4,
-        "x": 8,
-        "y": 2
-      },
-      "id": 17,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "alias": "",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_node",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Sync status history",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 3,
-        "x": 12,
-        "y": 2
-      },
-      "id": 15,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {
-          "valueSize": 15
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.1.4",
-      "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "last_block"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Chain Head",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 17,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 9,
-        "x": 15,
-        "y": 2
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "last_block"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Chain head",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "fieldMinMax": false,
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "index": 0,
-                  "text": "inactive"
-                },
-                "to": 25
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 26,
-                "result": {
-                  "index": 1,
-                  "text": "waiting"
-                },
-                "to": 45
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 46,
-                "result": {
-                  "index": 2,
-                  "text": "syncing"
-                },
-                "to": 76
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 77,
-                "result": {
-                  "index": 3,
-                  "text": "synced"
-                },
-                "to": 100
-              },
-              "type": "range"
-            }
-          ],
-          "noValue": "inactive",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#535353",
-                "value": null
-              },
-              {
-                "color": "light-yellow",
-                "value": 40
-              },
-              {
-                "color": "semi-dark-orange",
-                "value": 50
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 0,
-        "y": 5
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {
-          "valueSize": 20
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.1.4",
-      "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_exec",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Execution",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "fieldMinMax": false,
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "index": 0,
-                  "text": "inactive"
-                },
-                "to": 25
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 26,
-                "result": {
-                  "index": 1,
-                  "text": "waiting"
-                },
-                "to": 45
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 46,
-                "result": {
-                  "index": 2,
-                  "text": "syncing"
-                },
-                "to": 76
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 77,
-                "result": {
-                  "index": 3,
-                  "text": "synced"
-                },
-                "to": 100
-              },
-              "type": "range"
-            }
-          ],
-          "noValue": "inactive",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#535353",
-                "value": null
-              },
-              {
-                "color": "light-yellow",
-                "value": 40
-              },
-              {
-                "color": "semi-dark-orange",
-                "value": 50
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 2,
-        "y": 5
-      },
-      "id": 7,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {
-          "valueSize": 20
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.1.4",
-      "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_consensus",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
-      "title": "Consensus",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
+        "uid": "${DS_INFLUXDB_V1}"
       },
       "description": "",
       "fieldConfig": {
@@ -3132,9 +2417,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 8
+        "w": 10,
+        "x": 4,
+        "y": 2
       },
       "id": 3,
       "options": {
@@ -3152,11 +2437,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.1.4",
+      "pluginVersion": "11.2.2",
       "targets": [
         {
           "alias": "cpu_load",
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3202,7 +2490,10 @@
         },
         {
           "alias": "temp",
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3254,7 +2545,692 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 17,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 14,
+        "y": 2
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "last_block"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Chain head",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "index": 0,
+                  "text": "inactive"
+                },
+                "to": 25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 26,
+                "result": {
+                  "index": 1,
+                  "text": "waiting"
+                },
+                "to": 45
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 46,
+                "result": {
+                  "index": 2,
+                  "text": "syncing"
+                },
+                "to": 76
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 77,
+                "result": {
+                  "index": 3,
+                  "text": "synced"
+                },
+                "to": 100
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "inactive",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#535353",
+                "value": null
+              },
+              {
+                "color": "light-yellow",
+                "value": 40
+              },
+              {
+                "color": "semi-dark-orange",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 0,
+        "y": 4
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 20
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "measurement": "status_exec",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "active_percent"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Execution",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "index": 0,
+                  "text": "inactive"
+                },
+                "to": 25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 26,
+                "result": {
+                  "index": 1,
+                  "text": "waiting"
+                },
+                "to": 45
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 46,
+                "result": {
+                  "index": 2,
+                  "text": "syncing"
+                },
+                "to": 76
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 77,
+                "result": {
+                  "index": 3,
+                  "text": "synced"
+                },
+                "to": 100
+              },
+              "type": "range"
+            }
+          ],
+          "noValue": "inactive",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#535353",
+                "value": null
+              },
+              {
+                "color": "light-yellow",
+                "value": 40
+              },
+              {
+                "color": "semi-dark-orange",
+                "value": 50
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 2,
+        "y": 4
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 20
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "measurement": "status_consensus",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "active_percent"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Consensus",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 0,
+        "y": 6
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 15
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "last_block"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Chain Head",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "progress",
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 0,
+        "y": 8
+      },
+      "id": 16,
+      "options": {
+        "displayMode": "lcd",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 0,
+        "namePlacement": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {
+          "titleSize": 10,
+          "valueSize": 10
+        },
+        "valueMode": "text"
+      },
+      "pluginVersion": "11.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sync_part_perc_0"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sync_part_perc_1"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sync_part_perc_2"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "chain",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "sync_part_perc_3"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Sync progress",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
       },
       "description": "",
       "fieldConfig": {
@@ -3271,6 +3247,7 @@
             "axisPlacement": "auto",
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 20,
             "gradientMode": "scheme",
@@ -3354,8 +3331,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 18,
-        "x": 6,
+        "w": 10,
+        "x": 4,
         "y": 8
       },
       "id": 44,
@@ -3376,7 +3353,10 @@
       "targets": [
         {
           "alias": "cpu_usage",
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3416,7 +3396,10 @@
         },
         {
           "alias": "temp",
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3462,7 +3445,358 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Transfer rate",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "upload"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 14,
+        "y": 8
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "download",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "net",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "download_rate"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        },
+        {
+          "alias": "upload",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "net",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "upload_rate"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Network",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "Sync status",
+            "axisPlacement": "auto",
+            "axisSoftMax": 100,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 31,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "index": 0,
+                  "text": "0"
+                },
+                "to": 20
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 21,
+                "result": {
+                  "index": 1,
+                  "text": "S"
+                },
+                "to": 80
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 81,
+                "result": {
+                  "index": 2,
+                  "text": "1"
+                },
+                "to": 100
+              },
+              "type": "range"
+            }
+          ],
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 0,
+        "y": 14
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
+          "groupBy": [],
+          "measurement": "status_node",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "active_percent"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=~",
+              "value": "/^$single_dev$/"
+            }
+          ]
+        }
+      ],
+      "title": "Sync status history",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB_V1}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3478,6 +3812,7 @@
             "axisSoftMax": 8000000000,
             "axisSoftMin": 0,
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 17,
             "gradientMode": "opacity",
@@ -3548,9 +3883,9 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 10,
-        "x": 0,
+        "x": 4,
         "y": 14
       },
       "id": 2,
@@ -3572,7 +3907,10 @@
       },
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3617,7 +3955,10 @@
           ]
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3667,7 +4008,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P4B5EB7AC8565B06F"
+        "uid": "${DS_INFLUXDB_V1}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3681,6 +4022,7 @@
             "axisLabel": "Disk used GB",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 17,
             "gradientMode": "hue",
@@ -3726,9 +4068,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 14,
-        "x": 10,
+        "h": 6,
+        "w": 10,
+        "x": 14,
         "y": 14
       },
       "id": 9,
@@ -3748,7 +4090,10 @@
       },
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB_V1}"
+          },
           "groupBy": [
             {
               "params": [
@@ -3801,14 +4146,10 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "EthOnPi55_s",
-          "value": "EthOnPi55_s"
-        },
+        "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "P4B5EB7AC8565B06F"
+          "uid": "${DS_INFLUXDB_V1}"
         },
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Single device Ethereum nodes",
@@ -3826,15 +4167,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "isNone": true,
-          "selected": false,
-          "text": "None",
-          "value": ""
-        },
+        "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "P4B5EB7AC8565B06F"
+          "uid": "${DS_INFLUXDB_V1}"
         },
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Ethereum node based on two devices",
@@ -3896,13 +4232,13 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Ethereum Nodes Monitor",
-  "uid": "fdy90asap6eiob",
+  "title": "Ethereum Nodes Monitor v2",
+  "uid": "web3piv2p6eiob",
   "version": 1,
   "weekStart": ""
 }
