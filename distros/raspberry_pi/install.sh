@@ -203,7 +203,7 @@ prepare_disk() {
 if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "Clone basic-status-http repository"
-  git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/bsh/
+  git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/basic-status-http/
 
   set_status "Configure HTTP status service"
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
