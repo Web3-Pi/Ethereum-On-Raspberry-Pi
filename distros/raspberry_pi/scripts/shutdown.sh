@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Web3Pi shutdown system
+# Web3 Pi shutdown system
 #
 
 # check for required privileges

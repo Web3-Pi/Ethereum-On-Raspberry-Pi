@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Basic Ethereum Node Monitor
+Description=Web3 Pi Basic Ethereum Node Monitor
 After=network.target
 
 [Service]

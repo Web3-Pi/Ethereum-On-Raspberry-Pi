@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Web3Pi install script
+# Web3 Pi install script
 #
 
 SWAPFILE_SIZE=16384
@@ -29,7 +29,7 @@ echolog(){
 }
 
 echolog " "
-echolog "Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START - Web3Pi install.sh START"
+echolog "Web3 Pi install.sh START - Web3 Pi install.sh START - Web3 Pi install.sh START - Web3 Pi install.sh START - Web3 Pi install.sh START"
 echolog " "
 timedatectl | echolog
 

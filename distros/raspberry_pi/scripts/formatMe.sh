@@ -3,7 +3,7 @@
 # Function to ask for confirmation and wait for a response
 ask_confirmation() {
     while true; do
-        read -p "Drive will be formated during next run Web3Pi install script. \n Are you sure? (y/n): " yn
+        read -p "Drive will be formated during next run Web3 Pi install script. \n Are you sure? (y/n): " yn
         case $yn in
             [Yy]* ) echo "User chose 'yes'."; return 0;;
             [Nn]* ) echo "User chose 'no'."; return 1;;

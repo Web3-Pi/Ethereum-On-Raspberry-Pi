@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Lighthouse Consensus Layer Client service
+Description=Web3 Pi Lighthouse Consensus Client service
 After=network.target
 Documentation=https://setup-guide.web3pi.io
 

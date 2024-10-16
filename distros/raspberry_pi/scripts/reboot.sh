@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Web3Pi reboot system
+# Web3 Pi reboot system
 #
 
 # check for required privileges

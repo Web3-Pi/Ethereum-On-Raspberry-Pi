@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Web3Pi - Geth version update
+# Web3 Pi - Geth version update
 # https://geth.ethereum.org/docs/getting-started/installing-geth
 #
 

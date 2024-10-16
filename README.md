@@ -1,4 +1,4 @@
-## Web3Pi
+## Web3 Pi
 
 Basic suite of tools and references to existing projects to create and host Ethereum Nodes on the devices from the Raspberry Pi family.
 

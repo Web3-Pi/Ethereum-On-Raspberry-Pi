@@ -1,4 +1,4 @@
-# Web3Pi config - single node
+# Web3 Pi config - single node
 [web3pi]
 geth=true
 nimbus=true
@@ -12,7 +12,7 @@ bsm=true
 # Basic Eth2 Node Monitor
 bnm=true
 
-#Execution endpoint address
+# Execution endpoint address
 exec_url=http://localhost:8551
 
 [geth]
@@ -24,7 +24,7 @@ nimbus_port=9000
 [lighthouse]
 lighthouse_port=9000
 
-# End of Web3Pi config
+# End of Web3 Pi config
 
 
 [all]
@@ -109,9 +109,9 @@ dtoverlay=dwc2,dr_mode=host
 # 2800MHz is reasonable OC
 usb_max_current_enable=1
 
-#Enable PCIe
+# Enable PCIe
 dtparam=pciex1
-#Enable PCIe gen.3 (default is gen.2)
+# Enable PCIe gen.3 (default is gen.2)
 dtparam=pciex1_gen=3
 
 [all]

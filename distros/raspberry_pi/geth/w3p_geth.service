@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Geth Client
+Description=Web3 Pi Geth Client
 After=network.target
 Documentation=https://setup-guide.web3pi.io
 

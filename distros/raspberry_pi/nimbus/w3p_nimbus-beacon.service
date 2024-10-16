@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Nimbus Consensus Layer Client
+Description=Web3 Pi Nimbus Consensus Client
 After=network.target
 Documentation=https://setup-guide.web3pi.io
 

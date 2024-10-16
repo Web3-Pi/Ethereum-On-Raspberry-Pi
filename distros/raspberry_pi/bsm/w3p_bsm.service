@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Basic System Monitor
+Description=Web3 Pi Basic System Monitor
 After=network.target
 
 [Service]

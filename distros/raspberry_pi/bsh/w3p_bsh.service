@@ -1,5 +1,5 @@
 [Unit]
-Description=Web3Pi Basic Status HTTP
+Description=Web3 Pi Basic Status HTTP
 After=network.target
 
 [Service]

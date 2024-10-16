@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Web3Pi - Nimbus version update
+# Web3 Pi - Nimbus version update
 # https://nimbus.guide/keep-updated.html
 #
 
