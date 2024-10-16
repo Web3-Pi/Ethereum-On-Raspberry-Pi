@@ -1,53 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_INFLUXDB_V1",
-      "label": "InfluxDB_v1",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.2.2"
-    },
-    {
-      "type": "datasource",
-      "id": "influxdb",
-      "name": "InfluxDB",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -81,10 +32,7 @@
       "id": 19,
       "panels": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -173,10 +121,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "status_node",
               "orderByTime": "ASC",
@@ -206,10 +151,7 @@
           "type": "stat"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -262,10 +204,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -312,10 +251,7 @@
           "type": "gauge"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -397,10 +333,7 @@
           "targets": [
             {
               "alias": "",
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -443,10 +376,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -550,10 +480,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "status_exec",
               "orderByTime": "ASC",
@@ -583,10 +510,7 @@
           "type": "stat"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -690,10 +614,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "status_consensus",
               "orderByTime": "ASC",
@@ -723,10 +644,7 @@
           "type": "stat"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -782,10 +700,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "chain",
               "orderByTime": "ASC",
@@ -811,10 +726,7 @@
               ]
             },
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "hide": false,
               "measurement": "chain",
@@ -841,10 +753,7 @@
               ]
             },
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "hide": false,
               "measurement": "chain",
@@ -871,10 +780,7 @@
               ]
             },
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "hide": false,
               "measurement": "chain",
@@ -905,10 +811,7 @@
           "type": "bargauge"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1017,10 +920,7 @@
           },
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1065,10 +965,7 @@
               ]
             },
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1116,10 +1013,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1199,10 +1093,7 @@
           },
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1249,10 +1140,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1368,10 +1256,7 @@
           "targets": [
             {
               "alias": "",
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "status_node",
               "orderByTime": "ASC",
@@ -1403,10 +1288,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1459,10 +1341,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1509,10 +1388,7 @@
           "type": "gauge"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1594,10 +1470,7 @@
           "targets": [
             {
               "alias": "",
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1640,10 +1513,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1689,10 +1559,7 @@
           "pluginVersion": "11.1.4",
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [],
               "measurement": "chain",
               "orderByTime": "ASC",
@@ -1722,10 +1589,7 @@
           "type": "stat"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1801,10 +1665,7 @@
           },
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -1851,10 +1712,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1963,10 +1821,7 @@
           },
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -2011,10 +1866,7 @@
               ]
             },
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -2062,10 +1914,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2145,10 +1994,7 @@
           },
           "targets": [
             {
-              "datasource": {
-                "type": "influxdb",
-                "uid": "${DS_INFLUXDB_V1}"
-              },
+              "datasource": "InfluxDB_v1",
               "groupBy": [
                 {
                   "params": [
@@ -2212,10 +2058,7 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -2307,10 +2150,7 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "status_node",
           "orderByTime": "ASC",
@@ -2342,10 +2182,7 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -2441,10 +2278,7 @@
       "targets": [
         {
           "alias": "cpu_load",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -2490,10 +2324,7 @@
         },
         {
           "alias": "temp",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -2543,10 +2374,7 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2622,10 +2450,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -2672,10 +2497,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -2782,10 +2604,7 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "status_exec",
           "orderByTime": "ASC",
@@ -2815,10 +2634,7 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -2925,10 +2741,7 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "status_consensus",
           "orderByTime": "ASC",
@@ -2958,10 +2771,7 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3012,10 +2822,7 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "chain",
           "orderByTime": "ASC",
@@ -3045,10 +2852,7 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3105,10 +2909,7 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "chain",
           "orderByTime": "ASC",
@@ -3134,10 +2935,7 @@
           ]
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "hide": false,
           "measurement": "chain",
@@ -3164,10 +2962,7 @@
           ]
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "hide": false,
           "measurement": "chain",
@@ -3194,10 +2989,7 @@
           ]
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "hide": false,
           "measurement": "chain",
@@ -3228,10 +3020,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3353,10 +3142,7 @@
       "targets": [
         {
           "alias": "cpu_usage",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -3396,10 +3182,7 @@
         },
         {
           "alias": "temp",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -3443,10 +3226,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3547,10 +3327,7 @@
       "targets": [
         {
           "alias": "download",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -3591,10 +3368,7 @@
         },
         {
           "alias": "upload",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -3638,10 +3412,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3759,10 +3530,7 @@
       "targets": [
         {
           "alias": "",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [],
           "measurement": "status_node",
           "orderByTime": "ASC",
@@ -3794,10 +3562,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3907,10 +3672,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -3955,10 +3717,7 @@
           ]
         },
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -4006,10 +3765,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_INFLUXDB_V1}"
-      },
+      "datasource": "InfluxDB_v1",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4090,10 +3846,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_INFLUXDB_V1}"
-          },
+          "datasource": "InfluxDB_v1",
           "groupBy": [
             {
               "params": [
@@ -4147,10 +3900,7 @@
     "list": [
       {
         "current": {},
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB_V1}"
-        },
+        "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Single device Ethereum nodes",
         "hide": 0,
@@ -4168,10 +3918,7 @@
       },
       {
         "current": {},
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_INFLUXDB_V1}"
-        },
+        "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Ethereum node based on two devices",
         "hide": 0,
@@ -4232,7 +3979,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
