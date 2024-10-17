@@ -388,7 +388,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": 60000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1051,7 +1051,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": 60000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1579,7 +1579,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": false,
+            "spanNulls": 60000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1933,8 +1933,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#535353",
-                    "value": null
+                    "color": "#535353"
                   },
                   {
                     "color": "orange",
@@ -2024,8 +2023,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2158,8 +2156,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2292,8 +2289,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#535353",
-                    "value": null
+                    "color": "#535353"
                   },
                   {
                     "color": "yellow",
@@ -2427,8 +2423,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "#535353",
-                    "value": null
+                    "color": "#535353"
                   },
                   {
                     "color": "yellow",
@@ -2522,8 +2517,7 @@
                 "mode": "percentage",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               },
