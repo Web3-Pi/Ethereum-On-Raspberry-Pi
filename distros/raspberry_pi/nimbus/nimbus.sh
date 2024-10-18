@@ -22,7 +22,7 @@ echolog(){
             done
     else
         echo -n "$(date +'[%F %T %Z]') - " | tee -a $LOGI
-        echo $* | tee -a $LOGI
+        echo "$*" | tee -a $LOGI
     fi
 }
 
@@ -32,7 +32,7 @@ get_install_stage() {
     local file_path=$1
     if [ -f "/root/.install_stage" ]; then
         local number=$(cat "/root/.install_stage")
-        echo $number
+        echo "$number"
     else
         echolog "File /root/.install_stage does not exist."
         return 0
@@ -47,6 +47,14 @@ set_status() {
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
+}
+
+# Function to calculate average ping time
+calculate_average_ping() {
+  local server=$1
+  local server_address=$(echo "$server" | sed -E 's#^https?://##')
+  local avg_ping=$(ping -c 3 -q "$server_address" 2>/dev/null | grep -oP '(?<=rtt min/avg/max/mdev = )[0-9.]+(?=/)')
+  echo "$avg_ping"
 }
 
 nimbus_port="$(config_get nimbus_port)";
@@ -68,16 +76,56 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
-# Script for finding the best server
-source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/pingServers.sh
 
+nimbus_dir="/mnt/storage/.nimbus/data/shared_mainnet_0"
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "exec_url = ${exec_url}"
 echolog "nimbus_port = ${nimbus_port}"
-echolog "best_server = ${best_server} ($best_ping ms)"
+echolog "nimbus_dir = ${nimbus_dir}"
 
-echolog "Run Nimbus beacon node - quick sync"
-nimbus_beacon_node trustedNodeSync --network:mainnet --data-dir=/mnt/storage/.nimbus/data/shared_mainnet_0 --trusted-node-url=${best_server} --backfill=false
+bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/sort_servers.sh
 
-echolog "Run Nimbus beacon node"
-nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=/mnt/storage/.nimbus/data/shared_mainnet_0 --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+# File with the list of servers
+SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/serversList.txt"
+
+# Directory for Nimbus
+nimbus_dir="/mnt/storage/.nimbus/data/shared_mainnet_0"
+
+# Iterate through each server from the list
+success=false
+while read -r server; do
+  if [[ -n "$server" ]]; then
+    echolog "Attempting to sync with server: $server"
+    avg_ping=$(calculate_average_ping "$server")
+    echolog "Average ping = $avg_ping ms"
+    
+    # Run the Nimbus beacon node command and display output in real time
+    output=$(nimbus_beacon_node trustedNodeSync --network=mainnet --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1 | tee /dev/tty)
+    
+    # Searching for a line containing 'horizon' and extracting the value.
+    horizon_value=$(echo "$output" | grep -oP 'horizon=\K\d+')
+    echolog "horizon=$horizon_value "
+    
+    # Check the output for success messages
+    if [ "$horizon_value" -gt 0 ]; then
+      echolog "Sync successful with server: $server "
+      success=true
+      break
+    else
+      echolog "Sync failed with server: $server, trying next server..."
+      echolog "Removing $nimbus_dir "
+      rm -r $nimbus_dir
+    fi
+  fi
+done < "$SERVERS_FILE"
+
+
+# If the trustedNodeSync was successful
+if [ "$success" = true ]; then
+  echolog "Run Nimbus beacon node"
+  nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network:mainnet --data-dir=${nimbus_dir} --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+else
+  # If no server was successful
+  echolog "All servers failed to complete the trustedNodeSync."
+  exit 1
+fi
