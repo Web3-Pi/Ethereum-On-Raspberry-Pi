@@ -279,7 +279,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
  
   set_status "Installing required dependencies"
   apt-get update
-  apt-get -y install python3-dev libpython3.12-dev python3.12-venv software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop
+  apt-get -y install python3-dev libpython3.12-dev python3.12-venv software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop ccze
   
 ## 2. STORAGE SETUP ##########################################################################
 
@@ -370,13 +370,50 @@ if [ "$(get_install_stage)" -eq 3 ]; then
 
   set_status "MISC CONF STEPS"
 
+  sleep 1
+
   # Install ufw
+  set_status "Istalling UFW (firewall)"
   apt-get -y install ufw
-  ufw --force disable
+  # ufw --force disable
 
-  # Install some extra dependencies
-  #apt-get -y install libraspberrypi-bin iotop screen bpytop python3-dev libpython3.12-dev python3.12-venv
 
+  set_status "Configuring UFW (firewall)"
+
+  ufw allow 22/tcp comment "SSH"
+
+  geth_port="$(config_get geth_port)";
+  ufw allow ${geth_port}/tcp comment "Geth: peer-to-peer (P2P) communication"
+  ufw allow ${geth_port}/udp comment "Geth: peer-to-peer (P2P) communication"
+  ufw allow 8545/tcp comment "Geth: JSON-RPC server (HTTP)"
+  ufw allow 8546/tcp comment "Geth: WebSocket server"
+  # If the execution and consensus clients are on the same device, this port does not need to be open in the firewall, as communication occurs over localhost.
+  ufw allow 8551/tcp comment "Geth: Engine API, enabling communication between the execution and consensus layers"
+
+  nimbus_port="$(config_get nimbus_port)";
+  ufw allow ${nimbus_port}/tcp comment "Nimbus/Lighthouse: peer-to-peer (P2P) communication"
+  ufw allow ${nimbus_port}/udp comment "Nimbus/Lighthouse: peer-to-peer (P2P) communication"
+
+  lighthouse_port="$(config_get lighthouse_port)";
+  # If Lighthouse is not in use, this port can be closed.
+  ufw allow ${lighthouse_port}/tcp comment "Lighthouse: HTTP REST API"
+
+  ufw allow 3000/tcp comment "Grafana: web interface"
+
+  # If the database and cgrafana are on the same device, this port does not need to be open in the firewall, as communication occurs over localhost.
+  # ufw allow 8086/tcp comment "InfluxDB: HTTP API"
+
+  ufw allow 80/tcp comment "basic-status-http: web interface"
+
+  ufw allow 7197/tcp comment "basic-system-monitor: JSON"
+
+  ufw allow 5353/udp comment "avahi-daemon: mDNS"
+
+
+  sleep 3
+  set_status "Enable UFW (firewall)"
+  sudo ufw --force enable
+  ufw status verbose | echolog
  
 ## 7. MONITORING ####################################################################################
 
@@ -601,7 +638,7 @@ fi
 
 if [ "$(get_install_stage)" -eq 100 ]; then
 
-  set_status "Not First Fun - READ CONFIG FROM CONFIG.TXT"
+  set_status "Not First Run - READ CONFIG FROM CONFIG.TXT"
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
