@@ -533,8 +533,10 @@ if [ "$(get_install_stage)" -eq 3 ]; then
   # Disable root user
   passwd -l root
 
-  # Delete raspberry user
-  deluser raspberry
+  # Delete default user
+  defUserName=$(grep 'name:' /boot/firmware/user-data | sed -n 's/.*- name: //p')
+  echolog "defUserName=" $defUserName 
+  deluser $defUserName
 
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
