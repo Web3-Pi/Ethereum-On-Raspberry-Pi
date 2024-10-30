@@ -535,7 +535,7 @@ if [ "$(get_install_stage)" -eq 3 ]; then
 
   # Delete default user
   defUserName=$(grep 'name:' /boot/firmware/user-data | sed -n 's/.*- name: //p')
-  echolog "defUserName=" $defUserName 
+  echolog "defUserName="$defUserName 
   deluser $defUserName
 
 
