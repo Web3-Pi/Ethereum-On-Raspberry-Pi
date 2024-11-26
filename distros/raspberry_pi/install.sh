@@ -63,6 +63,22 @@ get_install_stage() {
     fi
 }
 
+# Function: set_status_json
+# Function to write a string to a file with status
+STATUS_FILE="/opt/web3pi/status.json"
+set_status_json() {
+  local status="$1"
+  local level="$2"
+  jq -n -c\
+    --arg status "$status"\
+    --arg stage "$(get_install_stage)"\
+    --arg time "$(date +"%Y-%m-%dT%H:%M:%S%z")"\
+    --arg level "$([ "$level" = "" ] && echo "INFO" || echo "$level")"\
+    '{"time": $time, "status": $status, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
+  #echolog " " 
+  #echolog "STAGE $(get_install_stage): $status" 
+  #echolog " " 
+}
 
 # Function: set_status
 # Function to write a string to a file with status
@@ -72,9 +88,16 @@ set_status() {
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
+  set_status_json "$status" INFO
 }
 
 set_status "install.sh - start"
+
+
+set_error() {
+  local status="$1"
+  set_status_json "$status" "ERROR"
+}
 
 # Terminate the script with saving logs
 terminateScript()
