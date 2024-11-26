@@ -642,6 +642,9 @@ if [ "$(get_install_stage)" -eq 100 ]; then
 
   set_status "Not First Run - READ CONFIG FROM CONFIG.TXT"
 
+  # WiFi stability fix
+  iw dev wlan0 set power_save off
+
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
 
