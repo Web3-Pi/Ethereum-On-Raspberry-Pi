@@ -161,13 +161,19 @@ prepare_disk() {
     if [ -d "$TMP_DIR/.ethereum" ]; then
       echolog ".ethereum already exists on the disk."
 
-      # Check if the .format_me file exists in the .ethereum path
-      if [ -f "$TMP_DIR/.format_me" ]; then
+      # Check if the format_me or format_storage file exists
+      if [ -f "/boot/firmware/format_storage" ]; then
+        echolog "The format_storage file was found. Formatting and mounting..."
+        rm /boot/firmware/format_storage
+      elif [ -f "$TMP_DIR/format_me" ]; then
+        echolog "The format_me file was found. Formatting and mounting..."
+      elif [ -f "$TMP_DIR/.format_me" ]; then # for compatibility with prev releases
         echolog "The .format_me file was found. Formatting and mounting..."
       else
-        echolog "The .format_me file was not found. Skipping formatting."
+        echolog "The format flag file was not found. Skipping formatting."
         proceed_with_format=false
       fi
+
     else
       echolog "The .ethereum does not exist on the disk. Formatting and mounting..."
     fi
