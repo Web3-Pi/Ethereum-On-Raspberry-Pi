@@ -236,12 +236,8 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "Configure HTTP status service"
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
-  
-  set_status "Configure instalation-status"
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/installation-status/w3p_installation-status.service /etc/systemd/system/w3p_installation-status.service
   systemctl daemon-reload
   systemctl enable w3p_bsh.service
-  systemctl enable w3p_installation-status.service
 
   set_install_stage 2
 
@@ -252,7 +248,6 @@ if [ "$(get_install_stage)" -ge 2 ]; then
 
   set_status "Run HTTP status service"
   systemctl start w3p_bsh.service
-  systemctl start w3p_installation-status.service
   
 fi
 
