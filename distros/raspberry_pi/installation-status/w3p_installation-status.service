@@ -1,0 +1,13 @@
+[Unit]
+Description=Web3 Pi installation status page
+After=network.target
+
+[Service]
+ExecStart=PORT=88 LOG_FILE=/opt/web3pi/status.jlog /opt/web3pi/installation-status-app
+Restart=always
+RestartSec=60s
+#User=ethereum
+#Group=ethereum
+
+[Install]
+WantedBy=multi-user.target

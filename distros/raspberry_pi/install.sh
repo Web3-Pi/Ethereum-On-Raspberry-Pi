@@ -63,10 +63,10 @@ get_install_stage() {
     fi
 }
 
-# Function: set_status_json
+# Function: set_status_jlog
 # Function to write a string to a file with status
-STATUS_FILE="/opt/web3pi/status.json"
-set_status_json() {
+STATUS_FILE="/opt/web3pi/status.jlog"
+set_status_jlog() {
   local status="$1"
   local level="$2"
   jq -n -c\
@@ -88,7 +88,7 @@ set_status() {
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
-  set_status_json "$status" INFO
+  set_status_jlog "$status" INFO
 }
 
 set_status "install.sh - start"
@@ -96,7 +96,7 @@ set_status "install.sh - start"
 
 set_error() {
   local status="$1"
-  set_status_json "$status" "ERROR"
+  set_status_jlog "$status" "ERROR"
 }
 
 # Terminate the script with saving logs
@@ -236,8 +236,12 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "Configure HTTP status service"
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
+  
+  set_status "Configure instalation-status"
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/installation-status/w3p_installation-status.service /etc/systemd/system/w3p_installation-status.service
   systemctl daemon-reload
   systemctl enable w3p_bsh.service
+  systemctl enable w3p_installation-status.service
 
   set_install_stage 2
 
@@ -248,6 +252,7 @@ if [ "$(get_install_stage)" -ge 2 ]; then
 
   set_status "Run HTTP status service"
   systemctl start w3p_bsh.service
+  systemctl start w3p_installation-status.service
   
 fi
 

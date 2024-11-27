@@ -55,6 +55,23 @@ get_install_stage() {
 }
 
 
+# Function: set_status_jlog
+# Function to write a string to a file with status
+STATUS_FILE="/opt/web3pi/status.jlog"
+set_status_jlog() {
+  local status="$1"
+  local level="$2"
+  jq -n -c\
+    --arg status "$status"\
+    --arg stage "$(get_install_stage)"\
+    --arg time "$(date +"%Y-%m-%dT%H:%M:%S%z")"\
+    --arg level "$([ "$level" = "" ] && echo "INFO" || echo "$level")"\
+    '{"time": $time, "status": $status, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
+  #echolog " " 
+  #echolog "STAGE $(get_install_stage): $status" 
+  #echolog " " 
+}
+
 # Function: set_status
 # Function to write a string to a file with status
 set_status() {
@@ -63,8 +80,13 @@ set_status() {
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
+  set_status_jlog "$status" INFO
 }
 
+set_error() {
+  local status="$1"
+  set_status_jlog "$status" "ERROR"
+}
 
 set_status "rc.local - started"
 
