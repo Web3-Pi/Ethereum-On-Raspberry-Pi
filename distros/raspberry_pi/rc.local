@@ -101,7 +101,7 @@ if [ "$(get_install_stage)" -eq 0 ]; then
   timedatectl | echolog
 
   set_status "rc.local - Ethereum-On-Raspberry-Pi repo clone"
-  git-force-clone --branch r0.7.3 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  git-force-clone --branch dev https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 
   set_install_stage 1
