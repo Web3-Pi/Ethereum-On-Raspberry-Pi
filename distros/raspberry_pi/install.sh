@@ -231,22 +231,23 @@ prepare_disk() {
 # Install basic-status-http ASAP
 if [ "$(get_install_stage)" -eq 1 ]; then
 
-  #set_status "Clone basic-status-http repository"
+  set_status "Clone basic-status-http repository"
   #git-force-clone https://github.com/Web3-Pi/basic-status-http.git /opt/web3pi/basic-status-http/
 
-  #set_status "Configure HTTP status service"
+  set_status "Configure HTTP status service"
   #cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsh/w3p_bsh.service /etc/systemd/system/w3p_bsh.service
   #systemctl daemon-reload
   #systemctl enable w3p_bsh.service
 
   set_install_stage 2
+  set_status "Set stage 2"
 
 fi
 
 # Run basic-status-http ASAP
 if [ "$(get_install_stage)" -ge 2 ]; then
 
-  #set_status "Run HTTP status service"
+  set_status "Run HTTP status service"
   #systemctl start w3p_bsh.service
   
 fi
@@ -255,6 +256,7 @@ fi
 # Firmwate updates
 if [ "$(get_install_stage)" -eq 2 ]; then
   
+  set_status "set_install_stage 3"
   set_install_stage 3
 
   set_status "stop unattended-upgrades.service"
