@@ -571,14 +571,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
 
-  set_status "[install.sh] - CCreate a virtual environment for basic-system-monitor"
+  set_status "[install.sh] - Create a virtual environment for basic-system-monitor"
   echolog "basic-system-monitor venv conf"
   cd /opt/web3pi/basic-system-monitor
   python3 -m venv venv
 
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
   
-  set_status "[install.sh] - CCreate a virtual environment for basic-eth2-node-monitor"
+  set_status "[install.sh] - Create a virtual environment for basic-eth2-node-monitor"
   echolog "basic-eth2-node-monitor venv conf"
   cd /opt/web3pi/basic-eth2-node-monitor
   python3 -m venv venv
@@ -689,14 +689,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   
 
 
-  #the next line creates an empty file so it won't run the next boot
-  set_status "[install.sh] - Create ${$FLAG}"
+  # Next line creates an empty file so it won't run the next boot
+  set_status "[install.sh] - Create ${FLAG}"
   touch $FLAG
 
   set_status "[install.sh] - Change the stage to 100"
   set_install_stage 100
 
-  set_status "[install.sh] - Write rc.local logs to ${$FLAG}"
+  set_status "[install.sh] - Write rc.local logs to ${FLAG}"
   grep "rc.local" /var/log/syslog >> $FLAG
   
   set_status "[install.sh] - Rebooting..."
