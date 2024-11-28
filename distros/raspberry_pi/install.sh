@@ -263,17 +263,23 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
-  # Firmware update
-  #if [ ! -f $RFLAG ]; then
-    set_status "Firmware Update"
-    sudo rpi-eeprom-update -a
-    #touch $RFLAG
-    #echolog "RFLAG created"
-    set_status "Rebooting after rpi-eeprom-update"
-    sleep 10
-    reboot
-    exit 1
-  #fi
+
+  set_status "Firmware Update"
+  # Run the firmware update command
+  output_reu=$(rpi-eeprom-update -a)
+
+  # Check if the output contains the message indicating a reboot is needed
+  if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
+      echo "EEPROM update requires a reboot. Restarting the device..."
+      set_status "Rebooting after rpi-eeprom-update"
+      sleep 5
+      reboot
+      exit 1
+  else
+      echo "No firmware update required."
+      set_status "No firmware update required."
+      sleep 3
+  fi
 
 fi
 
@@ -674,6 +680,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   set_status "Not First Run - READ CONFIG FROM CONFIG.TXT"
 
   # WiFi stability fix
+  set_status "Set wlan0 power_save off"
   iw dev wlan0 set power_save off
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
