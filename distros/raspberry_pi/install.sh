@@ -129,6 +129,8 @@ get_best_disk() {
   else
     W3P_DRIVE="NA"
     echolog "No suitable disk found"
+    set_error "[install.sh] - No suitable disk found"
+    sleep 2
     terminateScript
     #kill -9 $$
   fi
@@ -140,6 +142,8 @@ verify_size() {
 
   if [[ ${#loc_array[@]} != 2 ]]; then
     echolog "Unexpected error while reading disk size"
+    set_error "[install.sh] - Unexpected error while reading disk size"
+    sleep 2
     terminateScript
     #kill -9 $$
   fi
@@ -169,6 +173,8 @@ prepare_disk() {
     # Verify that the provided disk is large enough to store at least part of the swap file and least significant part of consensus client state 
     if ! verify_size $PARTITION; then
       echolog "Disk to small to proceed with installation"
+      set_error "[install.sh] - Disk to small to proceed with installation"
+      sleep 2
       terminateScript
       #kill -9 $$
     fi
@@ -181,23 +187,29 @@ prepare_disk() {
 
     # Check if the .ethereum exists on the mounted disk
     if [ -d "$TMP_DIR/.ethereum" ]; then
+      set_status "[install.sh] - .ethereum already exists on the disk"
       echolog ".ethereum already exists on the disk."
 
       # Check if the format_me or format_storage file exists
       if [ -f "/boot/firmware/format_storage" ]; then
         echolog "The format_storage file was found. Formatting and mounting..."
+        set_status "[install.sh] - The format_storage file was found. Formatting and mounting..."
         rm /boot/firmware/format_storage
       elif [ -f "$TMP_DIR/format_me" ]; then
         echolog "The format_me file was found. Formatting and mounting..."
+        set_status "[install.sh] - The format_me file was found. Formatting and mounting..."
       elif [ -f "$TMP_DIR/.format_me" ]; then # for compatibility with prev releases
         echolog "The .format_me file was found. Formatting and mounting..."
+        set_status "[install.sh] - The .format_me file was found. Formatting and mounting..."
       else
         echolog "The format flag file was not found. Skipping formatting."
+        set_status "[install.sh] - The format flag file was not found. Skipping formatting."
         proceed_with_format=false
       fi
 
     else
       echolog "The .ethereum does not exist on the disk. Formatting and mounting..."
+      set_status "[install.sh] - The .ethereum does not exist on the disk. Formatting and mounting..."
     fi
 
     # Unmount the disk from the temporary directory
@@ -210,20 +222,28 @@ prepare_disk() {
   if [ "$proceed_with_format" = true ]; then
     # Create a new partition and format it as ext4
     echolog "Creating new partition and formatting disk: $DISK..."
+    set_status "[install.sh] - Creating new partition and formatting disk: $DISK..."
+
     wipefs -a "$DISK"
     sgdisk -n 0:0:0 "$DISK"
     mkfs.ext4 -F "$PARTITION" || {
       echolog "Unable to format $PARTITION"
+      set_error "[install.sh] - Unable to format $PARTITION"
+      sleep 2
       return 1
     }
 
     echolog "Removing FS reserved blocks on partion $PARTITION"
+    set_status "[install.sh] - Removing FS reserved blocks on partion $PARTITION"
     tune2fs -m 0 $PARTITION
   fi
 
   echolog "Mounting $PARTITION as /mnt/storage"
+  set_status "[install.sh] - Mounting $PARTITION as /mnt/storage"
   mkdir /mnt/storage
   echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
+
+  set_status "[install.sh] - Storage is ready"
 }
 
 
