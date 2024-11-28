@@ -250,21 +250,23 @@ prepare_disk() {
 # Firmware updates
 if [ "$(get_install_stage)" -eq 1 ]; then
   
-  set_status "[install.sh] - Change the stage to 2"
-  set_install_stage 2
-
   set_status "[install.sh] - Stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
-
 
   set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
   # Run the firmware update command
   output_reu=$(rpi-eeprom-update -a)
   echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
 
+  rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
   if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
+      rebootReq=true
+  fi
+
+  # Check the value of rebootReq
+  if [ "$rebootReq" = true ]; then
       echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
       set_status "[install.sh] - Rebooting after rpi-eeprom-update"
       sleep 5
@@ -276,6 +278,8 @@ if [ "$(get_install_stage)" -eq 1 ]; then
       sleep 3
   fi
 
+  set_status "[install.sh] - Change the stage to 2"
+  set_install_stage 2
 fi
 
 # MAIN installation part
@@ -318,8 +322,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   set_status "[install.sh] - Refreshes the package lists"
   apt-get update
   
-  set_status "[install.sh] - Installing required dependencies"
-  apt-get -y install python3-dev libpython3.12-dev python3.12-venv software-properties-common apt-utils file vim net-tools telnet apt-transport-https gcc jq git libraspberrypi-bin iotop screen bpytop ccze
+  set_status "[install.sh] - Installing required dependencies 1/3"
+  apt-get -y install iw python3-dev libpython3.12-dev python3.12-venv
+  
+  set_status "[install.sh] - Installing required dependencies 2/3"
+  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https
+  
+  set_status "[install.sh] - Installing required dependencies 3/3"
+  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze
   
 ## 2. STORAGE SETUP ##########################################################################
 
@@ -487,7 +497,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   
   # Installing Grafana
   set_status "[install.sh] - Installing Grafana"
-  apt-get install -y grafana
+  apt-get -y install grafana
 
   set_status "[install.sh] - Configuring Grafana"
   # Copy datasources.yaml for grafana
