@@ -24,6 +24,10 @@ You can also follow the instructions for a particular device setup:
 - [Pair device](https://web3-pi.github.io/setup-guide/GetStart/pair-devices/)
 
 
-## Acknowledgements
-Thanks to [Ethereum on ARM](https://github.com/EOA-Blockchain-Labs/ethereumonarm) project and its community.
+## Disclaimer
 
+Raspberry Pi is a trademark of Raspberry Pi Ltd. The use of this trademark here is solely for descriptive purposes.
+
+## Acknowledgements
+
+Thanks to [Ethereum on ARM](https://github.com/EOA-Blockchain-Labs/ethereumonarm) project and its community.
