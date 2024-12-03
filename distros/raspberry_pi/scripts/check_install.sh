@@ -75,7 +75,7 @@ required_services=("chronyd" "avahi-daemon" "dphys-swapfile")
 
 # --- Section: System Time ---
 echolog " " " " " "  # Blank line
-echolog "INFO" "Web3Pi Installation Check Started" " "  # Section header
+echolog "INFO" "Web3 Pi Installation Check Started" " "  # Section header
 echolog " " " " " "  # Blank line
 
 # Display system time

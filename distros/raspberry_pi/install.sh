@@ -709,6 +709,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   set_status "[install.sh] - Write rc.local logs to ${FLAG}"
   grep "rc.local" /var/log/syslog >> $FLAG
   
+  set_status "[install.sh] - Run check_install.sh script"
+  bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/check_install.sh
+
   set_status "[install.sh] - Rebooting..."
   sleep 3
   reboot
