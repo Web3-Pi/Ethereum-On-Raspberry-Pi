@@ -1,6 +1,16 @@
 #!/bin/bash
 
-servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/serversList.txt"
+# Read custom config flags from /boot/firmware/config.txt
+config_read_file() {
+    (grep -E "^${2}=" -m 1 "${1}" 2>/dev/null || echo "VAR=UNDEFINED") | head -n 1 | cut -d '=' -f 2-;
+}
+
+config_get() {
+    val="$(config_read_file /boot/firmware/config.txt "${1}")";
+    printf -- "%s" "${val}";
+}
+
+servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${lighthouse_network}.txt"
 best_server=""
 best_ping=1000000  # set a very high initial value
 

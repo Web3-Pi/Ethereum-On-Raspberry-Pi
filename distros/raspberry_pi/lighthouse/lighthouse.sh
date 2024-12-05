@@ -72,7 +72,7 @@ while [ $? -ne 0 ]; do
 done
 
 # Script for finding the best server
-source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/pingServers.sh
+source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ping_servers.sh
 
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "exec_url = ${exec_url}"

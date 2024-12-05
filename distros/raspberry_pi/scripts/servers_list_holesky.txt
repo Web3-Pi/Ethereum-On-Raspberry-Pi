@@ -1,0 +1,5 @@
+https://holesky.beaconstate.info
+https://holesky-checkpoint-sync.stakely.io
+https://beaconstate-holesky.chainsafe.io
+https://holesky.beaconstate.ethstaker.cc
+https://checkpoint-sync.holesky.ethpandaops.io
