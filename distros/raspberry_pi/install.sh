@@ -557,11 +557,18 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   echolog "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
 
-  set_status "[install.sh] - Generating the jwt.hex file"
-  #sudo -u ethereum openssl rand -hex 32 | tr -d "\n" | tee /home/ethereum/clients/secrets/jwt.hex
-  sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
-  echolog " "
-
+  set_status "[install.sh] - Prepare the jwt.hex file"
+  # Check if the file exists
+  if [ -f "/boot/firmware/jwt.hex" ]; then
+      # Move the file to the destination directory
+      mv "/boot/firmware/jwt.hex" "/home/ethereum/clients/secrets/"
+      echolog "The /boot/firmware/jwt.hex file has been moved to /home/ethereum/clients/secrets/"
+  else
+      echolog "The /boot/firmware/jwt.hex file does not exist. Generating new jwt.hex file"
+      sudo -u ethereum openssl rand -hex 32 | sudo -u ethereum tr -d "\n" | sudo -u ethereum tee /home/ethereum/clients/secrets/jwt.hex
+      echolog " "
+  fi
+  
   set_status "[install.sh] - Copying scripts to /home/ethereum/scripts"
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh

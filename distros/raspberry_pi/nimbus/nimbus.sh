@@ -87,10 +87,19 @@ echolog "nimbus_port = ${nimbus_port}"
 echolog "nimbus_network = ${nimbus_network}"
 echolog "nimbus_dir = ${nimbus_dir}"
 
-bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/sort_servers.sh
-
 # File with the list of servers
-SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/serversList.txt"
+SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${nimbus_network}.txt"
+
+if [ -f "${SERVERS_FILE}" ]; then
+    echolog "SERVERS_FILE = ${SERVERS_FILE}"
+else
+    echolog "File ${SERVERS_FILE} does not exist."
+    return 1
+fi
+
+bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_sort.sh $SERVERS_FILE
+
+sleep 1
 
 # Iterate through each server from the list
 success=false
