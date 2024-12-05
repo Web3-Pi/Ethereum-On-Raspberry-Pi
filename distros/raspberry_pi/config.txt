@@ -20,9 +20,13 @@ geth_port=30303
 
 [nimbus]
 nimbus_port=9000
+# Ethereum network: mainnet/holesky/sepolia/goerli
+nimbus_network=mainnet
 
 [lighthouse]
 lighthouse_port=9000
+# Ethereum network: mainnet/holesky/sepolia/goerli
+lighthouse_network=mainnet
 
 # End of Web3 Pi config
 

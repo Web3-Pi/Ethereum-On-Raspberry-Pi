@@ -3,6 +3,7 @@
 # Web3 Pi - rc.local
 #
 
+BRANCH="dev"
 
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
@@ -55,6 +56,23 @@ get_install_stage() {
 }
 
 
+# Function: set_status_jlog
+# Function to write a string to a file with status
+STATUS_FILE="/opt/web3pi/status.jlog"
+set_status_jlog() {
+  local status="$1"
+  local level="$2"
+  jq -n -c\
+    --arg status "$status"\
+    --arg stage "$(get_install_stage)"\
+    --arg time "$(date +"%Y-%m-%dT%H:%M:%S%z")"\
+    --arg level "$([ "$level" = "" ] && echo "INFO" || echo "$level")"\
+    '{"time": $time, "status": $status, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
+  #echolog " " 
+  #echolog "STAGE $(get_install_stage): $status" 
+  #echolog " " 
+}
+
 # Function: set_status
 # Function to write a string to a file with status
 set_status() {
@@ -63,13 +81,19 @@ set_status() {
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
+  set_status_jlog "$status" INFO
 }
 
+set_error() {
+  local status="$1"
+  set_status_jlog "$status" "ERROR"
+}
 
-set_status "rc.local - started"
+set_status "[rc.local] - Script started"
+
 
 # Checking internet connection
-set_status "Checking internet connection"
+set_status "[rc.local] - Checking internet connection"
 
 pingServerAdr="github.com"
 ping_n=0
@@ -78,6 +102,8 @@ ping_max=10
 ping -c 1 $pingServerAdr > /dev/null 2>&1
 while [ $? -ne 0 ]; do
   echolog -e "\e[1A\e[K $(date): test connection [$ping_n/$ping_max] - ${pingServerAdr}"
+  # \e[1A Moves the cursor one line up in the terminal.
+  # \e[K Clears the line from the current cursor position to the end.
   sleep 6
   let "ping_n+=1"
   [[ ${ping_n} -gt ${ping_max} ]] && echolog "Stopping the installation, internet access is necessary" && exit 1
@@ -87,36 +113,44 @@ done
 echolog "$(date): Connected - ${pingServerAdr}"
 
 
-
+# Runs only once
 if [ "$(get_install_stage)" -eq 0 ]; then
 
   # Install essential dependencies
-  set_status "rc.local - Install essential dependencies"
-  apt-get update
-  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-flask python3-netifaces
+  set_status "[rc.local] - Essential dependencies"
 
-  set_status "rc.local - time sync with NTP"
+  set_status "[rc.local] - Refreshes the package lists"
+  apt-get update
+  
+  set_status "[rc.local] - Install essential dependencies"
+  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-netifaces
+
+  set_status "[rc.local] - Sync time with NTP server (chronyd -q)"
   chronyd -q
 
   timedatectl | echolog
 
-  set_status "rc.local - Ethereum-On-Raspberry-Pi repo clone"
-  git-force-clone --branch r0.7.3 https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
+  set_status "[rc.local] - Update Ethereum-On-Raspberry-Pi repository (--branch ${BRANCH})"
+  git-force-clone --branch ${BRANCH} https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 
+  et_status "[rc.local] - Change the stage to 1"
   set_install_stage 1
 fi
 
+
 if [ "$(get_install_stage)" -ge 1 ]; then
   # Run the installation script
-  set_status "rc.local - Run installation script"
+  set_status "[rc.local] - Run main installation script (install.sh)"
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 fi
 
-set_status "rc.local exit 0"
 
 if [ "$(get_install_stage)" -eq 100 ]; then
+  # set_status "[rc.local] - Installation completed"
   set_status "Installation completed"
+  sleep 2
 fi
 
+# set_status "[rc.local] - End of script (exit 0)"
 exit 0
