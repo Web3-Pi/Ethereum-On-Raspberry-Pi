@@ -49,9 +49,10 @@ set_status() {
   echolog " " 
 }
 
+echolog "Lighthouse run script (lighthouse.sh)"
 
 lighthouse_port="$(config_get lighthouse_port)";
-lighthouse_network="$(config_get lighthouse_network)";
+eth_network="$(config_get eth_network)";
 exec_url="$(config_get exec_url)";
 
 
@@ -77,8 +78,8 @@ source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ping_se
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "exec_url = ${exec_url}"
 echolog "lighthouse_port = ${lighthouse_port}"
-echolog "lighthouse_network = ${lighthouse_network}"
+echolog "eth_network = ${eth_network}"
 echolog "best_server = ${best_server} ($best_ping ms)"
 
 echolog "Run Lighthouse beacon node"
-lighthouse bn --network ${lighthouse_network} --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${best_server} --datadir /mnt/storage/.lighthouse --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}
+lighthouse bn --network ${eth_network} --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${best_server} --datadir /mnt/storage/.lighthouse --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}

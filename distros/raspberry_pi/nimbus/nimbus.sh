@@ -57,9 +57,11 @@ calculate_average_ping() {
   echo "$avg_ping"
 }
 
+echolog "Nimbus run script (nimbus.sh)"
+
 nimbus_port="$(config_get nimbus_port)";
 exec_url="$(config_get exec_url)";
-nimbus_network="$(config_get nimbus_network)";
+eth_network="$(config_get eth_network)";
 
 # Checking internet connection
 echolog "Checking internet connection"
@@ -79,16 +81,16 @@ done
 
 
 # Directory for Nimbus
-nimbus_dir="/mnt/storage/.nimbus/data/shared_${nimbus_network}_0"
+nimbus_dir="/mnt/storage/.nimbus/data/shared_${eth_network}_0"
 
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "exec_url = ${exec_url}"
 echolog "nimbus_port = ${nimbus_port}"
-echolog "nimbus_network = ${nimbus_network}"
+echolog "eth_network = ${eth_network}"
 echolog "nimbus_dir = ${nimbus_dir}"
 
 # File with the list of servers
-SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${nimbus_network}.txt"
+SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${eth_network}.txt"
 
 if [ -f "${SERVERS_FILE}" ]; then
     echolog "SERVERS_FILE = ${SERVERS_FILE}"
@@ -110,7 +112,7 @@ while read -r server; do
     echolog "Average ping = $avg_ping ms"
     
     # Run the Nimbus beacon node command and display output in real time
-    output=$(nimbus_beacon_node trustedNodeSync --network=${nimbus_network} --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1)
+    output=$(nimbus_beacon_node trustedNodeSync --network=${eth_network} --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1)
     # output=$(nimbus_beacon_node trustedNodeSync --network=mainnet --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1 | tee /dev/tty)
     
     # Searching for a line containing 'horizon' and extracting the value.
@@ -134,7 +136,7 @@ done < "$SERVERS_FILE"
 # If the trustedNodeSync was successful
 if [ "$success" = true ]; then
   echolog "Run Nimbus beacon node"
-  nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network=${nimbus_network} --data-dir=${nimbus_dir} --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+  nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network=${eth_network} --data-dir=${nimbus_dir} --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
 else
   # If no server was successful
   echolog "All servers failed to complete the trustedNodeSync."

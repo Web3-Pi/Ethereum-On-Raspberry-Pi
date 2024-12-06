@@ -49,7 +49,10 @@ set_status() {
   echolog " " 
 }
 
+echolog "Geth run script (geth.sh)"
+
 geth_port="$(config_get geth_port)";
+eth_network="$(config_get eth_network)";
 
 # Checking internet connection
 echolog "Checking internet connection"
@@ -67,9 +70,12 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
+echolog "$(date): Connected - ${pingServerAdr}"
+echolog "geth_port = ${geth_port}"
+echolog "eth_network = ${eth_network}"
 
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "geth_port = ${geth_port}"
 
 echolog "Run Geth"
-geth --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth_port} --port ${geth_port} --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --datadir /mnt/storage/.ethereum --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --http.corsdomain '*' --state.scheme=path
+geth --${eth_network} --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.vhosts '*' --discovery.port ${geth_port} --port ${geth_port} --authrpc.jwtsecret /home/ethereum/clients/secrets/jwt.hex --datadir /mnt/storage/.ethereum --ws --ws.port 8546 --ws.addr 0.0.0.0 --ws.origins '*' --http --http.port 8545 --http.addr 0.0.0.0 --http.vhosts '*' --http.corsdomain '*' --http.api eth,net,web3 --state.scheme=path
