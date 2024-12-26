@@ -336,12 +336,12 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 #  ToDo: This should be separete step
 
   # Prepare drive to mount /mnt/storage
-  set_status "[install.sh] - Looking for a valid drive for Blockchain copy"
-  get_best_disk
-  echolog "W3P_DRIVE=$W3P_DRIVE"
+  #set_status "[install.sh] - Looking for a valid drive for Blockchain copy"
+  #get_best_disk
+  #echolog "W3P_DRIVE=$W3P_DRIVE"
 
-  set_status "[install.sh] - Preparing $W3P_DRIVE for installation"
-  prepare_disk $W3P_DRIVE
+  #set_status "[install.sh] - Preparing $W3P_DRIVE for installation"
+  #prepare_disk $W3P_DRIVE
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
 
@@ -361,6 +361,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Force password change on first login
   chage -d 0 ethereum
 
+  mkdir /mnt/storage
   chown ethereum:ethereum /mnt/storage/
   
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
@@ -379,7 +380,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   systemctl enable dphys-swapfile
   {
     echo "vm.min_free_kbytes=65536"
-    echo "vm.swappiness=100"
+    echo "vm.swappiness=80"
     echo "vm.vfs_cache_pressure=500"
     echo "vm.dirty_background_ratio=1"
     echo "vm.dirty_ratio=50"
