@@ -1,4 +1,6 @@
 #!/bin/bash
+# Description: This script updates Nimbus to the latest version.
+
 #
 # Web3 Pi - Nimbus version update
 # https://nimbus.guide/keep-updated.html

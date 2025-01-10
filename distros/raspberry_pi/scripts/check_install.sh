@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: Checks the installation and configuration of Web3 Pi image
 #
 # Web3 Pi - Comprehensive Check Script
 #

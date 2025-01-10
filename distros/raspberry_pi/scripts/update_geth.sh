@@ -1,5 +1,6 @@
 #!/bin/bash
-#
+# Description: This script updates Geth to the latest version.
+
 # Web3 Pi - Geth version update
 # https://geth.ethereum.org/docs/getting-started/installing-geth
 #
