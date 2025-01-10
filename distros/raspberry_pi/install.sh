@@ -256,14 +256,14 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
   # Run the firmware update command
-  output_reu=$(rpi-eeprom-update -a)
-  echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
+  #output_reu=$(rpi-eeprom-update -a)
+  #echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
 
   rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
-  if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
-      rebootReq=true
-  fi
+  #if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
+  #    rebootReq=true
+  #fi
 
   # Check the value of rebootReq
   if [ "$rebootReq" = true ]; then
@@ -340,8 +340,19 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   get_best_disk
   echolog "W3P_DRIVE=$W3P_DRIVE"
 
-  set_status "[install.sh] - Preparing $W3P_DRIVE for installation"
-  prepare_disk $W3P_DRIVE
+  # Check if /boot/firmware is mounted
+  mount_point=$(mount | grep ' /boot/firmware ' | awk '{print $1}')
+
+  # Check if the mount point starts with $DEV_NVME or $DEV_USB
+  if [[ $mount_point == $DEV_NVME* ]]; then
+      set_status "[install.sh] - /boot/firmware is mounted on an NVMe device: $mount_point"
+  elif [[ $mount_point == $DEV_USB* ]]; then
+      set_status "[install.sh] - /boot/firmware is mounted on a USB device: $mount_point"
+  else
+      set_status "[install.sh] - /boot/firmware is mounted on device: $mount_point"
+      set_status "[install.sh] - Preparing $W3P_DRIVE for installation"
+      prepare_disk $W3P_DRIVE
+  fi
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
 
@@ -361,6 +372,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Force password change on first login
   chage -d 0 ethereum
 
+  mkdir /mnt/storage
   chown ethereum:ethereum /mnt/storage/
   
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
@@ -375,19 +387,42 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sed -i "s|#CONF_SWAPSIZE=.*|CONF_SWAPSIZE=$SWAPFILE_SIZE|" /etc/dphys-swapfile
   sed -i "s|#CONF_MAXSWAP=.*|CONF_MAXSWAP=$SWAPFILE_SIZE|" /etc/dphys-swapfile
 
-  # Enable dphys-swapfile service
-  systemctl enable dphys-swapfile
-  {
-    echo "vm.min_free_kbytes=65536"
-    echo "vm.swappiness=100"
-    echo "vm.vfs_cache_pressure=500"
-    echo "vm.dirty_background_ratio=1"
-    echo "vm.dirty_ratio=50"
-  } >> /etc/sysctl.conf
-  
-#  echo "vm.swappiness=10" >>/etc/sysctl.conf  
-#  sysctl -p
-  
+  # Check total RAM in kB
+  total_ram=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+  set_status "[install.sh] - Detected RAM: ${total_ram} kB"
+
+  # Conditions
+  if [ "$total_ram" -lt 8000000 ]; then
+      set_error "[install.sh] - Not enough RAM for Web3 Pi. Minimum required is 8 GB"
+      terminateScript
+  elif [ "$total_ram" -ge 15000000 ]; then
+      set_status "[install.sh] - Setting vm.swappiness to 10"
+      # Enable dphys-swapfile service
+      systemctl enable dphys-swapfile
+      {
+        echo "vm.min_free_kbytes=65536"
+        echo "vm.swappiness=10"
+        echo "vm.vfs_cache_pressure=100"
+        echo "vm.dirty_background_ratio=10"
+        echo "vm.dirty_ratio=20"
+      } >> /etc/sysctl.conf
+  elif [ "$total_ram" -ge 8000000 ]; then
+      set_status "[install.sh] - Setting vm.swappiness to 80"
+      # Enable dphys-swapfile service
+      systemctl enable dphys-swapfile
+      {
+        echo "vm.min_free_kbytes=65536"
+        echo "vm.swappiness=80"
+        echo "vm.vfs_cache_pressure=500"
+        echo "vm.dirty_background_ratio=1"
+        echo "vm.dirty_ratio=50"
+      } >> /etc/sysctl.conf
+  else
+      set_error "[install.sh] - RAM does not match expected specifications."
+      terminateScript
+  fi
+
+
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  
@@ -456,8 +491,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   lighthouse_port="$(config_get lighthouse_port)";
   # If Lighthouse is not in use, this port can be closed.
-  ufw allow ${lighthouse_port}/tcp comment "Lighthouse: HTTP REST API"
-
+  ufw allow ${lighthouse_port}/tcp comment "Lighthouse: p2p"
   ufw allow 3000/tcp comment "Grafana: web interface"
 
   # If the database and cgrafana are on the same device, this port does not need to be open in the firewall, as communication occurs over localhost.
