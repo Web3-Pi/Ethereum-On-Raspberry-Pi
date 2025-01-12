@@ -257,7 +257,7 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
   # Run the firmware update command
   output_reu=$(rpi-eeprom-update -a)
-  echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
+  echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/default/pieeprom-2025-01-08_w3p.bin \n${output_reu}"
 
   rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
@@ -271,6 +271,7 @@ if [ "$(get_install_stage)" -eq 1 ]; then
       set_status "[install.sh] - Rebooting after rpi-eeprom-update"
       sleep 5
       reboot
+      sleep 5
       exit 1
   else
       echo "[install.sh] - No firmware update required"
