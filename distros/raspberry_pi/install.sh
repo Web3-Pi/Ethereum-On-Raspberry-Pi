@@ -256,14 +256,14 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
   # Run the firmware update command
-  #output_reu=$(rpi-eeprom-update -a)
-  #echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
+  output_reu=$(rpi-eeprom-update -a)
+  echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
 
   rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
-  #if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
-  #    rebootReq=true
-  #fi
+  if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
+      rebootReq=true
+  fi
 
   # Check the value of rebootReq
   if [ "$rebootReq" = true ]; then
