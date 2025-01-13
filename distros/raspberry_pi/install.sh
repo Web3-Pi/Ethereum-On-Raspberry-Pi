@@ -254,21 +254,9 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
-
-  set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
-  apt install -y flashrom
-
-  # Check if /proc/cpuinfo exists
-  if [ -f /proc/cpuinfo ]; then
-      # Read CPU information from /proc/cpuinfo
-      CPU_INFO=$(grep -m 1 'Hardware' /proc/cpuinfo | awk '{print $3}')
-  elif [ -f /proc/device-tree/compatible ]; then
-      # Alternatively, check /proc/device-tree/compatible
-      CPU_INFO=$(tr -d '\0' < /proc/device-tree/compatible | grep -o 'bcm271[1-9]')
-  else
-      echo "Unable to retrieve hardware information. This might not be a Raspberry Pi."
-      exit 1
-  fi
+  # Ubuntu 24.04 have old rpi-eeprom app
+  git-force-clone -b master https://github.com/raspberrypi/rpi-eeprom /opt/web3pi/rpi-eeprom
+  /opt/web3pi/rpi-eeprom/test/install -b
 
   output_reu=""
   # Detect SoC version
@@ -277,13 +265,15 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
       if echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2711"; then
           set_status "[install.sh] - Detected SoC: BCM2711 (e.g., Raspberry Pi 4/400/CM4)"
+          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
           output_reu=$(rpi-eeprom-update -a)
           echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
       elif echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2712"; then
           set_status "[install.sh] - Detected SoC: BCM2712 (e.g., Raspberry Pi 5/500/CM5)"
+          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
           # Run the firmware update command
-          output_reu=$(rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin)
-          echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin \n${output_reu}"
+          output_reu=$(rpi-eeprom-update -a)
+          echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
       else
           set_error "[install.sh] - Detected another model (not BCM2711 or BCM2712)."
           terminateScript
@@ -309,12 +299,13 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   # Check the value of rebootReq
   if [ "$rebootReq" = true ]; then
+      echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
       set_status "[install.sh] - Rebooting after rpi-eeprom-update"
       sleep 5
       reboot
-      sleep 5
       exit 1
   else
+      echo "[install.sh] - No firmware update required"
       set_status "[install.sh] - No firmware update required"
       sleep 3
   fi
