@@ -426,7 +426,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   set_status "[install.sh] - Detected RAM: ${total_ram} kB"
 
   # Conditions
-  if [ "$total_ram" -lt 8000000 ]; then
+  if [ "$total_ram" -lt 7000000 ]; then
       set_error "[install.sh] - Not enough RAM for Web3 Pi. Minimum required is 8 GB"
       terminateScript
   elif [ "$total_ram" -ge 15000000 ]; then
@@ -440,7 +440,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
         echo "vm.dirty_background_ratio=10"
         echo "vm.dirty_ratio=20"
       } >> /etc/sysctl.conf
-  elif [ "$total_ram" -ge 8000000 ]; then
+  elif [ "$total_ram" -ge 7000000 ]; then
       set_status "[install.sh] - Setting vm.swappiness to 80"
       # Enable dphys-swapfile service
       systemctl enable dphys-swapfile
