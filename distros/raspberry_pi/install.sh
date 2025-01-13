@@ -286,10 +286,12 @@ if [ "$(get_install_stage)" -eq 1 ]; then
           output_reu=$(rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin)
           echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin \n${output_reu}"
       else
-          echo "Detected another model (not BCM2711 or BCM2712)."
+          set_error "[install.sh] - Detected another model (not BCM2711 or BCM2712)."
+          terminateScript
       fi
   else
-      echo "No /proc/device-tree/compatible file found — cannot detect SoC this way."
+      set_error "[install.sh] - No /proc/device-tree/compatible file found — cannot detect SoC this way."
+      terminateScript
   fi
 
   rebootReq=false
@@ -297,9 +299,13 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
       rebootReq=true
       set_status "[install.sh] - Firmware will be updated after reboot. rebootReq=true"
+      set_status "[install.sh] - Change the stage to 2"
+      set_install_stage 2
   elif echo "$output_reu" | grep -q "UPDATE SUCCESSFUL"; then
       rebootReq=true
       set_status "[install.sh] - Firmware updated with flashrom. rebootReq=true"
+      set_status "[install.sh] - Change the stage to 2"
+      set_install_stage 2
   fi
 
   # Check the value of rebootReq
