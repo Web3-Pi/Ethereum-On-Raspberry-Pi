@@ -254,27 +254,61 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
-  set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
-  # Run the firmware update command
-  output_reu=$(rpi-eeprom-update -a)
-  echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/default/pieeprom-2025-01-08_w3p.bin \n${output_reu}"
+  
 
+  set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
+  apt install -y flashrom
+
+  # Check if /proc/cpuinfo exists
+  if [ -f /proc/cpuinfo ]; then
+      # Read CPU information from /proc/cpuinfo
+      CPU_INFO=$(grep -m 1 'Hardware' /proc/cpuinfo | awk '{print $3}')
+  elif [ -f /proc/device-tree/compatible ]; then
+      # Alternatively, check /proc/device-tree/compatible
+      CPU_INFO=$(tr -d '\0' < /proc/device-tree/compatible | grep -o 'bcm271[1-9]')
+  else
+      echo "Unable to retrieve hardware information. This might not be a Raspberry Pi."
+      exit 1
+  fi
+
+  output_reu=""
+  # Detect SoC version
+  case "$CPU_INFO" in
+      bcm2711)
+          set_status "[install.sh] - Detected SoC: BCM2711 (e.g., Raspberry Pi 4/400/CM4)"
+          output_reu=$(rpi-eeprom-update -a)
+          echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
+          ;;
+      bcm2712)
+          set_status "[install.sh] - Detected SoC: BCM2712 (e.g., Raspberry Pi 5/500/CM5)"
+          # Run the firmware update command
+          output_reu=$(rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin)
+          echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin \n${output_reu}"
+          ;;
+      *)
+          set_error "[install.sh] - Unknown or unsupported SoC: $CPU_INFO"
+          terminateScript
+          ;;
+  esac
+  
   rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
   if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
       rebootReq=true
+      set_status "[install.sh] - Firmware will be updated after reboot. rebootReq=true"
+  elif echo "$output_reu" | grep -q "UPDATE SUCCESSFUL"; then
+      rebootReq=true
+      set_status "[install.sh] - Firmware updated with flashrom. rebootReq=true"
   fi
 
   # Check the value of rebootReq
   if [ "$rebootReq" = true ]; then
-      echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
       set_status "[install.sh] - Rebooting after rpi-eeprom-update"
       sleep 5
       reboot
       sleep 5
       exit 1
   else
-      echo "[install.sh] - No firmware update required"
       set_status "[install.sh] - No firmware update required"
       sleep 3
   fi
