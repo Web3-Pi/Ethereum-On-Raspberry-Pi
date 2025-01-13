@@ -300,11 +300,13 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   # Check the value of rebootReq
   if [ "$rebootReq" = true ]; then
       echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
+      echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
       set_status "[install.sh] - Rebooting after rpi-eeprom-update"
       sleep 5
       reboot
       exit 1
   else
+      echo "[install.sh] - No firmware update required"
       echo "[install.sh] - No firmware update required"
       set_status "[install.sh] - No firmware update required"
       sleep 3
