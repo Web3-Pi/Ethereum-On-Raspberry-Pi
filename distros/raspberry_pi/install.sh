@@ -273,24 +273,25 @@ if [ "$(get_install_stage)" -eq 1 ]; then
 
   output_reu=""
   # Detect SoC version
-  case "$CPU_INFO" in
-      bcm2711)
+  if [ -f /proc/device-tree/compatible ]; then
+      SOC_COMPATIBLE=$(tr -d '\0' < /proc/device-tree/compatible)
+
+      if echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2711"; then
           set_status "[install.sh] - Detected SoC: BCM2711 (e.g., Raspberry Pi 4/400/CM4)"
           output_reu=$(rpi-eeprom-update -a)
           echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
-          ;;
-      bcm2712)
+      elif echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2712"; then
           set_status "[install.sh] - Detected SoC: BCM2712 (e.g., Raspberry Pi 5/500/CM5)"
           # Run the firmware update command
           output_reu=$(rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin)
           echolog "cmd: rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader-2712/latest/pieeprom-2025-01-13-w3p.bin \n${output_reu}"
-          ;;
-      *)
-          set_error "[install.sh] - Unknown or unsupported SoC: $CPU_INFO"
-          terminateScript
-          ;;
-  esac
-  
+      else
+          echo "Detected another model (not BCM2711 or BCM2712)."
+      fi
+  else
+      echo "No /proc/device-tree/compatible file found — cannot detect SoC this way."
+  fi
+
   rebootReq=false
   # Check if the output contains the message indicating a reboot is needed
   if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
