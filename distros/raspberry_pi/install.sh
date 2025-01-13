@@ -254,7 +254,6 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
-  
 
   set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
   apt install -y flashrom
