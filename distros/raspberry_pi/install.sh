@@ -694,6 +694,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
 
+  systemctl daemon-reload
+  
   if [ "$(config_get influxdb)" = "true" ]; then
     echolog "Service config: Enable influxdb.service"
     systemctl enable influxdb.service
