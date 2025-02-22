@@ -589,6 +589,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/gssm/w3p_gssm.service /etc/systemd/system/w3p_gssm.service
 
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
@@ -615,6 +616,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/gssm/run.sh /opt/web3pi/geth-sync-stages-monitoring/run.sh
+  chmod +x /opt/web3pi/geth-sync-stages-monitoring/run.sh
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
@@ -740,6 +744,17 @@ if [ "$(get_install_stage)" -eq 2 ]; then
     echolog "Service config: NoChange w3p_bnm.service"
   fi
 
+  if [ "$(config_get gssm)" = "true" ]; then
+    echolog "Service config: Enable gssm.service"
+    systemctl enable w3p_gssm.service
+  #  systemctl start w3p_gssm.service
+  elif  [ "$(config_get bnm)" = "false" ]; then
+    echolog "Service config: Disable w3p_gssm.service"
+    systemctl disable w3p_gssm.service
+  else
+    echolog "Service config: NoChange w3p_gssm.service"
+  fi
+
   if [ "$(config_get geth)" = "true" ]; then
     echolog "Service config: Enable w3p_geth.service"
     systemctl enable w3p_geth.service
@@ -852,6 +867,17 @@ if [ "$(get_install_stage)" -eq 100 ]; then
     systemctl disable w3p_bnm.service
   else
     echolog "Service config: NoChange w3p_bnm.service"
+  fi
+
+  if [ "$(config_get gssm)" = "true" ]; then
+    echolog "Service config: Enable gssm.service"
+    systemctl enable w3p_gssm.service
+    systemctl start w3p_gssm.service
+  elif  [ "$(config_get gssm)" = "false" ]; then
+    echolog "Service config: Disable w3p_gssm.service"
+    systemctl disable w3p_gssm.service
+  else
+    echolog "Service config: NoChange w3p_gssm.service"
   fi
 
   if [ "$(config_get geth)" = "true" ]; then
