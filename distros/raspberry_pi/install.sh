@@ -674,6 +674,13 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
+  set_status "[install.sh] - Create a virtual environment for geth-sync-stages-monitoring"
+  echolog "geth-sync-stages-monitoring venv conf"
+  cd /opt/web3pi/geth-sync-stages-monitoring
+  python3 -m venv venv
+
+  chmod +x /opt/web3pi/geth-sync-stages-monitoring/run.sh
+
   chown -R ethereum:ethereum /opt/web3pi
 
 ## 12. CLEANUP ###########################################################################################
