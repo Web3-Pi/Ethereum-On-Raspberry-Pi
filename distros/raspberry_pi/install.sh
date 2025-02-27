@@ -583,16 +583,22 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   systemctl start grafana-server
 
-  set_status "[install.sh] - Add dummy network adapter for NetworkManager"
-  nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
-  systemctl restart NetworkManager
+  
+  
 
   set_status "[install.sh] - Installing Cockpit"
   . /etc/os-release
   apt install -y -t ${VERSION_CODENAME}-backports cockpit
 
-  set_status "[install.sh] - Installing web3-pi-cockpit-module-software-installer"
-  apt install web3-pi-cockpit-module-software-installer
+  set_status "[install.sh] - Add dummy network adapter for NetworkManager"
+  nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
+
+  set_status "[install.sh] - Installing web3-pi-cockpit-modules"
+  apt install web3-pi-cockpit-module-software-installer web3-pi-cockpit-module-script-runner web3-pi-cockpit-module-link
+  
+  set_status "[install.sh] - Restart NetworkManager service"
+  systemctl restart NetworkManager
+
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
