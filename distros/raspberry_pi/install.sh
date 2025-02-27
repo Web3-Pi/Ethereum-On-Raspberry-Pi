@@ -335,8 +335,12 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   sleep 3
 
+  set_status "[install.sh] - Adding Web3 Pi repositories"
+  wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
+  
   set_status "[install.sh] - Adding Ethereum repositories"
-  sudo add-apt-repository -y ppa:ethereum/ethereum
+  add-apt-repository -y ppa:ethereum/ethereum
   
   set_status "[install.sh] - Adding Nimbus repositories"
   echo 'deb https://apt.status.im/nimbus all main' | tee /etc/apt/sources.list.d/nimbus.list
@@ -347,6 +351,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
+  apt update
 
 ## 1. Install some required dependencies ####################################################
  
@@ -578,16 +583,16 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   systemctl start grafana-server
 
+  set_status "[install.sh] - Add dummy network adapter for NetworkManager"
   nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
   systemctl restart NetworkManager
 
+  set_status "[install.sh] - Installing Cockpit"
   . /etc/os-release
   apt install -y -t ${VERSION_CODENAME}-backports cockpit
 
-  wget 'https://storage.w3p.ovh/cockpit-module/web3-pi-script-runner/web3-pi-script-runner.tgz' -O web3-pi-script-runner.tgz
-  tar -xvf web3-pi-script-runner.tgz -C /usr/local/share/cockpit/
-
-
+  set_status "[install.sh] - Installing web3-pi-cockpit-module-software-installer"
+  apt install web3-pi-cockpit-module-software-installer
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
