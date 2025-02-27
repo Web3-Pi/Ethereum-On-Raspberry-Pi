@@ -363,7 +363,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https
   
   set_status "[install.sh] - Installing required dependencies 3/3"
-  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze
+  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli
   
 ## 2. STORAGE SETUP ##########################################################################
 
@@ -537,6 +537,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   ufw allow 5353/udp comment "avahi-daemon: mDNS"
 
+  ufw allow 9090/tcp comment "Cockpit Web Panel"
+
 
   set_status "[install.sh] - Enable UFW (firewall)"
   sleep 2
@@ -574,10 +576,18 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Copy dashboards.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
 
-  grafana-server
-#  systemctl enable grafana-server
   systemctl start grafana-server
- 
+
+  nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
+  systemctl restart NetworkManager
+
+  . /etc/os-release
+  apt install -y -t ${VERSION_CODENAME}-backports cockpit
+
+  wget 'https://storage.w3p.ovh/cockpit-module/web3-pi-script-runner/web3-pi-script-runner.tgz' -O web3-pi-script-runner.tgz
+  tar -xvf web3-pi-script-runner.tgz -C /usr/local/share/cockpit/
+
+
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
