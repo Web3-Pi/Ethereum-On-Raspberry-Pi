@@ -618,7 +618,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/gssm/run.sh /opt/web3pi/geth-sync-stages-monitoring/run.sh
-  chmod +x /opt/web3pi/geth-sync-stages-monitoring/run.sh
+  chmod +x /opt/web3pi/geth-sync-stages-monitoring/*.sh
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
@@ -679,7 +679,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cd /opt/web3pi/geth-sync-stages-monitoring
   python3 -m venv venv
 
-  chmod +x /opt/web3pi/geth-sync-stages-monitoring/run.sh
+  chmod +x /opt/web3pi/geth-sync-stages-monitoring/*.sh
 
   chown -R ethereum:ethereum /opt/web3pi
 
