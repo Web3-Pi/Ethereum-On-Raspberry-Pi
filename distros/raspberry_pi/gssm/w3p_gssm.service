@@ -6,6 +6,8 @@ After=network.target
 ExecStart=/opt/web3pi/geth-sync-stages-monitoring/run.sh
 Restart=always
 RestartSec=60s
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
