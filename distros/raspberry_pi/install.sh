@@ -592,7 +592,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
 
   set_status "[install.sh] - Installing web3-pi-cockpit-modules"
-  apt install web3-pi-link web3-pi-software-installer web3-pi-script-runner
+  apt install -y w3p-link w3p-updater w3p-script-runner
   
   set_status "[install.sh] - Restart NetworkManager service"
   systemctl restart NetworkManager
