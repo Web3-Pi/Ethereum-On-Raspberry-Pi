@@ -368,7 +368,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https
   
   set_status "[install.sh] - Installing required dependencies 3/3"
-  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli
+  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli speedtest-cli
+
   
 ## 2. STORAGE SETUP ##########################################################################
 
@@ -421,6 +422,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
 
+  sleep 2
+
   # Configure swap file location and size
   sed -i "s|#CONF_SWAPFILE=.*|CONF_SWAPFILE=/mnt/storage/swapfile|" /etc/dphys-swapfile
   sed -i "s|#CONF_SWAPSIZE=.*|CONF_SWAPSIZE=$SWAPFILE_SIZE|" /etc/dphys-swapfile
@@ -445,6 +448,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
         echo "vm.dirty_background_ratio=10"
         echo "vm.dirty_ratio=20"
       } >> /etc/sysctl.conf
+      sysctl -p
   elif [ "$total_ram" -ge 7000000 ]; then
       set_status "[install.sh] - Setting vm.swappiness to 80"
       # Enable dphys-swapfile service
@@ -456,12 +460,11 @@ if [ "$(get_install_stage)" -eq 2 ]; then
         echo "vm.dirty_background_ratio=1"
         echo "vm.dirty_ratio=50"
       } >> /etc/sysctl.conf
+      sysctl -p
   else
       set_error "[install.sh] - RAM does not match expected specifications."
       terminateScript
   fi
-
-
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  

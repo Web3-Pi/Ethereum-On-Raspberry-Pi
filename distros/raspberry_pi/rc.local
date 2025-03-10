@@ -3,7 +3,7 @@
 # Web3 Pi - rc.local
 #
 
-BRANCH="r0.7.6"
+BRANCH="dev_0.7.7"
 
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
@@ -115,6 +115,10 @@ echolog "$(date): Connected - ${pingServerAdr}"
 
 # Runs only once
 if [ "$(get_install_stage)" -eq 0 ]; then
+
+  set_status "[install.sh] - Stop unattended-upgrades.service"
+  systemctl stop unattended-upgrades
+  systemctl disable unattended-upgrades
 
   # Install essential dependencies
   set_status "[rc.local] - Essential dependencies"
