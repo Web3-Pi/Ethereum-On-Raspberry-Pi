@@ -339,7 +339,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   set_status "[install.sh] - Adding Web3 Pi repositories"
   wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
+  #echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
+  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse beta" | tee /etc/apt/sources.list.d/web3-pi.list
   
   set_status "[install.sh] - Adding Ethereum repositories"
   add-apt-repository -y ppa:ethereum/ethereum
@@ -633,9 +634,10 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-#  set_status "[install.sh] - Monitoring configuration"
+  set_status "[install.sh] - Basic-System-Monitor Install"
 #  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
 #  chmod +x /opt/web3pi/basic-system-monitor/run.sh
+  apt install -y w3p-system-monitor
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
