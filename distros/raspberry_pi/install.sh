@@ -241,7 +241,9 @@ prepare_disk() {
   echolog "Mounting $PARTITION as /mnt/storage"
   set_status "[install.sh] - Mounting $PARTITION as /mnt/storage"
   mkdir /mnt/storage
-  echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
+  echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab
+  sleep 2
+  mount /mnt/storage
 
   set_status "[install.sh] - Storage is ready"
 }
@@ -606,7 +608,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   set_status "[install.sh] - Services configuration"
   
 
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
+#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
@@ -631,9 +633,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - Monitoring configuration"
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
-  chmod +x /opt/web3pi/basic-system-monitor/run.sh
+#  set_status "[install.sh] - Monitoring configuration"
+#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
+#  chmod +x /opt/web3pi/basic-system-monitor/run.sh
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
@@ -839,6 +841,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get influxdb)" = "false" ]; then
     echolog "Service config: Disable influxdb.service"
     systemctl disable influxdb.service
+    systemctl stop influxdb.service
   else
     echolog "Service config: NoChange influxdb.service"
   fi
@@ -850,6 +853,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get grafana)" = "false" ]; then
     echolog "Service config: Disable grafana-server.service"
     systemctl disable grafana-server.service
+    systemctl stop grafana-server.service
   else
     echolog "Service config: NoChange grafana-server.service"
   fi
@@ -861,6 +865,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get bsm)" = "false" ]; then
     echolog "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
+    systemctl stop w3p_bsm.service
   else
     echolog "Service config: NoChange w3p_bsm.service"
   fi
@@ -872,6 +877,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get bnm)" = "false" ]; then
     echolog "Service config: Disable w3p_bnm.service"
     systemctl disable w3p_bnm.service
+    systemctl stop w3p_bnm.service
   else
     echolog "Service config: NoChange w3p_bnm.service"
   fi
@@ -883,16 +889,21 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get geth)" = "false" ]; then
     echolog "Service config: Disable w3p_geth.service"
     systemctl disable w3p_geth.service
+    systemctl stop w3p_geth.service
   else
     echolog "Service config: NoChange w3p_geth.service"
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
     echolog "Service config: Enable w3p_lighthouse-beacon.service"
+    systemctl stop w3p_nimbus-beacon.service
+    systemctl disable w3p_nimbus-beacon.service
+    
     systemctl enable w3p_lighthouse-beacon.service
     systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
     echolog "Service config: Disable w3p_lighthouse-beacon.service"
+    systemctl stop w3p_lighthouse-beacon.service
     systemctl disable w3p_lighthouse-beacon.service
   else
     echolog "Service config: NoChange w3p_lighthouse-beacon.service"
@@ -901,10 +912,14 @@ if [ "$(get_install_stage)" -eq 100 ]; then
 
   if [ "$(config_get nimbus)" = "true" ]; then
     echolog "Service config: Enable w3p_nimbus-beacon.service"
+    systemctl stop w3p_lighthouse-beacon.service
+    systemctl disable w3p_lighthouse-beacon.service
+
     systemctl enable w3p_nimbus-beacon.service
     systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
     echolog "Service config: Disable w3p_nimbus-beacon.service"
+    systemctl stop w3p_nimbus-beacon.service
     systemctl disable w3p_nimbus-beacon.service
   else
     echolog "Service config: NoChange w3p_nimbus-beacon.service"
