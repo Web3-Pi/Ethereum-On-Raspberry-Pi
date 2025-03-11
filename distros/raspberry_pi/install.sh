@@ -610,7 +610,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   
 
 #  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
+#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
@@ -634,13 +634,15 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - Basic-System-Monitor Install"
+  set_status "[install.sh] - basic-system-monitor Install"
 #  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
 #  chmod +x /opt/web3pi/basic-system-monitor/run.sh
   apt install -y w3p-system-monitor
 
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
-  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+  set_status "[install.sh] - basic-eth2-node-monitor Install"
+#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
+#  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+  apt install -y w3p-node-monitor
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
