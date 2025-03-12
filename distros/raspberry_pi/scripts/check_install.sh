@@ -317,12 +317,12 @@ check_directories
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking /mnt/storage/ Directory Write Permissions..." " "  # Section header
 
-# Sprawdzenie opcji montowania dla /mnt/storage/
+# Checking mount options for /mnt/storage/
 mount_info=$(mount | grep ' /mnt/storage ')
 if echo "$mount_info" | grep -q 'ro,'; then
-    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ jest zamontowany jako read-only."
+    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ is mounted as read-only."
 else
-    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ jest zapisywalny."
+    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ is writable."
 fi
 
 # --- Section: /mnt/storage Disk Information ---
@@ -330,7 +330,6 @@ echolog " " " " " "  # Blank line
 echolog "INFO" "Checking /mnt/storage Disk Information..." " "  # Section header
 
 if mount | grep -q ' /mnt/storage '; then
-    # Używamy df z opcją -BG, aby wyświetlić rozmiary w GB
     disk_info=$(df -BG /mnt/storage | tail -n 1)
     disk_device=$(echo "$disk_info" | awk '{print $1}')
     total_size=$(echo "$disk_info" | awk '{print $2}')
@@ -351,8 +350,7 @@ check_firewall_configuration
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking Software Versions..." " "  # Section header
 
-# Check versions of Geth, Nimbus, and Lighthouse
-# Sprawdzanie wersji Geth
+# Check versions of Geth
 if dpkg -l | grep -q "ethereum"; then
     geth_version=$(apt-cache policy ethereum | grep Installed | awk '{print $2}')
     echolog "OK" "Geth Version" "Installed version: $geth_version"
@@ -487,12 +485,12 @@ fi
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking /mnt/storage/ Directory Write Permissions..." " "  # Section header
 
-# Sprawdzenie opcji montowania dla /mnt/storage/
+# Checking mount options for /mnt/storage/
 mount_info=$(mount | grep ' /mnt/storage ')
 if echo "$mount_info" | grep -q 'ro,'; then
-    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ jest zamontowany jako read-only."
+    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ is mounted as read-only."
 else
-    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ jest zapisywalny."
+    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ is writable."
 fi
 
 # --- Section: Internet Speed Test ---
