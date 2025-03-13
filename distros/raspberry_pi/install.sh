@@ -368,7 +368,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   apt-get -y install iw python3-dev libpython3.12-dev python3.12-venv
   
   set_status "[install.sh] - Installing required dependencies 2/3"
-  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https
+  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https figlet
   
   set_status "[install.sh] - Installing required dependencies 3/3"
   apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli speedtest-cli
