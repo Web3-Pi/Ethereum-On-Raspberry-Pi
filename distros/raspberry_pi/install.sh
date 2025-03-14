@@ -337,11 +337,6 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   sleep 3
 
-  set_status "[install.sh] - Adding Web3 Pi repositories"
-  wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
-  #echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
-  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse beta" | tee /etc/apt/sources.list.d/web3-pi.list
-  
   set_status "[install.sh] - Adding Ethereum repositories"
   add-apt-repository -y ppa:ethereum/ethereum
   
@@ -598,7 +593,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
 
   set_status "[install.sh] - Installing web3-pi-cockpit-modules"
-  apt install -y w3p-link w3p-updater w3p-script-runner
+  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater
   
   set_status "[install.sh] - Restart NetworkManager service"
   systemctl restart NetworkManager
@@ -634,15 +629,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - basic-system-monitor Install"
-#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
-#  chmod +x /opt/web3pi/basic-system-monitor/run.sh
-  apt install -y w3p-system-monitor
-
-  set_status "[install.sh] - basic-eth2-node-monitor Install"
-#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
-#  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
-  apt install -y w3p-node-monitor
+  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall"
+  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
