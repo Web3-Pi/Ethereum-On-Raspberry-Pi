@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: This script checks if a newer version of Ethereum clients is available.
 
 echo -e "\n--- Latest software versions:"
 echo -n -e "------ geth\t\t= "; curl -s "https://api.github.com/repos/ethereum/go-ethereum/releases/latest" | jq -r '.tag_name' | tr -d "v"

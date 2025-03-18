@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: This script sorts the server list for Lighthouse. It is used during the startup of Lighthouse.
 
 # Read custom config flags from /boot/firmware/config.txt
 config_read_file() {
@@ -10,7 +11,8 @@ config_get() {
     printf -- "%s" "${val}";
 }
 
-servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${lighthouse_network}.txt"
+eth_network="$(config_get eth_network)";
+servers_file="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${eth_network}.txt"
 best_server=""
 best_ping=1000000  # set a very high initial value
 

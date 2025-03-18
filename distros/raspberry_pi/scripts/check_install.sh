@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: Checks the installation and configuration of Web3 Pi image
 #
 # Web3 Pi - Comprehensive Check Script
 #
@@ -69,7 +70,7 @@ required_packages=("chrony" "avahi-daemon" "git-extras" "python3-pip" "python3-n
                    "libpython3.12-dev" "python3.12-venv" "software-properties-common" \
                    "apt-utils" "file" "vim" "net-tools" "telnet" \
                    "apt-transport-https" "gcc" "jq" "git" \
-                   "libraspberrypi-bin" "iotop" "screen" "bpytop" "ccze")
+                   "libraspberrypi-bin" "iotop" "screen" "bpytop" "ccze" "nvme-cli" "speedtest-cli" "cockpit" "w3p-updater")
 
 required_services=("chronyd" "avahi-daemon" "dphys-swapfile")
 
@@ -207,10 +208,10 @@ check_swap_space() {
 # Function to check kernel parameters
 check_sysctl_settings() {
     local swappiness=$(sysctl vm.swappiness | awk '{print $3}')
-    if [ "$swappiness" -eq 100 ]; then
+    if [ "$swappiness" -eq 80 ]; then
         echolog "OK" "Sysctl Setting" "vm.swappiness is set to $swappiness."
     else
-        echolog "WARN" "Sysctl Setting" "vm.swappiness is $swappiness (recommended: 100)."
+        echolog "WARN" "Sysctl Setting" "vm.swappiness is $swappiness (recommended: 80)."
     fi
 }
 
@@ -243,59 +244,9 @@ check_directories() {
 }
 
 
-# Function to check Geth version
-check_geth_version() {
-    if command -v geth &>/dev/null; then
-        geth_installed_version=$(geth version | awk '/^Version:/{print $2}' | tr -d "v")
-        geth_installed_version=${geth_installed_version%-*}  # Remove suffixes after '-'
-
-        geth_latest_version=$(curl -s "https://api.github.com/repos/ethereum/go-ethereum/releases/latest" | jq -r '.tag_name' | tr -d "v")
-        geth_latest_version=${geth_latest_version%-*}  # Remove suffixes after '-'
-
-        if [ -z "$geth_latest_version" ]; then
-            echolog "ERROR" "Geth Version" "Failed to fetch latest version."
-            return
-        fi
-
-        if [ "$geth_installed_version" = "$geth_latest_version" ]; then
-            echolog "OK" "Geth Version" "Installed version $geth_installed_version is up to date."
-        else
-            if [ "$(printf '%s\n' "$geth_installed_version" "$geth_latest_version" | sort -V | head -n1)" = "$geth_installed_version" ]; then
-                echolog "WARN" "Geth Version" "Installed version $geth_installed_version is older than latest version $geth_latest_version."
-            else
-                echolog "ERROR" "Geth Version" "Installed version $geth_installed_version is newer than latest version $geth_latest_version."
-            fi
-        fi
-    else
-        echolog "WARN" "Geth Version" "Geth is not installed."
-    fi
-}
-
-# Function to check Nimbus version
-check_nimbus_version() {
-    if command -v nimbus_beacon_node &>/dev/null; then
-        nimbus_installed_version=$(nimbus_beacon_node --version 2>&1 | awk '/^Nimbus beacon node/{print $NF}' | sed 's/^v//; s/-.*$//')
-
-        nimbus_latest_version=$(curl -s "https://api.github.com/repos/status-im/nimbus-eth2/releases/latest" | jq -r '.name' | sed 's/^v//; s/-.*$//')
-
-        if [ -z "$nimbus_latest_version" ]; then
-            echolog "ERROR" "Nimbus Version" "Failed to fetch latest version."
-            return
-        fi
-
-        if [ "$nimbus_installed_version" = "$nimbus_latest_version" ]; then
-            echolog "OK" "Nimbus Version" "Installed version $nimbus_installed_version is up to date."
-        else
-            if [ "$(printf '%s\n' "$nimbus_installed_version" "$nimbus_latest_version" | sort -V | head -n1)" = "$nimbus_installed_version" ]; then
-                echolog "WARN" "Nimbus Version" "Installed version $nimbus_installed_version is older than latest version $nimbus_latest_version."
-            else
-                echolog "ERROR" "Nimbus Version" "Installed version $nimbus_installed_version is newer than latest version $nimbus_latest_version."
-            fi
-        fi
-    else
-        echolog "WARN" "Nimbus Version" "Nimbus is not installed."
-    fi
-}
+# --- Section: Geth and Nimbus Version Check ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking Geth and Nimbus Versions from APT..." " "  # Section header
 
 # Function to check Lighthouse version
 check_lighthouse_version() {
@@ -362,6 +313,32 @@ check_swap_space
 check_sysctl_settings
 check_directories
 
+# --- Section: Storage Directory Check ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking /mnt/storage/ Directory Write Permissions..." " "  # Section header
+
+# Checking mount options for /mnt/storage/
+mount_info=$(mount | grep ' /mnt/storage ')
+if echo "$mount_info" | grep -q 'ro,'; then
+    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ is mounted as read-only."
+else
+    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ is writable."
+fi
+
+# --- Section: /mnt/storage Disk Information ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking /mnt/storage Disk Information..." " "  # Section header
+
+if mount | grep -q ' /mnt/storage '; then
+    disk_info=$(df -BG /mnt/storage | tail -n 1)
+    disk_device=$(echo "$disk_info" | awk '{print $1}')
+    total_size=$(echo "$disk_info" | awk '{print $2}')
+    free_space=$(echo "$disk_info" | awk '{print $4}')
+    echolog "INFO" "/mnt/storage Disk" "Device: $disk_device, Total Size: $total_size, Free Space: $free_space"
+else
+    echolog "ERROR" "/mnt/storage Disk" "/mnt/storage is not mounted."
+fi
+
 # --- Section: Firewall and Security Checks ---
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking Firewall Configuration..." " "  # Section header
@@ -373,9 +350,22 @@ check_firewall_configuration
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking Software Versions..." " "  # Section header
 
-# Check versions of Geth, Nimbus, and Lighthouse
-check_geth_version
-check_nimbus_version
+# Check versions of Geth
+if dpkg -l | grep -q "ethereum"; then
+    geth_version=$(apt-cache policy ethereum | grep Installed | awk '{print $2}')
+    echolog "OK" "Geth Version" "Installed version: $geth_version"
+else
+    echolog "WARN" "Geth Version" "Geth is not installed."
+fi
+
+# Sprawdzanie wersji Nimbus
+if dpkg -l | grep -q "nimbus-beacon-node"; then
+    nimbus_version=$(apt-cache policy nimbus-beacon-node | grep Installed | awk '{print $2}')
+    echolog "OK" "Nimbus Version" "Installed version: $nimbus_version"
+else
+    echolog "WARN" "Nimbus Version" "Nimbus is not installed."
+fi
+
 check_lighthouse_version
 
 # --- Section: Additional Checks ---
@@ -463,6 +453,75 @@ for file in "${REQUIRED_FILES[@]}"; do
         echolog "WARN" "File Check" "$file does not exist."
     fi
 done
+
+# --- Section: Internet Speed Check ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking Internet Speed..." " "  # Section header
+
+# Perform speed test using speedtest-cli
+if ! command -v speedtest-cli &>/dev/null; then
+    echolog "ERROR" "Internet Speed Test" "speedtest-cli not installed."
+else
+    speedtest_result=$(speedtest-cli --csv)
+
+    download_speed=$(echo "$speedtest_result" | cut -d',' -f7)
+    upload_speed=$(echo "$speedtest_result" | cut -d',' -f8)
+    ping=$(echo "$speedtest_result" | cut -d',' -f6 | cut -d'.' -f1)
+
+    download_speed_mbps=$(echo "scale=2; $download_speed / 1000000" | bc)
+
+    remarks="Download: ${download_speed%.*} bps (~${download_speed} Mbps), Ping: $(echo "$speedtest_result" | cut -d',' -f6) ms"
+
+    if (( $(echo "$download_speed < 20000000" | bc -l) )); then
+        echolog "ERROR" "Internet Speed" "$remarks"
+    elif (( $(echo "$(echo $speedtest_result | cut -d',' -f6) > 50" | bc -l) )); then
+        echolog "WARN" "Internet Speed Test" "$remarks"
+    else
+        echolog "OK" "Internet Speed Test" "$remarks"
+    fi
+fi
+
+# --- Section: Storage Directory Check ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking /mnt/storage/ Directory Write Permissions..." " "  # Section header
+
+# Checking mount options for /mnt/storage/
+mount_info=$(mount | grep ' /mnt/storage ')
+if echo "$mount_info" | grep -q 'ro,'; then
+    echolog "ERROR" "/mnt/storage/ Check" "/mnt/storage/ is mounted as read-only."
+else
+    echolog "OK" "/mnt/storage/ Check" "/mnt/storage/ is writable."
+fi
+
+# --- Section: Internet Speed Test ---
+echolog " " " " " "  # Blank line
+echolog "INFO" "Checking Internet Speed..." " "  # Section header
+
+# Run speed test and parse results
+if command -v speedtest-cli &>/dev/null; then
+    speedtest_result=$(speedtest-cli --csv 2>/dev/null)
+    if [ -n "$speedtest_result" ]; then
+        IFS=',' read -r timestamp ping download upload <<< "$(echo "$speedtest_result" | awk -F ',' '{print $3","$6","$7","$8}')"
+        download_mbps=$(printf "%.2f" "$(echo "$download" | awk '{print $1 / 1000000}')")
+        upload_mbps=$(printf "%.2f" "$(echo "$upload" | awk '{print $1 / 1000000}')")
+        ping_ms=$(printf "%.2f" "$ping")
+        
+        # Log results
+        echolog "INFO" "Internet Speed Test" "Download: ${download_mbps} Mbps, Upload: ${upload_mbps} Mbps, Ping: ${ping_ms} ms"
+        
+        # Check thresholds
+        if (( $(echo "$download_mbps < 20" | bc -l) )); then
+            echolog "ERROR" "Internet Speed Test" "Download speed too low: ${download_mbps} Mbps"
+        fi
+        if (( $(echo "$ping_ms > 50" | bc -l) )); then
+            echolog "WARN" "Internet Speed Test" "High ping: ${ping_ms} ms"
+        fi
+    else
+        echolog "ERROR" "Internet Speed Test" "Failed to retrieve speed test results."
+    fi
+else
+    echolog "ERROR" "Internet Speed Test" "speedtest-cli not found. Please install it."
+fi
 
 # --- Section: Conclusion ---
 echolog " " " " " "  # Blank line

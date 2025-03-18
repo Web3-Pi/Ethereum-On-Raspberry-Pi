@@ -1,6 +1,5 @@
 #!/bin/bash
-#
-# Web3 Pi reboot system
+# Description: This script restarts the system while gracefully shutting down Ethereum-related services.
 #
 
 # check for required privileges
