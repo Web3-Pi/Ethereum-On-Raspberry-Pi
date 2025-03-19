@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -124,7 +124,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -251,7 +251,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "cpu_load",
@@ -445,10 +445,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "download",
@@ -607,10 +609,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -764,7 +768,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -901,7 +905,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -956,8 +960,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
+        "h": 2,
+        "w": 2,
         "x": 0,
         "y": 5
       },
@@ -982,7 +986,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1013,6 +1017,31 @@
       ],
       "title": "Chain head",
       "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 2,
+        "y": 5
+      },
+      "id": 46,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"display: flex; justify-content: center; align-items: center; height: 50px;\">\r\n    <a href=\"https://web3pi.io\" target=\"_blank\" style=\"display: flex; align-items: center; height: 100%;\">\r\n        <img src=\"/public/img/web3pi_logo.png\" alt=\"Web3Pi Logo\" style=\"max-height: 95%; cursor: pointer;\">\r\n    </a>\r\n</div>\r\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.5.2",
+      "title": "",
+      "type": "text"
     },
     {
       "datasource": "InfluxDB_v1",
@@ -1138,10 +1167,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "cpu_usage",
@@ -1255,14 +1286,20 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 7,
         "w": 4,
         "x": 0,
-        "y": 8
+        "y": 7
       },
       "id": 16,
       "options": {
         "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 0,
@@ -1283,7 +1320,7 @@
         },
         "valueMode": "text"
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1508,10 +1545,12 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "",
@@ -1651,10 +1690,12 @@
           "sortDesc": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1825,10 +1866,12 @@
           "sortDesc": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -3909,56 +3952,53 @@
       "type": "row"
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 39,
+  "preload": false,
+  "refresh": "10s",
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "eop-5_s",
+          "value": "eop-5_s"
+        },
         "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Single device Ethereum nodes",
-        "hide": 0,
         "includeAll": false,
         "label": "Single device nodes",
-        "multi": false,
         "name": "single_dev",
         "options": [],
         "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "refresh": 1,
         "regex": "/^.*_s$/",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "",
+          "value": ""
+        },
         "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Ethereum node based on two devices",
-        "hide": 0,
         "includeAll": false,
         "label": "Dual device nodes",
-        "multi": false,
         "name": "dual_dev",
         "options": [],
         "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "refresh": 1,
         "regex": "/^.*_d$/",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "_exec",
           "value": "_exec"
         },
         "hide": 2,
         "includeAll": false,
-        "multi": false,
         "name": "dual_exec",
         "options": [
           {
@@ -3968,18 +4008,15 @@
           }
         ],
         "query": "${dual_dev}_exec",
-        "skipUrlSync": false,
         "type": "custom"
       },
       {
         "current": {
-          "selected": false,
           "text": "_consensus",
           "value": "_consensus"
         },
         "hide": 2,
         "includeAll": false,
-        "multi": false,
         "name": "dual_consensus",
         "options": [
           {
@@ -3989,7 +4026,6 @@
           }
         ],
         "query": "${dual_dev}_consensus",
-        "skipUrlSync": false,
         "type": "custom"
       }
     ]
@@ -4002,6 +4038,6 @@
   "timezone": "browser",
   "title": "Ethereum Nodes Monitor v2",
   "uid": "web3piv2p6eiob",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
