@@ -35,7 +35,7 @@
       "type": "row"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -127,39 +127,18 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_node",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT \"active_percent\" FROM \"status_node\" WHERE (\"host\"::tag =~ /^$|dev4$/) AND $timeFilter",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_node\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"last\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "hide": false,
+          "queryType": "flux"
         }
       ],
       "title": "Node status",
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -255,103 +234,26 @@
       "targets": [
         {
           "alias": "cpu_load",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "cpu",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag =~ /^$dev5$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "used_percent"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "hide": false,
+          "queryType": "flux"
         },
         {
           "alias": "temp",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "temp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag =~ /^$dev5$/) AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"temp\")\n  |> filter(fn: (r) => r._field == \"deg_C\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "deg_C"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "hide": false,
+          "queryType": "flux"
         }
       ],
       "title": "CPU load & temperature",
       "type": "gauge"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -414,6 +316,25 @@
           {
             "matcher": {
               "id": "byName",
+              "options": "download"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Download"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
               "options": "upload"
             },
             "properties": [
@@ -423,6 +344,10 @@
                   "fixedColor": "yellow",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "displayName",
+                "value": "Upload"
               }
             ]
           }
@@ -451,93 +376,25 @@
       },
       "targets": [
         {
-          "alias": "download",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            }
-          ],
-          "hide": false,
-          "measurement": "net",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"net\")\n  |> filter(fn: (r) => r._field == \"download_rate\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> map(fn: (r) => ({r with _field: \"download\"}))\n  |> yield(name: \"download\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "download_rate"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "hide": false,
+          "queryType": "flux"
         },
         {
-          "alias": "upload",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            }
-          ],
-          "hide": false,
-          "measurement": "net",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"net\")\n  |> filter(fn: (r) => r._field == \"upload_rate\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> map(fn: (r) => ({r with _field: \"upload\"}))\n  |> yield(name: \"upload\")",
           "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "upload_rate"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "hide": false,
+          "queryType": "flux"
         }
       ],
       "title": "Network",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -612,55 +469,18 @@
         }
       },
       "targets": [
-        {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "last_block"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
-        }
-      ],
+      {
+        "datasource": "InfluxDB_v2",
+        "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"last_block\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: true)\n  |> yield(name: \"mean\")",
+        "refId": "A",
+        "queryType": "flux"
+      }
+    ],
       "title": "Chain head",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -767,37 +587,17 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_exec",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_exec\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"active_percent\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         }
       ],
       "title": "Execution",
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -904,37 +704,17 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_consensus",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_consensus\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"active_percent\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         }
       ],
       "title": "Consensus",
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -985,37 +765,17 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"last_block\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"last_block\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "last_block"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         }
       ],
       "title": "Chain head",
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1082,6 +842,18 @@
           {
             "matcher": {
               "id": "byName",
+              "options": "cpu_usage"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CPU usage"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
               "options": "temp"
             },
             "properties": [
@@ -1116,6 +888,10 @@
                   "mode": "continuous-blues",
                   "seriesBy": "max"
                 }
+              },
+              {
+                "id": "displayName",
+                "value": "Temperature"
               }
             ]
           }
@@ -1144,92 +920,24 @@
       },
       "targets": [
         {
-          "alias": "cpu_usage",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            }
-          ],
-          "measurement": "cpu",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _value: r._value, _time: r._time, _field: \"cpu_usage\" }))\n  |> yield(name: \"cpu_usage\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "used_percent"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         },
         {
-          "alias": "temp",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            }
-          ],
-          "hide": false,
-          "measurement": "temp",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"temp\")\n  |> filter(fn: (r) => r._field == \"deg_C\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _value: r._value, _time: r._time, _field: \"temp\" }))\n  |> yield(name: \"temp\")",
           "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "deg_C"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux",
+          "hide": false
         }
       ],
       "title": "CPU load & temperature history",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1286,118 +994,38 @@
       "pluginVersion": "11.2.2",
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_0\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"sync_part_perc_0\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_0"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         },
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_1\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"sync_part_perc_1\")",
           "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_1"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux",
+          "hide": false
         },
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_2\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"sync_part_perc_2\")",
           "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_2"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux",
+          "hide": false
         },
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "chain",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_3\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield(name: \"sync_part_perc_3\")",
           "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "sync_part_perc_3"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux",
+          "hide": false
         }
       ],
       "title": "Sync progress",
       "type": "bargauge"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1514,40 +1142,17 @@
       },
       "targets": [
         {
-          "alias": "",
-          "datasource": "InfluxDB_v1",
-          "groupBy": [],
-          "measurement": "status_node",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_node\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> yield()",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active_percent"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         }
       ],
       "title": "Sync status history",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1607,26 +1212,26 @@
         },
         "overrides": [
           {
-            "__systemRef": "hideSeriesFrom",
             "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "mem.mean"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
+              "id": "byFrameRefID",
+              "options": "A"
             },
             "properties": [
               {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
+                "id": "displayName",
+                "value": "Memory"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Swap"
               }
             ]
           }
@@ -1657,100 +1262,24 @@
       },
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "mem",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"used_bytes\") FROM \"mem\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"mem\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "used_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         },
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "swap",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"swap\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "used_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux",
+          "hide": false
         }
       ],
       "title": "Memory use",
       "type": "timeseries"
     },
     {
-      "datasource": "InfluxDB_v1",
+      "datasource": "InfluxDB_v2",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1831,47 +1360,10 @@
       },
       "targets": [
         {
-          "datasource": "InfluxDB_v1",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "disk",
-          "orderByTime": "ASC",
-          "policy": "default",
+          "datasource": "InfluxDB_v2",
+          "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"disk\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${single_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "used_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=~",
-              "value": "/^$single_dev$/"
-            }
-          ]
+          "queryType": "flux"
         }
       ],
       "title": "Disk use",
@@ -1888,7 +1380,7 @@
       "id": 19,
       "panels": [
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1977,37 +1469,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "status_node",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_node\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "active_percent"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Node status",
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2060,54 +1532,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "cpu",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_percent"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_exec$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Exec dev CPU load",
           "type": "gauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2166,7 +1601,33 @@
               },
               "unit": "percent"
             },
-            "overrides": []
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "cpu_usage",
+                      "temp"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                ]
+              }
+            ]
           },
           "gridPos": {
             "h": 6,
@@ -2177,10 +1638,12 @@
           "id": 37,
           "options": {
             "legend": {
-              "calcs": [],
+              "calcs": [
+                "lastNotNull"
+              ],
               "displayMode": "list",
               "placement": "bottom",
-              "showLegend": false
+              "showLegend": true
             },
             "tooltip": {
               "mode": "single",
@@ -2189,51 +1652,23 @@
           },
           "targets": [
             {
-              "alias": "",
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                }
-              ],
-              "measurement": "cpu",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-              "rawQuery": false,
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"cpu_usage\" }))",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_percent"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_exec$/"
-                }
-              ]
+              "queryType": "flux"
+            },
+            {
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu_temp\")\n  |> filter(fn: (r) => r._field == \"temp_c\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"temp\" }))",
+              "refId": "B",
+              "queryType": "flux"
             }
           ],
           "title": "Execution device CPU load history",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2337,37 +1772,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "status_exec",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_exec\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "active_percent"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Execution",
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2471,37 +1886,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "status_consensus",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_consensus\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "active_percent"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Consensus",
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2557,118 +1952,38 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_0\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "sync_part_perc_0"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             },
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "hide": false,
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_1\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "B",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "sync_part_perc_1"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "hide": false,
+              "queryType": "flux"
             },
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "hide": false,
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_2\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "C",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "sync_part_perc_2"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "hide": false,
+              "queryType": "flux"
             },
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "hide": false,
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"sync_part_perc_3\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield()",
               "refId": "D",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "sync_part_perc_3"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "hide": false,
+              "queryType": "flux"
             }
           ],
           "title": "Sync progress",
           "type": "bargauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2728,26 +2043,26 @@
             },
             "overrides": [
               {
-                "__systemRef": "hideSeriesFrom",
                 "matcher": {
-                  "id": "byNames",
-                  "options": {
-                    "mode": "exclude",
-                    "names": [
-                      "mem.mean"
-                    ],
-                    "prefix": "All except:",
-                    "readOnly": true
-                  }
+                  "id": "byFrameRefID",
+                  "options": "A"
                 },
                 "properties": [
                   {
-                    "id": "custom.hideFrom",
-                    "value": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    }
+                    "id": "displayName",
+                    "value": "Memory"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Swap"
                   }
                 ]
               }
@@ -2778,100 +2093,24 @@
           },
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "mem",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "SELECT mean(\"used_bytes\") FROM \"mem\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval) fill(null)",
-              "rawQuery": false,
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"mem\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_exec$/"
-                }
-              ]
+              "queryType": "flux"
             },
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "measurement": "swap",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"swap\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "B",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_exec$/"
-                }
-              ]
+              "hide": false,
+              "queryType": "flux"
             }
           ],
           "title": "Execution device memory use",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -2952,54 +2191,17 @@
           },
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "disk",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"disk\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_exec}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_exec$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Execution device disk use",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3114,41 +2316,19 @@
             }
           },
           "targets": [
-            {
-              "alias": "",
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "status_node",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-              "rawQuery": false,
-              "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "active_percent"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
-            }
-          ],
+          {
+            "datasource": "InfluxDB_v2",
+            "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"status_node\")\n  |> filter(fn: (r) => r._field == \"active_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield(name: \"active_percent\")",
+            "refId": "A",
+            "alias": "",
+            "queryType": "flux"
+          }
+        ],
           "title": "Sync status history",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3201,54 +2381,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "cpu",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_consensus}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_percent"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_consensus$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Cons dev CPU load",
           "type": "gauge"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3330,51 +2473,18 @@
           },
           "targets": [
             {
-              "alias": "",
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                }
-              ],
-              "measurement": "cpu",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "SELECT mean(\"used_percent\") FROM \"cpu\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval)",
-              "rawQuery": false,
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"cpu\")\n  |> filter(fn: (r) => r._field == \"used_percent\")\n  |> filter(fn: (r) => r.host =~ /^${dual_consensus}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _field: \"cpu_usage\" }))\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_percent"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_consensus$/"
-                }
-              ]
+              "alias": "",
+              "queryType": "flux"
             }
           ],
           "title": "Consensus device CPU load history",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3420,37 +2530,17 @@
           "pluginVersion": "11.2.2",
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [],
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"last_block\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> yield(name: \"last_block\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "last_block"
-                    ],
-                    "type": "field"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Latest block",
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3527,54 +2617,17 @@
           },
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "chain",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"chain\")\n  |> filter(fn: (r) => r._field == \"last_block\")\n  |> filter(fn: (r) => r.host =~ /^${dual_dev}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "last_block"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_dev$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Chain head",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3634,26 +2687,26 @@
             },
             "overrides": [
               {
-                "__systemRef": "hideSeriesFrom",
                 "matcher": {
-                  "id": "byNames",
-                  "options": {
-                    "mode": "exclude",
-                    "names": [
-                      "mem.mean"
-                    ],
-                    "prefix": "All except:",
-                    "readOnly": true
-                  }
+                  "id": "byFrameRefID",
+                  "options": "A"
                 },
                 "properties": [
                   {
-                    "id": "custom.hideFrom",
-                    "value": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    }
+                    "id": "displayName",
+                    "value": "Memory"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Swap"
                   }
                 ]
               }
@@ -3684,100 +2737,24 @@
           },
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "mem",
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "SELECT mean(\"used_bytes\") FROM \"mem\" WHERE (\"host\"::tag = 'ethtest1.local') AND $timeFilter GROUP BY time($__interval) fill(null)",
-              "rawQuery": false,
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"mem\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_consensus}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_consensus$/"
-                }
-              ]
+              "queryType": "flux"
             },
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "measurement": "swap",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"swap\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_consensus}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "B",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_consensus$/"
-                }
-              ]
+              "hide": false,
+              "queryType": "flux"
             }
           ],
           "title": "Consensus device memory use",
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB_v1",
+          "datasource": "InfluxDB_v2",
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -3858,47 +2835,10 @@
           },
           "targets": [
             {
-              "datasource": "InfluxDB_v1",
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "measurement": "disk",
-              "orderByTime": "ASC",
-              "policy": "default",
+              "datasource": "InfluxDB_v2",
+              "query": "from(bucket: \"ethonrpi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"disk\")\n  |> filter(fn: (r) => r._field == \"used_bytes\")\n  |> filter(fn: (r) => r.host =~ /^${dual_consensus}$/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
               "refId": "A",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "used_bytes"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": [
-                {
-                  "key": "host::tag",
-                  "operator": "=~",
-                  "value": "/^$dual_consensus$/"
-                }
-              ]
+              "queryType": "flux"
             }
           ],
           "title": "Consensus device disk use",
@@ -3909,15 +2849,21 @@
       "type": "row"
     }
   ],
+  "preload": false,
   "refresh": "10s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {},
-        "datasource": "InfluxDB_v1",
-        "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
+        "current": {
+          "text": "eop-1_s",
+          "value": "eop-1_s"
+        },
+        "datasource": {
+          "type": "InfluxDB_v2"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(\n  bucket: \"ethonrpi\",\n  tag: \"host\",\n  predicate: (r) => r._measurement == \"status_node\",\n  start: -30d\n)\n|> filter(fn: (r) => r._value =~ /^.*_s$/)",
         "description": "Single device Ethereum nodes",
         "hide": 0,
         "includeAll": false,
@@ -3925,17 +2871,23 @@
         "multi": false,
         "name": "single_dev",
         "options": [],
-        "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
+        "query": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(\n  bucket: \"ethonrpi\",\n  tag: \"host\",\n  predicate: (r) => r._measurement == \"status_node\",\n  start: -30d\n)\n|> filter(fn: (r) => r._value =~ /^.*_s$/)",
         "refresh": 1,
-        "regex": "/^.*_s$/",
+        "regex": "",
         "skipUrlSync": false,
         "sort": 0,
-        "type": "query"
+        "type": "query",
+        "queryType": "flux"
       },
       {
-        "current": {},
-        "datasource": "InfluxDB_v1",
-        "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "InfluxDB_v2"
+        },
+        "definition": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(\n  bucket: \"ethonrpi\",\n  tag: \"host\",\n  predicate: (r) => r._measurement == \"status_node\",\n  start: -30d\n)\n|> filter(fn: (r) => r._value =~ /^.*_d$/)",
         "description": "Ethereum node based on two devices",
         "hide": 0,
         "includeAll": false,
@@ -3943,12 +2895,13 @@
         "multi": false,
         "name": "dual_dev",
         "options": [],
-        "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
+        "query": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(\n  bucket: \"ethonrpi\",\n  tag: \"host\",\n  predicate: (r) => r._measurement == \"status_node\",\n  start: -30d\n)\n|> filter(fn: (r) => r._value =~ /^.*_d$/)",
         "refresh": 1,
-        "regex": "/^.*_d$/",
+        "regex": "",
         "skipUrlSync": false,
         "sort": 0,
-        "type": "query"
+        "type": "query",
+        "queryType": "flux"
       },
       {
         "current": {
