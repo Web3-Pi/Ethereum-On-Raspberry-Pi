@@ -642,8 +642,15 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall"
-  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
+  
+
+  set_status "[install.sh] - basic-system-monitor, w3p-lcd-dashboardInstall"
+  apt install -y w3p-system-monitor w3p-lcd-dashboard
+
+  set_status "[install.sh] - basic-eth2-node-monitor --branch mgordel/influx2-update"
+  git-force-clone --branch mgordel/influx2-update https://github.com/Web3-Pi/basic-eth2-node-monitor.git /opt/web3pi/basic-eth2-node-monitor
+  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
