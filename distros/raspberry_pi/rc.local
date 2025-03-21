@@ -3,7 +3,7 @@
 # Web3 Pi - rc.local
 #
 
-BRANCH="v0.7.4"
+BRANCH="r0.7.7"
 
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
@@ -116,14 +116,24 @@ echolog "$(date): Connected - ${pingServerAdr}"
 # Runs only once
 if [ "$(get_install_stage)" -eq 0 ]; then
 
+  set_status "[install.sh] - Stop unattended-upgrades.service"
+  systemctl stop unattended-upgrades
+  systemctl disable unattended-upgrades
+
   # Install essential dependencies
   set_status "[rc.local] - Essential dependencies"
 
+  sleep 1
+
+  set_status "[install.sh] - Adding Web3 Pi repositories"
+  wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
+  
   set_status "[rc.local] - Refreshes the package lists"
   apt-get update
   
   set_status "[rc.local] - Install essential dependencies"
-  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-netifaces
+  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-netifaces flashrom
 
   set_status "[rc.local] - Sync time with NTP server (chronyd -q)"
   chronyd -q

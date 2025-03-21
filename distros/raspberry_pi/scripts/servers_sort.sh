@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: This script sorts the servers for the Nimbus client. It is used during the startup of Nimbus.
 
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
