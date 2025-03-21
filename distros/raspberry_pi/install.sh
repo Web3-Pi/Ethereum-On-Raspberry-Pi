@@ -349,12 +349,22 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
-  apt update
+  set_status "[install.sh] - Adding InfluxDB repositories"
+  # Add the InfluxData key to verify downloads and add the repository
+  curl --silent --location -O \
+  https://repos.influxdata.com/influxdata-archive.key
+  echo "943666881a1b8d9b849b74caebf02d3465d6beb716510d86a39f6c8e8dac7515  influxdata-archive.key" \
+  | sha256sum --check - && cat influxdata-archive.key \
+  | gpg --dearmor \
+  | tee /etc/apt/trusted.gpg.d/influxdata-archive.gpg > /dev/null \
+  && echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' \
+  | tee /etc/apt/sources.list.d/influxdata.list
+
 
 ## 1. Install some required dependencies ####################################################
  
   set_status "[install.sh] - Required dependencies"
-  sleep 2
+  sleep 1
 
   set_status "[install.sh] - Refreshes the package lists"
   apt-get update
@@ -558,8 +568,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sleep 2
 
   # Installing InfluxDB
-  set_status "[install.sh] - Installing InfluxDB v2.7.9"
-  dpkg -i /opt/web3pi/influxdb/influxdb_2.7.9_arm64.deb
+  set_status "[install.sh] - Installing InfluxDB v2.x"
+  apt-get -y install influxdb2
 
   set_status "[install.sh] - Start influxdb.service"
 #  systemctl enable influxdb
