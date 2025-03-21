@@ -558,9 +558,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sleep 2
 
   # Installing InfluxDB
-  set_status "[install.sh] - Installing InfluxDB v1.8.10"
-  dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
-  sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
+  set_status "[install.sh] - Installing InfluxDB v2.7.9"
+  dpkg -i /opt/web3pi/influxdb/influxdb_2.7.9_arm64.deb
 
   set_status "[install.sh] - Start influxdb.service"
 #  systemctl enable influxdb
@@ -568,8 +567,12 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sleep 10
 
   set_status "[install.sh] - Configuring InfluxDB"
-  influx -execute 'CREATE DATABASE ethonrpi'
-  influx -execute "CREATE USER geth WITH PASSWORD 'geth'"
+  influx setup \
+    --username "admin" \
+    --password "web3-pi-node-monitor" \
+    --org "web3-pi" \
+    --bucket "ethonrpi" \
+    --force
   
   # Installing Grafana
   set_status "[install.sh] - Installing Grafana"
