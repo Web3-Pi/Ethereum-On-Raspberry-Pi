@@ -1,6 +1,5 @@
 #!/bin/bash
-#
-# Web3 Pi shutdown system
+# Description: This script shuts down the system while gracefully stopping Ethereum-related services. It is the recommended method for powering off the device.
 #
 
 # check for required privileges

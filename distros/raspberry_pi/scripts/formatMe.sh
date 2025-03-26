@@ -1,4 +1,5 @@
 #!/bin/bash
+# Description: This script sets the formatMe flag, which will trigger the storage to be formatted during the next execution of the Web3 Pi installer.
 
 # Function to ask for confirmation and wait for a response
 ask_confirmation() {
