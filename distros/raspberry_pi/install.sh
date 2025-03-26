@@ -589,14 +589,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   . /etc/os-release
   apt install -y -t ${VERSION_CODENAME}-backports cockpit
 
-  set_status "[install.sh] - Add dummy network adapter for NetworkManager"
-  nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
+  #set_status "[install.sh] - Add dummy network adapter for NetworkManager"
+  #nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
 
   set_status "[install.sh] - Installing web3-pi-cockpit-modules"
   apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater
   
-  set_status "[install.sh] - Restart NetworkManager service"
-  systemctl restart NetworkManager
+  #set_status "[install.sh] - Restart NetworkManager service"
+  #systemctl restart NetworkManager
 
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
