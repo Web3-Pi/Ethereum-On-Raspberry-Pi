@@ -593,7 +593,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   #nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
 
   set_status "[install.sh] - Installing web3-pi-cockpit-modules"
-  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater
+  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater 
   
   #set_status "[install.sh] - Restart NetworkManager service"
   #systemctl restart NetworkManager
@@ -603,9 +603,6 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   set_status "[install.sh] - Services configuration"
   
-
-#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
-#  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
@@ -687,6 +684,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
 
   chown -R ethereum:ethereum /opt/web3pi
+
+  set_status "[install.sh] - Installing w3p-installation-status"
+  apt install -y w3p-installation-status
 
 ## 12. CLEANUP ###########################################################################################
 
