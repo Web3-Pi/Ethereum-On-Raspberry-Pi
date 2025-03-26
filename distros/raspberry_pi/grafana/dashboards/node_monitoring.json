@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -445,12 +445,10 @@
           "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "download",
@@ -609,12 +607,10 @@
           "showLegend": false
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1167,12 +1163,10 @@
           "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "cpu_usage",
@@ -1545,12 +1539,10 @@
           "showLegend": false
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "",
@@ -1690,12 +1682,10 @@
           "sortDesc": false
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1866,12 +1856,10 @@
           "sortDesc": false
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -3952,53 +3940,56 @@
       "type": "row"
     }
   ],
-  "preload": false,
   "refresh": "10s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {
-          "text": "eop-5_s",
-          "value": "eop-5_s"
-        },
+        "current": {},
         "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Single device Ethereum nodes",
+        "hide": 0,
         "includeAll": false,
         "label": "Single device nodes",
+        "multi": false,
         "name": "single_dev",
         "options": [],
         "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "refresh": 1,
         "regex": "/^.*_s$/",
+        "skipUrlSync": false,
+        "sort": 0,
         "type": "query"
       },
       {
-        "current": {
-          "text": "",
-          "value": ""
-        },
+        "current": {},
         "datasource": "InfluxDB_v1",
         "definition": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "description": "Ethereum node based on two devices",
+        "hide": 0,
         "includeAll": false,
         "label": "Dual device nodes",
+        "multi": false,
         "name": "dual_dev",
         "options": [],
         "query": "SHOW TAG VALUES FROM \"status_node\" with Key= \"host\" ",
         "refresh": 1,
         "regex": "/^.*_d$/",
+        "skipUrlSync": false,
+        "sort": 0,
         "type": "query"
       },
       {
         "current": {
+          "selected": false,
           "text": "_exec",
           "value": "_exec"
         },
         "hide": 2,
         "includeAll": false,
+        "multi": false,
         "name": "dual_exec",
         "options": [
           {
@@ -4008,15 +3999,18 @@
           }
         ],
         "query": "${dual_dev}_exec",
+        "skipUrlSync": false,
         "type": "custom"
       },
       {
         "current": {
+          "selected": false,
           "text": "_consensus",
           "value": "_consensus"
         },
         "hide": 2,
         "includeAll": false,
+        "multi": false,
         "name": "dual_consensus",
         "options": [
           {
@@ -4026,6 +4020,7 @@
           }
         ],
         "query": "${dual_dev}_consensus",
+        "skipUrlSync": false,
         "type": "custom"
       }
     ]
@@ -4038,6 +4033,6 @@
   "timezone": "browser",
   "title": "Ethereum Nodes Monitor v2",
   "uid": "web3piv2p6eiob",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
