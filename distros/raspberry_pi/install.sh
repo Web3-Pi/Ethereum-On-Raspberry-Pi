@@ -582,6 +582,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Copy dashboards.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
 
+  # Copy images for grafana
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/img/*.png /usr/share/grafana/public/img/
+
   systemctl start grafana-server
 
 
