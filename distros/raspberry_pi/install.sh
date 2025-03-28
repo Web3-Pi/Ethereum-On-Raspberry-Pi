@@ -594,7 +594,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   NET_CONFIG_FILE="/boot/firmware/network-config"
 
-  if grep -qE '^[[:space:]]*[^#][[:space:]]*wifis:' "$NET_CONFIG_FILE"; then
+  if grep -qP '^\s*(?!#).*wifis:' "$NET_CONFIG_FILE"; then
       set_status "[install.sh] - Active Wi-Fi configuration detected"
   else
       set_status "[install.sh] - Add dummy network adapter for NetworkManager"
