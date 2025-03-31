@@ -454,33 +454,6 @@ for file in "${REQUIRED_FILES[@]}"; do
     fi
 done
 
-# --- Section: Internet Speed Check ---
-echolog " " " " " "  # Blank line
-echolog "INFO" "Checking Internet Speed..." " "  # Section header
-
-# Perform speed test using speedtest-cli
-if ! command -v speedtest-cli &>/dev/null; then
-    echolog "ERROR" "Internet Speed Test" "speedtest-cli not installed."
-else
-    speedtest_result=$(speedtest-cli --csv)
-
-    download_speed=$(echo "$speedtest_result" | cut -d',' -f7)
-    upload_speed=$(echo "$speedtest_result" | cut -d',' -f8)
-    ping=$(echo "$speedtest_result" | cut -d',' -f6 | cut -d'.' -f1)
-
-    download_speed_mbps=$(echo "scale=2; $download_speed / 1000000" | bc)
-
-    remarks="Download: ${download_speed%.*} bps (~${download_speed} Mbps), Ping: $(echo "$speedtest_result" | cut -d',' -f6) ms"
-
-    if (( $(echo "$download_speed < 20000000" | bc -l) )); then
-        echolog "ERROR" "Internet Speed" "$remarks"
-    elif (( $(echo "$(echo $speedtest_result | cut -d',' -f6) > 50" | bc -l) )); then
-        echolog "WARN" "Internet Speed Test" "$remarks"
-    else
-        echolog "OK" "Internet Speed Test" "$remarks"
-    fi
-fi
-
 # --- Section: Storage Directory Check ---
 echolog " " " " " "  # Blank line
 echolog "INFO" "Checking /mnt/storage/ Directory Write Permissions..." " "  # Section header
