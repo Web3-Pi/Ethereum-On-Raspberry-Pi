@@ -1,0 +1,3 @@
+https://hoodi.beaconstate.info
+https://hoodi-checkpoint-sync.attestant.io
+https://beaconstate-hoodi.chainsafe.io
