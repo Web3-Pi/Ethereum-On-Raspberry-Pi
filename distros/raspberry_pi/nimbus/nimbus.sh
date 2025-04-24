@@ -44,9 +44,9 @@ get_install_stage() {
 set_status() {
   local status="$1"  # Assign the first argument to a local variable
   echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
-  echolog " " 
-  echolog "STAGE $(get_install_stage): $status" 
-  echolog " " 
+  echolog " "
+  echolog "STAGE $(get_install_stage): $status"
+  echolog " "
 }
 
 # Function to calculate average ping time
@@ -110,17 +110,17 @@ while read -r server; do
     echolog "Attempting to sync with server: $server"
     avg_ping=$(calculate_average_ping "$server")
     echolog "Average ping = $avg_ping ms"
-    
+
     # Run the Nimbus beacon node command and display output in real time
     output=$(nimbus_beacon_node trustedNodeSync --network=${eth_network} --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1)
     # output=$(nimbus_beacon_node trustedNodeSync --network=mainnet --data-dir="$nimbus_dir" --trusted-node-url="$server" --backfill=false 2>&1 | tee /dev/tty)
-    
-    # Searching for a line containing 'horizon' and extracting the value.
-    horizon_value=$(echo "$output" | grep -oP 'horizon=\K\d+')
-    echolog "horizon=$horizon_value "
-    
+
+    # Check if output contains line indicating success
+    echo "$output" | grep -q "Done, your beacon node is ready to serve you!"
+    finished=$?
+
     # Check the output for success messages
-    if [ "$horizon_value" -gt 0 ]; then
+    if [ "$finished" -eq 0 ]; then
       echolog "Sync successful with server: $server "
       success=true
       break
@@ -132,13 +132,36 @@ while read -r server; do
   fi
 done < "$SERVERS_FILE"
 
+# If trustedNodeSync failed with all, try downloading finalized state via curl from each server
+if [ "$success" = false ]; then
+  echolog "All trustedNodeSync attempts failed. Trying to download finalized state from servers..."
+
+  while read -r server; do
+    if [[ -n "$server" ]]; then
+      url="${server%/}/eth/v2/debug/beacon/states/finalized"
+      echolog "Attempting to download finalized state from: $url"
+
+      mkdir -p "$nimbus_dir"
+      curl -sSf -o "$nimbus_dir/state.finalized.ssz" -H 'Accept: application/octet-stream' "$url"
+      if [ $? -eq 0 ]; then
+        echolog "Successfully downloaded finalized state from $server"
+        success=true
+        state_finalized=true
+        break
+      else
+        echolog "Failed to download from $server, trying next..."
+        rm -f "$nimbus_dir/state.finalized.ssz"
+      fi
+    fi
+  done < "$SERVERS_FILE"
+fi
 
 # If the trustedNodeSync was successful
 if [ "$success" = true ]; then
   echolog "Run Nimbus beacon node"
-  nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network=${eth_network} --data-dir=${nimbus_dir} --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update
+  nimbus_beacon_node --non-interactive --tcp-port=${nimbus_port} --udp-port=${nimbus_port} --el=${exec_url} --network=${eth_network} --data-dir=${nimbus_dir} --jwt-secret=/home/ethereum/clients/secrets/jwt.hex --rest=true --rest-port=5052 --rest-address=0.0.0.0 --rest-allow-origin='*' --enr-auto-update ${state_finalized:+--finalized-checkpoint-state="$nimbus_dir/state.finalized.ssz"}
 else
   # If no server was successful
-  echolog "All servers failed to complete the trustedNodeSync."
+  echolog "All sync attempts failed. Nimbus will not be started."
   exit 1
 fi
