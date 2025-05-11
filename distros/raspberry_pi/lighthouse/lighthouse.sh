@@ -45,10 +45,18 @@ set_status() {
   local status="$1"  # Assign the first argument to a local variable
   echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
   echolog " " 
-  echolog "STAGE $(get_install_stage): $status" 
-  echolog " " 
+  echolog "STAGE $(get_install_stage): $status"
+  echolog " "
 }
 
+# Function to calculate average ping time
+calculate_average_ping() {
+  local server=$1
+  local server_address=$(echo "$server" | sed -E 's#^https?://##')
+  local avg_ping=$(ping -c 3 -q "$server_address" 2>/dev/null | grep -oP '(?<=rtt min/avg/max/mdev = )[0-9.]+(?=/)')
+  echo "$avg_ping"
+}
+ 
 echolog "Lighthouse run script (lighthouse.sh)"
 
 lighthouse_port="$(config_get lighthouse_port)";
@@ -72,14 +80,62 @@ while [ $? -ne 0 ]; do
   ping -c 1 $pingServerAdr > /dev/null 2>&1
 done
 
-# Script for finding the best server
-source /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ping_servers.sh
+# Directory for Lighthouse
+lighthouse_dir="/mnt/storage/.lighthouse/data/shared_${eth_network}_0"
 
 echolog "$(date): Connected - ${pingServerAdr}"
 echolog "exec_url = ${exec_url}"
 echolog "lighthouse_port = ${lighthouse_port}"
 echolog "eth_network = ${eth_network}"
-echolog "best_server = ${best_server} ($best_ping ms)"
+echolog "lighthouse_dir = ${lighthouse_dir}"
 
-echolog "Run Lighthouse beacon node"
-lighthouse bn --network ${eth_network} --execution-endpoint ${exec_url} --execution-jwt /home/ethereum/clients/secrets/jwt.hex --checkpoint-sync-url ${best_server} --datadir /mnt/storage/.lighthouse --disable-deposit-contract-sync --http --http-address 0.0.0.0 --http-port 5052 --port ${lighthouse_port}
+# File with the list of servers
+SERVERS_FILE="/opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_list_${eth_network}.txt"
+
+if [ -f "${SERVERS_FILE}" ]; then
+    echolog "SERVERS_FILE = ${SERVERS_FILE}"
+else
+    echolog "File ${SERVERS_FILE} does not exist."
+    return 1
+fi
+
+bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/servers_sort.sh $SERVERS_FILE
+
+sleep 1
+
+success=false
+while read -r server; do
+  if [[ -n "$server" ]]; then
+    echolog "Attempting to sync with server: $server"
+    avg_ping=$(calculate_average_ping "$server")
+    echolog "Average ping = $avg_ping ms"
+
+    # Run the lighthouse beacon node command
+    echolog "Run Lighthouse beacon node"
+    lighthouse bn \
+        --network ${eth_network} \
+        --execution-endpoint ${exec_url} \
+        --execution-jwt /home/ethereum/clients/secrets/jwt.hex \
+        --checkpoint-sync-url ${server} \
+        --datadir ${lighthouse_dir} \
+        --disable-deposit-contract-sync \
+        --http --http-address 0.0.0.0 --http-port 5052 \
+        --port ${lighthouse_port} 
+
+    exit_code=$?
+
+    if [[ $exit_code -eq 0 ]]; then
+        success=true
+        break
+    fi
+
+    echolog "Sync failed with server: $server, trying next server..."
+    echolog "Removing $lighthouse_dir "
+    rm -r $lighthouse_dir
+  fi
+done < "$SERVERS_FILE"
+
+if [ "$success" = false ]; then
+echolog "All sync attempts failed. Lighthouse cannot be started."
+exit 1
+fi
