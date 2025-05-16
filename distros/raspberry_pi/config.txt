@@ -17,7 +17,7 @@ gssm=true
 # Execution endpoint address
 exec_url=http://localhost:8551
 
-# Ethereum network: mainnet/holesky/sepolia
+# Ethereum network: mainnet/holesky/sepolia/hoodi
 eth_network=mainnet
 
 [geth]

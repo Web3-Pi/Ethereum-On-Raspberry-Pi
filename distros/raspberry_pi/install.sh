@@ -241,7 +241,9 @@ prepare_disk() {
   echolog "Mounting $PARTITION as /mnt/storage"
   set_status "[install.sh] - Mounting $PARTITION as /mnt/storage"
   mkdir /mnt/storage
-  echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab && mount /mnt/storage
+  echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab
+  sleep 2
+  mount /mnt/storage
 
   set_status "[install.sh] - Storage is ready"
 }
@@ -336,7 +338,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sleep 3
 
   set_status "[install.sh] - Adding Ethereum repositories"
-  sudo add-apt-repository -y ppa:ethereum/ethereum
+  add-apt-repository -y ppa:ethereum/ethereum
   
   set_status "[install.sh] - Adding Nimbus repositories"
   echo 'deb https://apt.status.im/nimbus all main' | tee /etc/apt/sources.list.d/nimbus.list
@@ -347,6 +349,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
+  apt update
 
 ## 1. Install some required dependencies ####################################################
  
@@ -360,10 +363,11 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   apt-get -y install iw python3-dev libpython3.12-dev python3.12-venv
   
   set_status "[install.sh] - Installing required dependencies 2/3"
-  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https
+  apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https figlet
   
   set_status "[install.sh] - Installing required dependencies 3/3"
-  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze
+  apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli speedtest-cli
+
   
 ## 2. STORAGE SETUP ##########################################################################
 
@@ -416,6 +420,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
 
+  sleep 2
+
   # Configure swap file location and size
   sed -i "s|#CONF_SWAPFILE=.*|CONF_SWAPFILE=/mnt/storage/swapfile|" /etc/dphys-swapfile
   sed -i "s|#CONF_SWAPSIZE=.*|CONF_SWAPSIZE=$SWAPFILE_SIZE|" /etc/dphys-swapfile
@@ -440,6 +446,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
         echo "vm.dirty_background_ratio=10"
         echo "vm.dirty_ratio=20"
       } >> /etc/sysctl.conf
+      sysctl -p
   elif [ "$total_ram" -ge 7000000 ]; then
       set_status "[install.sh] - Setting vm.swappiness to 80"
       # Enable dphys-swapfile service
@@ -451,12 +458,11 @@ if [ "$(get_install_stage)" -eq 2 ]; then
         echo "vm.dirty_background_ratio=1"
         echo "vm.dirty_ratio=50"
       } >> /etc/sysctl.conf
+      sysctl -p
   else
       set_error "[install.sh] - RAM does not match expected specifications."
       terminateScript
   fi
-
-
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  
@@ -537,6 +543,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   ufw allow 5353/udp comment "avahi-daemon: mDNS"
 
+  ufw allow 9090/tcp comment "Cockpit Web Panel"
+
 
   set_status "[install.sh] - Enable UFW (firewall)"
   sleep 2
@@ -574,18 +582,35 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   # Copy dashboards.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
 
-  grafana-server
-#  systemctl enable grafana-server
+  # Copy images for grafana
+  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/img/*.png /usr/share/grafana/public/img/
+
   systemctl start grafana-server
- 
+
+
+  set_status "[install.sh] - Installing Cockpit"
+  . /etc/os-release
+  apt install -y -t ${VERSION_CODENAME}-backports cockpit
+
+  NET_CONFIG_FILE="/boot/firmware/network-config"
+
+  if grep -qP '^\s*(?!#).*wifis:' "$NET_CONFIG_FILE"; then
+      set_status "[install.sh] - Active Wi-Fi configuration detected"
+  else
+      set_status "[install.sh] - Add dummy network adapter for NetworkManager"
+      nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
+
+      set_status "[install.sh] - Restart NetworkManager service"
+      systemctl restart NetworkManager
+  fi
+
+  set_status "[install.sh] - Installing web3-pi-cockpit-modules"
+  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater 
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
   set_status "[install.sh] - Services configuration"
   
-
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/w3p_bsm.service /etc/systemd/system/w3p_bsm.service
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/w3p_bnm.service /etc/systemd/system/w3p_bnm.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/w3p_nimbus-beacon.service /etc/systemd/system/w3p_nimbus-beacon.service
@@ -610,12 +635,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - Monitoring configuration"
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bsm/run.sh /opt/web3pi/basic-system-monitor/run.sh
-  chmod +x /opt/web3pi/basic-system-monitor/run.sh
-
-  cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/bnm/run.sh /opt/web3pi/basic-eth2-node-monitor/run.sh
-  chmod +x /opt/web3pi/basic-eth2-node-monitor/run.sh
+  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall"
+  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
 
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/gssm/run.sh /opt/web3pi/geth-sync-stages-monitoring/run.sh
   chmod +x /opt/web3pi/geth-sync-stages-monitoring/*.sh
@@ -682,6 +703,9 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   chmod +x /opt/web3pi/geth-sync-stages-monitoring/*.sh
 
   chown -R ethereum:ethereum /opt/web3pi
+
+  set_status "[install.sh] - Installing w3p-installation-status"
+  apt install -y w3p-installation-status
 
 ## 12. CLEANUP ###########################################################################################
 
@@ -839,6 +863,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get influxdb)" = "false" ]; then
     echolog "Service config: Disable influxdb.service"
     systemctl disable influxdb.service
+    systemctl stop influxdb.service
   else
     echolog "Service config: NoChange influxdb.service"
   fi
@@ -850,6 +875,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get grafana)" = "false" ]; then
     echolog "Service config: Disable grafana-server.service"
     systemctl disable grafana-server.service
+    systemctl stop grafana-server.service
   else
     echolog "Service config: NoChange grafana-server.service"
   fi
@@ -861,6 +887,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get bsm)" = "false" ]; then
     echolog "Service config: Disable w3p_bsm.service"
     systemctl disable w3p_bsm.service
+    systemctl stop w3p_bsm.service
   else
     echolog "Service config: NoChange w3p_bsm.service"
   fi
@@ -872,6 +899,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get bnm)" = "false" ]; then
     echolog "Service config: Disable w3p_bnm.service"
     systemctl disable w3p_bnm.service
+    systemctl stop w3p_bnm.service
   else
     echolog "Service config: NoChange w3p_bnm.service"
   fi
@@ -894,16 +922,21 @@ if [ "$(get_install_stage)" -eq 100 ]; then
   elif  [ "$(config_get geth)" = "false" ]; then
     echolog "Service config: Disable w3p_geth.service"
     systemctl disable w3p_geth.service
+    systemctl stop w3p_geth.service
   else
     echolog "Service config: NoChange w3p_geth.service"
   fi
 
   if [ "$(config_get lighthouse)" = "true" ]; then
     echolog "Service config: Enable w3p_lighthouse-beacon.service"
+    systemctl stop w3p_nimbus-beacon.service
+    systemctl disable w3p_nimbus-beacon.service
+    
     systemctl enable w3p_lighthouse-beacon.service
     systemctl start w3p_lighthouse-beacon.service
   elif  [ "$(config_get lighthouse)" = "false" ]; then
     echolog "Service config: Disable w3p_lighthouse-beacon.service"
+    systemctl stop w3p_lighthouse-beacon.service
     systemctl disable w3p_lighthouse-beacon.service
   else
     echolog "Service config: NoChange w3p_lighthouse-beacon.service"
@@ -912,10 +945,14 @@ if [ "$(get_install_stage)" -eq 100 ]; then
 
   if [ "$(config_get nimbus)" = "true" ]; then
     echolog "Service config: Enable w3p_nimbus-beacon.service"
+    systemctl stop w3p_lighthouse-beacon.service
+    systemctl disable w3p_lighthouse-beacon.service
+
     systemctl enable w3p_nimbus-beacon.service
     systemctl start w3p_nimbus-beacon.service
   elif  [ "$(config_get nimbus)" = "false" ]; then
     echolog "Service config: Disable w3p_nimbus-beacon.service"
+    systemctl stop w3p_nimbus-beacon.service
     systemctl disable w3p_nimbus-beacon.service
   else
     echolog "Service config: NoChange w3p_nimbus-beacon.service"

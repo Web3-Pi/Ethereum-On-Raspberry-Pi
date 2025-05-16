@@ -1,0 +1,152 @@
+name: Create download mirrors
+
+on:
+  release:
+    types: [published] # Run when a release is published (including drafts being published)
+
+permissions:
+  contents: write
+
+jobs:
+  upload_to_r2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find .xz assets, Tag, and Release Info
+        id: find_assets
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const release = context.payload.release;
+            const assets = release.assets;
+            const xzAssets = assets.filter(asset => asset.name.endsWith('.xz'));
+
+            if (xzAssets.length === 0) {
+              core.setFailed('No .xz assets found in the release.');
+              return;
+            }
+
+            console.log(`Found ${xzAssets.length} .xz asset(s).`);
+            const assetInfo = xzAssets.map(asset => ({
+              name: asset.name,
+              url: asset.browser_download_url,
+              id: asset.id
+            }));
+
+            core.setOutput('assets_json', JSON.stringify(assetInfo));
+            core.setOutput('release_id', release.id);
+            core.setOutput('release_tag', release.tag_name);
+
+      - name: Process Each Asset (Download, Checksum, Upload)
+        id: process_assets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL_BASE: ${{ secrets.R2_PUBLIC_URL_BASE }}
+          RELEASE_TAG: ${{ steps.find_assets.outputs.release_tag }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { execSync } = require('child_process');
+            const fs = require('fs');
+            const ASSETS_JSON = JSON.parse(`${{ steps.find_assets.outputs.assets_json }}`);
+            const RELEASE_TAG = `${{ steps.find_assets.outputs.release_tag }}`;
+            const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
+            const R2_ENDPOINT_URL = process.env.R2_ENDPOINT_URL;
+            const R2_PUBLIC_URL_BASE = process.env.R2_PUBLIC_URL_BASE;
+
+            const sha256_JSON = {};
+
+            for (const asset of ASSETS_JSON) {
+              const assetName = asset.name;
+              const assetId = asset.id;
+
+              console.log(`--- Processing: ${assetName} ---`);
+
+              // Download the asset using GitHub REST API
+              const assetPath = `./${assetName}`;
+              const response = await github.rest.repos.getReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                asset_id: assetId,
+                headers: {
+                  Accept: "application/octet-stream",
+                },
+              });
+
+              fs.writeFileSync(assetPath, Buffer.from(response.data));
+              console.log(`Downloaded ${assetName} to ${assetPath}`);
+
+              // Calculate checksum
+              const checksum = execSync(`sha256sum ${assetPath}`).toString().split(' ')[0];
+              console.log(`SHA256 Checksum: ${checksum}`);
+
+              // Upload to R2
+              const r2Path = `s3://${R2_BUCKET_NAME}/${RELEASE_TAG}/${assetName}`;
+              console.log(`Uploading to R2: ${r2Path}`);
+              try {
+                execSync(`aws s3 cp ${assetPath} ${r2Path} --endpoint-url ${R2_ENDPOINT_URL} --checksum-algorithm CRC32`);
+                console.log(`Uploaded ${assetName} to R2`);
+              } catch (error) {
+                console.error(`Error uploading ${assetName} to R2: ${error.message}`);
+                throw error;
+              }
+
+              sha256_JSON[assetName] = checksum;
+
+              // Clean up local file
+              fs.unlinkSync(assetPath);
+              console.log(`Cleaned up ${assetPath}`);
+            }
+
+            // Output the accumulated mirror info for the next step
+            core.setOutput("sha256_json", JSON.stringify(sha256_JSON));
+
+      - name: Update Release Description
+        uses: actions/github-script@v7
+        env:
+          R2_PUBLIC_URL_BASE: ${{ secrets.R2_PUBLIC_URL_BASE }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const release_id = ${{ steps.find_assets.outputs.release_id }};
+            const SHA256_JSON = JSON.parse(`${{ steps.process_assets.outputs.sha256_json }}`);
+            const ASSETS_JSON = JSON.parse(`${{ steps.find_assets.outputs.assets_json }}`);
+            const RELEASE_TAG = `${{ steps.find_assets.outputs.release_tag }}`;
+            const R2_PUBLIC_URL_BASE = process.env.R2_PUBLIC_URL_BASE;
+
+            const release = await github.rest.repos.getRelease({
+              owner,
+              repo,
+              release_id,
+            });
+
+            const original_body = release.data.body || ''; // Handle null body
+            const update_header = `\n\n---\n\n### Mirrors & Checksums\n\n`;
+            const table_header = `| File Name | Mirror URL | SHA256 Checksum |\n|-----------|------------|-----------------|\n`;
+
+            let table_rows = "";
+            for (const asset of ASSETS_JSON) {
+              const assetName = asset.name;
+              const mirrorUrl = `${R2_PUBLIC_URL_BASE}/${RELEASE_TAG}/${assetName}`;
+              const checksum = SHA256_JSON[assetName];
+
+              table_rows += `| ${assetName} | [Download](${mirrorUrl}) | \`${checksum}\` |\n`;
+            }
+
+            const mirror_details = `${table_header}${table_rows}`;
+            const new_body = `${original_body}${update_header}${mirror_details}`;
+
+            console.log(`Updating release ${release_id} description.`);
+
+            await github.rest.repos.updateRelease({
+              owner,
+              repo,
+              release_id,
+              body: new_body,
+            });
+
+            console.log("Release description updated successfully.");

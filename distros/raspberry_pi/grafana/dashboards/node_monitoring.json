@@ -124,7 +124,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -251,7 +251,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "alias": "cpu_load",
@@ -764,7 +764,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -901,7 +901,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -956,8 +956,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 4,
+        "h": 2,
+        "w": 2,
         "x": 0,
         "y": 5
       },
@@ -982,7 +982,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -1013,6 +1013,31 @@
       ],
       "title": "Chain head",
       "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 2,
+        "x": 2,
+        "y": 5
+      },
+      "id": 46,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div style=\"display: flex; justify-content: center; align-items: center; height: 50px;\">\r\n    <a href=\"https://web3pi.io\" target=\"_blank\" style=\"display: flex; align-items: center; height: 100%;\">\r\n        <img src=\"/public/img/web3pi_logo.png\" alt=\"Web3Pi Logo\" style=\"max-height: 95%; cursor: pointer;\">\r\n    </a>\r\n</div>\r\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.5.2",
+      "title": "",
+      "type": "text"
     },
     {
       "datasource": "InfluxDB_v1",
@@ -1255,14 +1280,20 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 7,
         "w": 4,
         "x": 0,
-        "y": 8
+        "y": 7
       },
       "id": 16,
       "options": {
         "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 0,
@@ -1283,7 +1314,7 @@
         },
         "valueMode": "text"
       },
-      "pluginVersion": "11.2.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": "InfluxDB_v1",
@@ -3910,7 +3941,7 @@
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
