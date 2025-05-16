@@ -1,0 +1,13 @@
+[Unit]
+Description=Web3 Pi Geth Sync Monitoring
+After=network.target
+
+[Service]
+ExecStart=/opt/web3pi/geth-sync-stages-monitoring/run.sh
+Restart=always
+RestartSec=60s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

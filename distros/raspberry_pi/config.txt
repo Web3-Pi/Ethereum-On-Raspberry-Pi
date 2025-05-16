@@ -11,6 +11,8 @@ grafana=true
 bsm=true
 # Basic Eth2 Node Monitor
 bnm=true
+# Geth Sync Stges Monitor
+gssm=true
 
 # Execution endpoint address
 exec_url=http://localhost:8551
