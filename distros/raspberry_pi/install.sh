@@ -68,13 +68,15 @@ get_install_stage() {
 STATUS_FILE="/opt/web3pi/status.jlog"
 set_status_jlog() {
   local status="$1"
-  local level="$2"
+  local statusShort="$2"
+  local level="$3"
   jq -n -c\
     --arg status "$status"\
+    --arg statusShort "$statusShort"\
     --arg stage "$(get_install_stage)"\
     --arg time "$(date +"%Y-%m-%dT%H:%M:%S%z")"\
     --arg level "$([ "$level" = "" ] && echo "INFO" || echo "$level")"\
-    '{"time": $time, "status": $status, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
+    '{"time": $time, "status": $status, "statusShort": $statusShort, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
   #echolog " " 
   #echolog "STAGE $(get_install_stage): $status" 
   #echolog " " 
@@ -84,18 +86,20 @@ set_status_jlog() {
 # Function to write a string to a file with status
 set_status() {
   local status="$1"  # Assign the first argument to a local variable
+  local statusShort="$2"
   echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
-  set_status_jlog "$status" INFO
+  set_status_jlog "$status" "$statusShort" "INFO" 
 }
 
-set_status "[install.sh] - Script started"
+set_status "[install.sh] - Script started" "Script started"
 
 set_error() {
   local status="$1"
-  set_status_jlog "$status" "ERROR"
+  local statusShort="$2"
+  set_status_jlog "$status" "$statusShort" "ERROR" 
 }
 
 # Terminate the script with saving logs
@@ -129,7 +133,7 @@ get_best_disk() {
   else
     W3P_DRIVE="NA"
     echolog "No suitable disk found"
-    set_error "[install.sh] - No suitable disk found"
+    set_error "[install.sh] - No suitable disk found" "No disk found"
     sleep 2
     terminateScript
     #kill -9 $$
@@ -142,7 +146,7 @@ verify_size() {
 
   if [[ ${#loc_array[@]} != 2 ]]; then
     echolog "Unexpected error while reading disk size"
-    set_error "[install.sh] - Unexpected error while reading disk size"
+    set_error "[install.sh] - Unexpected error while reading disk size" "Disk size error"
     sleep 2
     terminateScript
     #kill -9 $$
@@ -173,7 +177,7 @@ prepare_disk() {
     # Verify that the provided disk is large enough to store at least part of the swap file and least significant part of consensus client state 
     if ! verify_size $PARTITION; then
       echolog "Disk to small to proceed with installation"
-      set_error "[install.sh] - Disk to small to proceed with installation"
+      set_error "[install.sh] - Disk too small to proceed with installation" "Disk too small"
       sleep 2
       terminateScript
       #kill -9 $$
@@ -187,29 +191,29 @@ prepare_disk() {
 
     # Check if the .ethereum exists on the mounted disk
     if [ -d "$TMP_DIR/.ethereum" ]; then
-      set_status "[install.sh] - .ethereum already exists on the disk"
+      set_status "[install.sh] - .ethereum already exists on the disk" ".ethereum found"
       echolog ".ethereum already exists on the disk."
 
       # Check if the format_me or format_storage file exists
       if [ -f "/boot/firmware/format_storage" ]; then
         echolog "The format_storage file was found. Formatting and mounting..."
-        set_status "[install.sh] - The format_storage file was found. Formatting and mounting..."
+        set_status "[install.sh] - The format_storage file was found. Formatting and mounting..." "Format & mount disk"
         rm /boot/firmware/format_storage
       elif [ -f "$TMP_DIR/format_me" ]; then
         echolog "The format_me file was found. Formatting and mounting..."
-        set_status "[install.sh] - The format_me file was found. Formatting and mounting..."
+        set_status "[install.sh] - The format_me file was found. Formatting and mounting..." "Format & mount disk"
       elif [ -f "$TMP_DIR/.format_me" ]; then # for compatibility with prev releases
         echolog "The .format_me file was found. Formatting and mounting..."
-        set_status "[install.sh] - The .format_me file was found. Formatting and mounting..."
+        set_status "[install.sh] - The .format_me file was found. Formatting and mounting..." "Format & mount disk"
       else
         echolog "The format flag file was not found. Skipping formatting."
-        set_status "[install.sh] - The format flag file was not found. Skipping formatting."
+        set_status "[install.sh] - The format flag file was not found. Skipping formatting." "Skip formatting"
         proceed_with_format=false
       fi
 
     else
       echolog "The .ethereum does not exist on the disk. Formatting and mounting..."
-      set_status "[install.sh] - The .ethereum does not exist on the disk. Formatting and mounting..."
+      set_status "[install.sh] - The .ethereum does not exist on the disk. Formatting and mounting..." "Format & mount disk"
     fi
 
     # Unmount the disk from the temporary directory
@@ -222,37 +226,37 @@ prepare_disk() {
   if [ "$proceed_with_format" = true ]; then
     # Create a new partition and format it as ext4
     echolog "Creating new partition and formatting disk: $DISK..."
-    set_status "[install.sh] - Creating new partition and formatting disk: $DISK..."
+    set_status "[install.sh] - Creating new partition and formatting disk: $DISK..." "Format disk"
 
     wipefs -a "$DISK"
     sgdisk -n 0:0:0 "$DISK"
     mkfs.ext4 -F "$PARTITION" || {
       echolog "Unable to format $PARTITION"
-      set_error "[install.sh] - Unable to format $PARTITION"
+      set_error "[install.sh] - Unable to format $PARTITION" "Format disk failed"
       sleep 2
       return 1
     }
 
     echolog "Removing FS reserved blocks on partion $PARTITION"
-    set_status "[install.sh] - Removing FS reserved blocks on partion $PARTITION"
+    set_status "[install.sh] - Removing FS reserved blocks on partion $PARTITION" "Remove FS blocks"
     tune2fs -m 0 $PARTITION
   fi
 
   echolog "Mounting $PARTITION as /mnt/storage"
-  set_status "[install.sh] - Mounting $PARTITION as /mnt/storage"
+  set_status "[install.sh] - Mounting $PARTITION as /mnt/storage" "Mount partition"
   mkdir /mnt/storage
   echo "$PARTITION /mnt/storage ext4 defaults,noatime 0 2" >> /etc/fstab
   sleep 2
   mount /mnt/storage
 
-  set_status "[install.sh] - Storage is ready"
+  set_status "[install.sh] - Storage is ready" "Storage is ready"
 }
 
 
 # Firmware updates
 if [ "$(get_install_stage)" -eq 1 ]; then
   
-  set_status "[install.sh] - Stop unattended-upgrades.service"
+  set_status "[install.sh] - Stop unattended-upgrades.service" "Disable upgrades"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
@@ -266,22 +270,22 @@ if [ "$(get_install_stage)" -eq 1 ]; then
       SOC_COMPATIBLE=$(tr -d '\0' < /proc/device-tree/compatible)
 
       if echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2711"; then
-          set_status "[install.sh] - Detected SoC: BCM2711 (e.g., Raspberry Pi 4/400/CM4)"
-          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
+          set_status "[install.sh] - Detected SoC: BCM2711 (e.g., Raspberry Pi 4/400/CM4)" "Detected SoC"
+          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC" "Check firmware"
           output_reu=$(rpi-eeprom-update -a)
           echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
       elif echo "$SOC_COMPATIBLE" | grep -q "brcm,bcm2712"; then
-          set_status "[install.sh] - Detected SoC: BCM2712 (e.g., Raspberry Pi 5/500/CM5)"
-          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC"
+          set_status "[install.sh] - Detected SoC: BCM2712 (e.g., Raspberry Pi 5/500/CM5)" "Detected SoC"
+          set_status "[install.sh] - Check for firmware updates for the Raspberry Pi SBC" "Check firmware"
           # Run the firmware update command
           output_reu=$(rpi-eeprom-update -a)
           echolog "cmd: rpi-eeprom-update -a \n${output_reu}"
       else
-          set_error "[install.sh] - Detected another model (not BCM2711 or BCM2712)."
+          set_error "[install.sh] - Detected another model (not BCM2711 or BCM2712)." "Wrong RPi model"
           terminateScript
       fi
   else
-      set_error "[install.sh] - No /proc/device-tree/compatible file found — cannot detect SoC this way."
+      set_error "[install.sh] - No /proc/device-tree/compatible file found — cannot detect SoC this way." "SoC not detected"
       terminateScript
   fi
 
@@ -289,13 +293,13 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   # Check if the output contains the message indicating a reboot is needed
   if echo "$output_reu" | grep -q "EEPROM updates pending. Please reboot to apply the update."; then
       rebootReq=true
-      set_status "[install.sh] - Firmware will be updated after reboot. rebootReq=true"
-      set_status "[install.sh] - Change the stage to 2"
+      set_status "[install.sh] - Firmware will be updated after reboot. rebootReq=true" "Reboot required"
+      set_status "[install.sh] - Change the stage to 2" "Set stage 2"
       set_install_stage 2
   elif echo "$output_reu" | grep -q "UPDATE SUCCESSFUL"; then
       rebootReq=true
-      set_status "[install.sh] - Firmware updated with flashrom. rebootReq=true"
-      set_status "[install.sh] - Change the stage to 2"
+      set_status "[install.sh] - Firmware updated with flashrom. rebootReq=true" "Firmware updated"
+      set_status "[install.sh] - Change the stage to 2" "Set stage 2"
       set_install_stage 2
   fi
 
@@ -303,49 +307,49 @@ if [ "$(get_install_stage)" -eq 1 ]; then
   if [ "$rebootReq" = true ]; then
       echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
       echo "[install.sh] - EEPROM update requires a reboot. Restarting the device..."
-      set_status "[install.sh] - Rebooting after rpi-eeprom-update"
+      set_status "[install.sh] - Rebooting after rpi-eeprom-update" "Rebooting..."
       sleep 5
       reboot
       exit 1
   else
       echo "[install.sh] - No firmware update required"
       echo "[install.sh] - No firmware update required"
-      set_status "[install.sh] - No firmware update required"
+      set_status "[install.sh] - No firmware update required" "Firmware up-to-date"
       sleep 3
   fi
 
-  set_status "[install.sh] - Change the stage to 2"
+  set_status "[install.sh] - Change the stage to 2" "Set stage 2"
   set_install_stage 2
 fi
 
 # MAIN installation part
 if [ "$(get_install_stage)" -eq 2 ]; then
 
-  set_status "[install.sh] - Main installation part"
+  set_status "[install.sh] - Main installation part" "Main installation"
   sleep 2
 
-  set_status "[install.sh] - Stop unattended-upgrades.service"
+  set_status "[install.sh] - Stop unattended-upgrades.service" "Disable upgrades"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
 ## 0. Add some necessary repositories ######################################################  
 
-  set_status "[install.sh] - Sync time with NTP server (chronyd -q)"
+  set_status "[install.sh] - Sync time with NTP server (chronyd -q)" "Sync time - NTP"
   chronyd -q
 
   timedatectl | echolog
 
   sleep 3
 
-  set_status "[install.sh] - Adding Ethereum repositories"
+  set_status "[install.sh] - Adding Ethereum repositories" "Add ETH repos"
   add-apt-repository -y ppa:ethereum/ethereum
   
-  set_status "[install.sh] - Adding Nimbus repositories"
+  set_status "[install.sh] - Adding Nimbus repositories" "Add Nimbus repos"
   echo 'deb https://apt.status.im/nimbus all main' | tee /etc/apt/sources.list.d/nimbus.list
   # Import the GPG key
   curl https://apt.status.im/pubkey.asc -o /etc/apt/trusted.gpg.d/apt-status-im.asc
 
-  set_status "[install.sh] - Adding Grafana repositories"
+  set_status "[install.sh] - Adding Grafana repositories" "Add Grafana repos"
   wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
   echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | tee -a /etc/apt/sources.list.d/grafana.list
   
@@ -353,19 +357,19 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
 ## 1. Install some required dependencies ####################################################
  
-  set_status "[install.sh] - Required dependencies"
+  set_status "[install.sh] - Required dependencies" "Required deps"
   sleep 2
 
-  set_status "[install.sh] - Refreshes the package lists"
+  set_status "[install.sh] - Refreshes the package lists" "Refresh pkg lists"
   apt-get update
   
-  set_status "[install.sh] - Installing required dependencies 1/3"
+  set_status "[install.sh] - Installing required dependencies 1/3" "Install deps 1/3"
   apt-get -y install iw python3-dev libpython3.12-dev python3.12-venv
   
-  set_status "[install.sh] - Installing required dependencies 2/3"
+  set_status "[install.sh] - Installing required dependencies 2/3" "Install deps 2/3"
   apt-get -y install software-properties-common apt-utils file vim net-tools telnet apt-transport-https figlet
   
-  set_status "[install.sh] - Installing required dependencies 3/3"
+  set_status "[install.sh] - Installing required dependencies 3/3" "Install deps 3/3"
   apt-get -y install gcc jq git libraspberrypi-bin iotop screen bpytop ccze nvme-cli speedtest-cli
 
   
@@ -374,7 +378,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 #  ToDo: This should be separete step
 
   # Prepare drive to mount /mnt/storage
-  set_status "[install.sh] - Looking for a valid drive for Blockchain copy"
+  set_status "[install.sh] - Looking for a valid drive for Blockchain copy" "Find valid drive"
   get_best_disk
   echolog "W3P_DRIVE=$W3P_DRIVE"
 
@@ -383,18 +387,18 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   # Check if the mount point starts with $DEV_NVME or $DEV_USB
   if [[ $mount_point == $DEV_NVME* ]]; then
-      set_status "[install.sh] - /boot/firmware is mounted on an NVMe device: $mount_point"
+      set_status "[install.sh] - /boot/firmware is mounted on an NVMe device: $mount_point" "Check NVMe drive"
   elif [[ $mount_point == $DEV_USB* ]]; then
-      set_status "[install.sh] - /boot/firmware is mounted on a USB device: $mount_point"
+      set_status "[install.sh] - /boot/firmware is mounted on a USB device: $mount_point" "Check USB drive"
   else
-      set_status "[install.sh] - /boot/firmware is mounted on device: $mount_point"
-      set_status "[install.sh] - Preparing $W3P_DRIVE for installation"
+      set_status "[install.sh] - /boot/firmware is mounted on device: $mount_point" "Check drive"
+      set_status "[install.sh] - Preparing $W3P_DRIVE for installation" "Prepare drive"
       prepare_disk $W3P_DRIVE
   fi
 
 ## 3. ACCOUNT CONFIGURATION ###################################################################
 
-  set_status "[install.sh] - Account configuration"
+  set_status "[install.sh] - Account configuration" "Configure account"
 
   # Create Ethereum account
   echolog "[install.sh] - Creating ethereum user"
@@ -415,7 +419,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   
 ## 4. SWAP SPACE CONFIGURATION ###################################################################
   
-  set_status "[install.sh] - SWAP configuration"
+  set_status "[install.sh] - SWAP configuration" "Configure SWAP"
   
   # Install dphys-swapfile package
   apt-get -y install dphys-swapfile
@@ -429,14 +433,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   # Check total RAM in kB
   total_ram=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-  set_status "[install.sh] - Detected RAM: ${total_ram} kB"
+  set_status "[install.sh] - Detected RAM: ${total_ram} kB" "Detected RAM"
 
   # Conditions
   if [ "$total_ram" -lt 7000000 ]; then
-      set_error "[install.sh] - Not enough RAM for Web3 Pi. Minimum required is 8 GB"
+      set_error "[install.sh] - Not enough RAM for Web3 Pi. Minimum required is 8 GB" "RAM < 8 GB"
       terminateScript
   elif [ "$total_ram" -ge 15000000 ]; then
-      set_status "[install.sh] - Setting vm.swappiness to 10"
+      set_status "[install.sh] - Setting vm.swappiness to 10" "Set swappiness"
       # Enable dphys-swapfile service
       systemctl enable dphys-swapfile
       {
@@ -448,7 +452,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
       } >> /etc/sysctl.conf
       sysctl -p
   elif [ "$total_ram" -ge 7000000 ]; then
-      set_status "[install.sh] - Setting vm.swappiness to 80"
+      set_status "[install.sh] - Setting vm.swappiness to 80" "Set swappiness"
       # Enable dphys-swapfile service
       systemctl enable dphys-swapfile
       {
@@ -460,13 +464,13 @@ if [ "$(get_install_stage)" -eq 2 ]; then
       } >> /etc/sysctl.conf
       sysctl -p
   else
-      set_error "[install.sh] - RAM does not match expected specifications."
+      set_error "[install.sh] - RAM does not match expected specifications." "RAM mismatch"
       terminateScript
   fi
 
 ## 5. ETHEREUM INSTALLATION #######################################################################
  
-  set_status "[install.sh] - Ethereum Clients Installation"
+  set_status "[install.sh] - Ethereum Clients Installation" "Install ETH clients"
 
   # Ethereum software installation
   
@@ -475,45 +479,45 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
 
   # Install Layer 1
-  set_status "[install.sh] - Ethereum Installation"
+  set_status "[install.sh] - Ethereum Installation" "Install Ethereum"
   apt-get -y install ethereum
   
-  set_status "[install.sh] - Nimbus Installation"
+  set_status "[install.sh] - Nimbus Installation" "Install Nimbus"
   apt-get -y install nimbus-beacon-node
  
-  set_status "[install.sh] - Lighthouse Installation"
+  set_status "[install.sh] - Lighthouse Installation" "Install Lighthouse"
   LH_RELEASE_URL="https://api.github.com/repos/sigp/lighthouse/releases/latest"
   LH_BINARIES_URL="$(curl -s $LH_RELEASE_URL | jq -r ".assets[] | select(.name) | .browser_download_url" | grep aarch64-unknown-linux-gnu.tar.gz$)"
 
   echolog Downloading Lighthouse URL: $LH_BINARIES_URL
   
   # Download
-  set_status "[install.sh] - Lighthouse Installation - download"
+  set_status "[install.sh] - Lighthouse Installation - download" "Download Lighthouse"
   wget -O /tmp/lighthouse.tar.gz $LH_BINARIES_URL
   # Untar
-  set_status "[install.sh] - Lighthouse Installation - extract"
+  set_status "[install.sh] - Lighthouse Installation - extract" "Extract Lighthouse"
   tar -xzvf /tmp/lighthouse.tar.gz -C /tmp/
   # Cleanup
-  set_status "[install.sh] - Lighthouse Installation - cleanup"
+  set_status "[install.sh] - Lighthouse Installation - cleanup" "Cleanup Lighthouse"
   rm /tmp/lighthouse.tar.gz
 
-  set_status "[install.sh] - Lighthouse Installation - copy to /usr/bin"
+  set_status "[install.sh] - Lighthouse Installation - copy to /usr/bin" "Prepare Lighthouse"
   cp /tmp/lighthouse /usr/bin
 
   lighthouse --version
 
 ## 6. MISC CONF STEPS ##############################################################################
 
-  set_status "[install.sh] - Miscellaneous configuration steps"
+  set_status "[install.sh] - Miscellaneous configuration steps" "Misc config"
   sleep 2
 
   # Install ufw
-  set_status "[install.sh] - Istalling UFW (firewall)"
+  set_status "[install.sh] - Istalling UFW (firewall)" "Install UFW"
   apt-get -y install ufw
   # ufw --force disable
 
 
-  set_status "[install.sh] - Configuring UFW (firewall)"
+  set_status "[install.sh] - Configuring UFW (firewall)" "Config UFW"
 
   ufw allow 22/tcp comment "SSH"
 
@@ -546,7 +550,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   ufw allow 9090/tcp comment "Cockpit Web Panel"
 
 
-  set_status "[install.sh] - Enable UFW (firewall)"
+  set_status "[install.sh] - Enable UFW (firewall)" "Enable UFW"
   sleep 2
   ufw --force enable
   ufw status verbose | echolog
@@ -554,28 +558,28 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 ## 7. MONITORING ####################################################################################
 
   #set_status "MONITORING instalation"
-  set_status "[install.sh] - Monitoring services installation"
+  set_status "[install.sh] - Monitoring services installation" "Setup monitoring"
   sleep 2
 
   # Installing InfluxDB
-  set_status "[install.sh] - Installing InfluxDB v1.8.10"
+  set_status "[install.sh] - Installing InfluxDB v1.8.10" "Install InfluxDB"
   dpkg -i /opt/web3pi/influxdb/influxdb_1.8.10_arm64.deb
   sed -i "s|# flux-enabled =.*|flux-enabled = true|" /etc/influxdb/influxdb.conf
 
-  set_status "[install.sh] - Start influxdb.service"
+  set_status "[install.sh] - Start influxdb.service" "Start InfluxDB"
 #  systemctl enable influxdb
   systemctl start influxdb
   sleep 10
 
-  set_status "[install.sh] - Configuring InfluxDB"
+  set_status "[install.sh] - Configuring InfluxDB" "Configure InfluxDB"
   influx -execute 'CREATE DATABASE ethonrpi'
   influx -execute "CREATE USER geth WITH PASSWORD 'geth'"
   
   # Installing Grafana
-  set_status "[install.sh] - Installing Grafana"
+  set_status "[install.sh] - Installing Grafana" "Install Grafana"
   apt-get -y install grafana
 
-  set_status "[install.sh] - Configuring Grafana"
+  set_status "[install.sh] - Configuring Grafana" "Configure Grafana"
   # Copy datasources.yaml for grafana
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/grafana/yaml/datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
 
@@ -588,28 +592,28 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   systemctl start grafana-server
 
 
-  set_status "[install.sh] - Installing Cockpit"
+  set_status "[install.sh] - Installing Cockpit" "Install Cockpit"
   . /etc/os-release
   apt install -y -t ${VERSION_CODENAME}-backports cockpit
 
   NET_CONFIG_FILE="/boot/firmware/network-config"
 
   if grep -qP '^\s*(?!#).*wifis:' "$NET_CONFIG_FILE"; then
-      set_status "[install.sh] - Active Wi-Fi configuration detected"
+      set_status "[install.sh] - Active Wi-Fi configuration detected" "Use Wi-Fi detected"
   else
-      set_status "[install.sh] - Add dummy network adapter for NetworkManager"
+      set_status "[install.sh] - Add dummy network adapter for NetworkManager" "Add dummy iface"
       nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
 
-      set_status "[install.sh] - Restart NetworkManager service"
+      set_status "[install.sh] - Restart NetworkManager service" "Restart NetManager"
       systemctl restart NetworkManager
   fi
 
-  set_status "[install.sh] - Installing web3-pi-cockpit-modules"
+  set_status "[install.sh] - Installing web3-pi-cockpit-modules" "Install w3p modules"
   apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater 
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
-  set_status "[install.sh] - Services configuration"
+  set_status "[install.sh] - Services configuration" "Setup services"
   
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/geth/w3p_geth.service /etc/systemd/system/w3p_geth.service
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/lighthouse/w3p_lighthouse-beacon.service /etc/systemd/system/w3p_lighthouse-beacon.service
@@ -618,7 +622,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
 ## 9. CLIENTS CONFIGURATION ############################################################################
   
-  set_status "[install.sh] - Clients configuration"
+  set_status "[install.sh] - Clients configuration" "Configure clients"
 
   echolog "Configuring clients run scripts"
   mkdir /home/ethereum/clients
@@ -634,19 +638,19 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall"
+  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall" "Setup monitoring"
   apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
 ## 10. ADDITIONAL DIRECTORIES ###########################################################################
 
-  set_status "[install.sh] - Adding client directories required to run the node"
+  set_status "[install.sh] - Adding client directories required to run the node" "Add client dirs"
 
   echolog "Adding client directories required to run the node"
   sudo -u ethereum mkdir -p /home/ethereum/clients/secrets/
 
-  set_status "[install.sh] - Prepare the jwt.hex file"
+  set_status "[install.sh] - Prepare the jwt.hex file" "Prepare jwt.hex"
   # Check if the file exists
   if [ -f "/boot/firmware/jwt.hex" ]; then
       # Move the file to the destination directory
@@ -658,7 +662,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
       echolog " "
   fi
   
-  set_status "[install.sh] - Copying scripts to /home/ethereum/scripts"
+  set_status "[install.sh] - Copying scripts to /home/ethereum/scripts" "Move scripts"
   ln -s /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/ /home/ethereum/
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/*.sh
   
@@ -666,7 +670,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   
 ## 11. CONVENIENCE CONFIGURATION ########################################################################
 
-  set_status "[install.sh] - Convenience configuration"
+  set_status "[install.sh] - Convenience configuration" "Config convenience"
 
   # Force colored prompt
   echolog "Setting up a colored prompt"
@@ -677,14 +681,14 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/ethereum/.bashrc
   chown ethereum:ethereum /home/ethereum/.bashrc
 
-  set_status "[install.sh] - Create a virtual environment for basic-system-monitor"
+  set_status "[install.sh] - Create a virtual environment for basic-system-monitor" "Venv for BSM"
   echolog "basic-system-monitor venv conf"
   cd /opt/web3pi/basic-system-monitor
   python3 -m venv venv
 
   chmod +x /opt/web3pi/basic-system-monitor/run.sh
   
-  set_status "[install.sh] - Create a virtual environment for basic-eth2-node-monitor"
+  set_status "[install.sh] - Create a virtual environment for basic-eth2-node-monitor" "Venv for BNM"
   echolog "basic-eth2-node-monitor venv conf"
   cd /opt/web3pi/basic-eth2-node-monitor
   python3 -m venv venv
@@ -693,12 +697,12 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   chown -R ethereum:ethereum /opt/web3pi
 
-  set_status "[install.sh] - Installing w3p-installation-status"
+  set_status "[install.sh] - Installing w3p-installation-status" "Install status tool"
   apt install -y w3p-installation-status
 
 ## 12. CLEANUP ###########################################################################################
 
-  set_status "[install.sh] - Cleanup"
+  set_status "[install.sh] - Cleanup" "Cleanup"
 
   # RPi imager fix
   chown root:root /etc
@@ -713,7 +717,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
 ## 13. READ CONFIG FROM CONFIG.TXT ########################################################################
 
-  set_status "[install.sh] - Read the services configuration from config.txt"
+  set_status "[install.sh] - Read the services configuration from config.txt" "Read config.txt"
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
   echolog "Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag" 
@@ -801,19 +805,19 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
 
   # Next line creates an empty file so it won't run the next boot
-  set_status "[install.sh] - Create ${FLAG}"
+  set_status "[install.sh] - Create ${FLAG}" "Create flag file"
   touch $FLAG
 
-  set_status "[install.sh] - Change the stage to 100"
+  set_status "[install.sh] - Change the stage to 100" "Set stage 100"
   set_install_stage 100
 
-  set_status "[install.sh] - Write rc.local logs to ${FLAG}"
+  set_status "[install.sh] - Write rc.local logs to ${FLAG}" "Save rc.local logs"
   grep "rc.local" /var/log/syslog >> $FLAG
   
-  set_status "[install.sh] - Run check_install.sh script"
+  set_status "[install.sh] - Run check_install.sh script" "Run check script"
   bash /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/scripts/check_install.sh
 
-  set_status "[install.sh] - Rebooting..."
+  set_status "[install.sh] - Rebooting..." "Rebooting..."
   sleep 3
   reboot
 
@@ -822,17 +826,17 @@ fi
 
 if [ "$(get_install_stage)" -eq 100 ]; then
 
-  set_status "[install.sh] - Not First Run"
+  set_status "[install.sh] - Not First Run" "Not First Run"
   sleep 2
 
 
   # WiFi stability fix
-  set_status "[install.sh] - Set wlan0 power_save off"
+  set_status "[install.sh] - Set wlan0 power_save off" "Setup wlan0"
   iw dev wlan0 set power_save off
   sleep 1
 
   # Read custom settings from /boot/firmware/config.txt - [Web3Pi] tag
-  set_status "[install.sh] - Read the services configuration from config.txt"
+  set_status "[install.sh] - Read the services configuration from config.txt" "Configure services"
   
   if [ "$(config_get influxdb)" = "true" ]; then
     echolog "Service config: Enable influxdb.service"
@@ -925,7 +929,7 @@ if [ "$(get_install_stage)" -eq 100 ]; then
     echolog "Service config: NoChange w3p_nimbus-beacon.service"
   fi
 
-  set_status "[install.sh] - Start and Enable unattended-upgrades.service"
+  set_status "[install.sh] - Start and Enable unattended-upgrades.service" "Enable upgrades"
   echolog "start unattended-upgrades.service"
   systemctl enable unattended-upgrades
 
@@ -938,5 +942,5 @@ if [ "$_IP" ]; then
   printf "\n\n\nRaspberry Pi IP address is %s\n\n\n" "$_IP"
 fi
 
-set_status "[install.sh] - End of script exit 0"
+set_status "[install.sh] - End of script exit 0" "Script done"
 exit 0

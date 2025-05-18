@@ -3,7 +3,7 @@
 # Web3 Pi - rc.local
 #
 
-BRANCH="main"
+BRANCH="hwmonitor"
 
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
@@ -61,13 +61,15 @@ get_install_stage() {
 STATUS_FILE="/opt/web3pi/status.jlog"
 set_status_jlog() {
   local status="$1"
-  local level="$2"
+  local statusShort="$2"
+  local level="$3"
   jq -n -c\
     --arg status "$status"\
+    --arg statusShort "$statusShort"\
     --arg stage "$(get_install_stage)"\
     --arg time "$(date +"%Y-%m-%dT%H:%M:%S%z")"\
     --arg level "$([ "$level" = "" ] && echo "INFO" || echo "$level")"\
-    '{"time": $time, "status": $status, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
+    '{"time": $time, "status": $status, "statusShort": $statusShort, "level": $level, "stage": $stage}' | tee -a $STATUS_FILE
   #echolog " " 
   #echolog "STAGE $(get_install_stage): $status" 
   #echolog " " 
@@ -77,23 +79,25 @@ set_status_jlog() {
 # Function to write a string to a file with status
 set_status() {
   local status="$1"  # Assign the first argument to a local variable
+  local statusShort="$2"
   echo "STAGE $(get_install_stage): $status" > /opt/web3pi/status.txt  # Write the string to the file
   echolog " " 
   echolog "STAGE $(get_install_stage): $status" 
   echolog " " 
-  set_status_jlog "$status" INFO
+  set_status_jlog "$status" "$statusShort" "INFO"
 }
 
 set_error() {
   local status="$1"
-  set_status_jlog "$status" "ERROR"
+  local statusShort="$2"
+  set_status_jlog "$status" "$statusShort" "ERROR"
 }
 
-set_status "[rc.local] - Script started"
+set_status "[rc.local] - Script started" "Script started"
 
 
 # Checking internet connection
-set_status "[rc.local] - Checking internet connection"
+set_status "[rc.local] - Checking internet connection" "Check internet"
 
 pingServerAdr="github.com"
 ping_n=0
@@ -116,49 +120,49 @@ echolog "$(date): Connected - ${pingServerAdr}"
 # Runs only once
 if [ "$(get_install_stage)" -eq 0 ]; then
 
-  set_status "[install.sh] - Stop unattended-upgrades.service"
+  set_status "[install.sh] - Stop unattended-upgrades.service" "Disable upgrades"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
   # Install essential dependencies
-  set_status "[rc.local] - Essential dependencies"
+  set_status "[rc.local] - Essential dependencies" "Essential deps"
 
   sleep 1
 
-  set_status "[install.sh] - Adding Web3 Pi repositories"
+  set_status "[install.sh] - Adding Web3 Pi repositories" "Add Web3Pi repos"
   wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
   echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
   
-  set_status "[rc.local] - Refreshes the package lists"
+  set_status "[rc.local] - Refreshes the package lists" "Refresh pkg lists"
   apt-get update
   
-  set_status "[rc.local] - Install essential dependencies"
+  set_status "[rc.local] - Install essential dependencies" "Install essentials"
   apt-get -y install chrony avahi-daemon git-extras python3-pip python3-netifaces flashrom
 
-  set_status "[rc.local] - Sync time with NTP server (chronyd -q)"
+  set_status "[rc.local] - Sync time with NTP server (chronyd -q)" "Sync time - NTP"
   chronyd -q
 
   timedatectl | echolog
 
-  set_status "[rc.local] - Update Ethereum-On-Raspberry-Pi repository (--branch ${BRANCH})"
+  set_status "[rc.local] - Update Ethereum-On-Raspberry-Pi repository (--branch ${BRANCH})" "Update EthOnPi repo"
   git-force-clone --branch ${BRANCH} https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
   chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 
-  et_status "[rc.local] - Change the stage to 1"
+  set_status "[rc.local] - Change the stage to 1" "Set stage 1"
   set_install_stage 1
 fi
 
 
 if [ "$(get_install_stage)" -ge 1 ]; then
   # Run the installation script
-  set_status "[rc.local] - Run main installation script (install.sh)"
+  set_status "[rc.local] - Run main installation script (install.sh)" "Run install.sh"
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 fi
 
 
 if [ "$(get_install_stage)" -eq 100 ]; then
   # set_status "[rc.local] - Installation completed"
-  set_status "Installation completed"
+  set_status "Installation completed" "Install done"
   sleep 2
 fi
 
