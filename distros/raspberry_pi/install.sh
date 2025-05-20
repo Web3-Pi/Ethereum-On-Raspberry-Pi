@@ -639,7 +639,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
   set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall" "Setup monitoring"
-  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
+  # apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
+  apt install -y w3p-system-monitor w3p-node-monitor
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
