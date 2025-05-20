@@ -9,6 +9,9 @@ BRANCH="hwmonitor"
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
 #              reads from stdin and logs each line. Outputs to console and appends to $LOGI file.
 LOGI="/var/log/web3pi.log"
+OFLAG="/root/opening.flag" # for skipping LCD dashboard opening animation
+touch $OFLAG
+
 echolog(){
     if [ $# -eq 0 ]
     then cat - | while read -r message
@@ -96,6 +99,7 @@ set_error() {
 set_status "[rc.local] - Script started" "Script started"
 
 
+
 # Checking internet connection
 set_status "[rc.local] - Checking internet connection" "Check internet"
 
@@ -141,7 +145,8 @@ if [ "$(get_install_stage)" -eq 0 ]; then
 
   set_status "[rc.local] - Sync time with NTP server (chronyd -q)" "Sync time - NTP"
   chronyd -q
-  systemctl systemctl restart w3p_lcd.service
+  rm $OFLAG
+  systemctl restart w3p_lcd.service
 
   timedatectl | echolog
 
