@@ -146,6 +146,7 @@ if [ "$(get_install_stage)" -eq 0 ]; then
   set_status "[rc.local] - Sync time with NTP server (chronyd -q)" "Sync time - NTP"
   chronyd -q
   rm $OFLAG
+  sleep 1
   systemctl restart w3p_lcd.service
 
   timedatectl | echolog
