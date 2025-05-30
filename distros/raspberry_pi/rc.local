@@ -151,6 +151,7 @@ fi
 
 if [ "$(get_install_stage)" -ge 1 ]; then
   # Run the installation script
+  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
   set_status "[rc.local] - Run main installation script (install.sh)" "Run install.sh"
   ./opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
 fi
