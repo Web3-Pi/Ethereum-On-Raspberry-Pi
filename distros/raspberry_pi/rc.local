@@ -3,8 +3,6 @@
 # Web3 Pi - rc.local
 #
 
-BRANCH="main"
-
 # Function: echolog
 # Description: Logs messages with a timestamp prefix. If no arguments are provided,
 #              reads from stdin and logs each line. Outputs to console and appends to $LOGI file.
@@ -116,35 +114,33 @@ echolog "$(date): Connected - ${pingServerAdr}"
 # Runs only once
 if [ "$(get_install_stage)" -eq 0 ]; then
 
-  set_status "[install.sh] - Stop unattended-upgrades.service"
+  set_status "[rc.local] - Runs only once (get_install_stage == 0)"
+  timedatectl | echolog
+
+  set_status "[rc.local] - Stop unattended-upgrades.service"
   systemctl stop unattended-upgrades
   systemctl disable unattended-upgrades
 
-  # Install essential dependencies
-  set_status "[rc.local] - Essential dependencies"
-
-  sleep 1
+  set_status "[rc.local] - Refreshes the package lists"
+  apt-get update
   
+  set_status "[rc.local] - Install chrony"
+  apt-get -y install chrony
+
+  sleep 3
+  set_status "[rc.local] - Sync time with NTP server (chronyd -q)"
+  chronyd -q
+  sleep 1
+  timedatectl | echolog
+
+  # Install essential dependencies
   set_status "[rc.local] - Refreshes the package lists"
   apt-get update
   
   set_status "[rc.local] - Install essential dependencies"
-  apt-get -y install chrony avahi-daemon git-extras python3-pip python3-netifaces flashrom
+  apt-get -y install avahi-daemon git-extras python3-pip python3-netifaces flashrom
 
-  set_status "[rc.local] - Sync time with NTP server (chronyd -q)"
-  chronyd -q
-
-  timedatectl | echolog
-  
-  set_status "[install.sh] - Adding Web3 Pi repositories"
-  wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
-  
-  set_status "[rc.local] - Update Ethereum-On-Raspberry-Pi repository (--branch ${BRANCH})"
-  git-force-clone --branch ${BRANCH} https://github.com/Web3-Pi/Ethereum-On-Raspberry-Pi.git /opt/web3pi/Ethereum-On-Raspberry-Pi
-  chmod +x /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/install.sh
-
-  set_status "[rc.local] - Change the stage to 1"
+  et_status "[rc.local] - Change the stage to 1"
   set_install_stage 1
 fi
 

@@ -337,6 +337,10 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   sleep 3
 
+  set_status "[install.sh] - Adding Web3 Pi repositories"
+  wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
+  
   set_status "[install.sh] - Adding Ethereum repositories"
   add-apt-repository -y ppa:ethereum/ethereum
   
@@ -605,7 +609,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   fi
 
   set_status "[install.sh] - Installing web3-pi-cockpit-modules"
-  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater 
+  apt install -y w3p-link w3p-updater w3p-script-runner w3p-updater w3p-network-firewall
 
 ## 8. SERVICES CONFIGURATION ###########################################################################
 
