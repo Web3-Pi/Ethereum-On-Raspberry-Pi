@@ -343,7 +343,7 @@ if [ "$(get_install_stage)" -eq 2 ]; then
 
   set_status "[install.sh] - Adding Web3 Pi repositories" "Add Web3Pi repos"
   wget -O - https://apt.web3pi.io/public-key.gpg | gpg --dearmor -o /etc/apt/keyrings/web3-pi-apt-repo.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse beta" | tee /etc/apt/sources.list.d/web3-pi.list
+  echo "deb [signed-by=/etc/apt/keyrings/web3-pi-apt-repo.gpg] https://apt.web3pi.io noble main restricted universe multiverse" | tee /etc/apt/sources.list.d/web3-pi.list
   
   set_status "[install.sh] - Adding Ethereum repositories" "Add ETH repos"
   add-apt-repository -y ppa:ethereum/ethereum
