@@ -642,8 +642,8 @@ if [ "$(get_install_stage)" -eq 2 ]; then
   cp /opt/web3pi/Ethereum-On-Raspberry-Pi/distros/raspberry_pi/nimbus/nimbus.sh /home/ethereum/clients/nimbus/nimbus.sh
   chmod +x /home/ethereum/clients/nimbus/nimbus.sh
 
-  set_status "[install.sh] - basic-system-monitor, basic-eth2-node-monitor, w3p-lcd-dashboardInstall" "Setup monitoring"
-  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard
+  set_status "[install.sh] - Install Web3 Pi monitoring tools" "Setup monitoring"
+  apt install -y w3p-system-monitor w3p-node-monitor w3p-lcd-dashboard w3p-geth-sync-stages-monitoring
 
   chown -R ethereum:ethereum /home/ethereum/clients
   
